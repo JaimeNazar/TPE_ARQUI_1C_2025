@@ -136,6 +136,7 @@ int main()
 	scNewline();
 	scPrint("Escribi lo que quieras: ", 0x2F);
 
+	// Main loop controlled by ticks
 	int lastTime = ticks_elapsed();
 	int deltaTime = 0;
 	while(1) {

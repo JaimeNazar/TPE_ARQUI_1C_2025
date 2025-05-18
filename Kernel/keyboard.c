@@ -38,7 +38,7 @@ char kbd_US [128] =
 };
 
 uint8_t pollKeyboard() {
-	while(!(get_keyboard_status() & 0x01));
+	while(!(get_keyboard_status() & 0x01)); // Poll keyboard until it has a key for us
 
 	uint8_t scancode = get_keyboard_output();
   	get_keyboard_output();  // Ignore key release
@@ -54,6 +54,6 @@ void keyPress() {
 
     uint8_t key = kbd_US[get_keyboard_output()];
 
-    if (key != 0)
+    if (key != 0)   // If not 0, then its mapped
 	    scPrintChar(kbd_US[get_keyboard_output()], 0x0F);
 }

@@ -33,9 +33,9 @@ void scScrollDown() {
 	currentVideo = video + (height-2) * width_char;
 }
 
+// Upper 4 bits are background color and lower 4 bits are character color
 void scPrintChar(char character, uint8_t color)
 {
-
 	if (currentVideo >= video + (height-1) * width*2)
 		scScrollDown();
 

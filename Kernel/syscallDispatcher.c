@@ -1,5 +1,6 @@
 #include <syscallDispatcher.h>
 
+// Output style depends on file descriptor
 int write(int fd, const char * buff, int length) {
     switch (fd) {
         case 1:
@@ -21,7 +22,9 @@ int write(int fd, const char * buff, int length) {
 }
 
 // TODO: check if int or is size_t
-int read(int fd, char * buff, int length) {
+
+// Polls the keyboard until enter is pressed or reached length specified
+int read(int fd, char * buff, int length) { 
     
     int read = 0;
 
