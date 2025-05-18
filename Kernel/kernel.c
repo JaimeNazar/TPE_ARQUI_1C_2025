@@ -3,6 +3,8 @@
 #include <lib.h>
 #include <moduleLoader.h>
 #include <naiveConsole.h>
+#include <styledConsole.h>
+#include <idtLoader.h>
 
 extern uint8_t text;
 extern uint8_t rodata;
@@ -80,8 +82,33 @@ void * initializeKernelBinary()
 	return getStackBase();
 }
 
+uint8_t getHours() {
+	return rtc(4);
+}
+
+uint8_t getMinutes() {
+	return rtc(2);
+}
+
+uint8_t getSeconds() {
+	return rtc(0);
+}
+
+void printTime(){
+	scPrint("Current time: ", 0x0F);
+	scPrintHex(getHours(), 0x0F);	// In Universal Standard Time
+	scPrint(":", 0x0F);
+	scPrintHex(getMinutes(), 0x0F);
+	scPrint(":", 0x0F);
+	scPrintHex(getSeconds(), 0x0F);
+
+	scNewline();
+}
+
 int main()
 {	
+	load_idt();
+
 	ncPrint("[Kernel Main]");
 	ncNewline();
 	ncPrint("  Sample code module at 0x");
@@ -100,5 +127,28 @@ int main()
 	ncNewline();
 
 	ncPrint("[Finished]");
+
+	scClear();
+
+	scPrint("TPE ARQUI!!!", 0xF2);
+	scNewline();
+	printTime();
+	scNewline();
+	scPrint("Escribi lo que quieras: ", 0x2F);
+
+	int lastTime = ticks_elapsed();
+	int deltaTime = 0;
+	while(1) {
+
+		if (deltaTime >= 5) {
+
+			// Do something
+
+			lastTime = ticks_elapsed();
+		}
+
+		deltaTime = ticks_elapsed() - lastTime;
+	}
+	
 	return 0;
 }

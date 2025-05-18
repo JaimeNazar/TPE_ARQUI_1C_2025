@@ -13,10 +13,13 @@ GLOBAL _irq03Handler
 GLOBAL _irq04Handler
 GLOBAL _irq05Handler
 
+GLOBAL _syscallHandler
+
 GLOBAL _exception0Handler
 
 EXTERN irqDispatcher
 EXTERN exceptionDispatcher
+EXTERN syscallDispatcher
 
 SECTION .text
 
@@ -138,6 +141,17 @@ _irq04Handler:
 _irq05Handler:
 	irqHandlerMaster 5
 
+_syscallHandler:
+   	pushState
+
+	mov rdi, rax	; Pass arguments from the syscall
+	mov rsi, rbx	; to the C function
+	mov rdx, rcx
+	
+	call syscallDispatcher
+
+	popState
+	iretq
 
 ;Zero Division Exception
 _exception0Handler:
@@ -147,8 +161,6 @@ haltcpu:
 	cli
 	hlt
 	ret
-
-
 
 SECTION .bss
 	aux resq 1
