@@ -142,15 +142,22 @@ _irq05Handler:
 	irqHandlerMaster 5
 
 _syscallHandler:
-   	pushState
+	push rbx
+	push rcx
+	push rdx
+	push rbp
 
-	mov rdi, rax	; Pass arguments from the syscall
-	mov rsi, rbx	; to the C function
-	mov rdx, rcx
+	mov rcx, rdx
+	mov rdx, rsi
+	mov rsi, rdi
+	mov rdi, rax
 	
 	call syscallDispatcher
 
-	popState
+	pop rbp
+	pop rdx
+	pop rcx
+	pop rbx
 	iretq
 
 ;Zero Division Exception
