@@ -212,8 +212,8 @@ void putPixel(uint32_t hexColor, uint64_t x, uint64_t y) {
 void drawSquare(uint64_t x, uint64_t y, uint64_t size, uint32_t hexColor) { // TODO: Check if there is a faster approach
 	for (int i = 0; i < size; i++) {
 		for (int j = 0; j < size; j++) {
-			//putPixel(hexColor, x+i, y+j);
-            buffer[y+i][x+j] = hexColor;
+			putPixel(hexColor, x+i, y+j);
+          //  buffer[y+i][x+j] = hexColor;
 		}
 	}
 }
@@ -247,7 +247,9 @@ void drawCharAt(char c, uint64_t x, uint64_t y, uint32_t hexColor) {
 void clearBuffer() {
     for (int i = 0; i < VBE_mode_info->height; i++) {
 		for (int j = 0; j < VBE_mode_info->width; j++) {
-			buffer[i][j] = 0;
+
+            putPixel(0, j, i);
+			//buffer[i][j] = 0;
 		}
 	}
 
@@ -257,7 +259,7 @@ void clearBuffer() {
 void drawScreen() {
     for (int i = 0; i < VBE_mode_info->height; i++) {
 		for (int j = 0; j < VBE_mode_info->width; j++) {
-            putPixel(buffer[i][j], j, i);
+            //putPixel(buffer[i][j], j, i);
 		}
 	}
 
