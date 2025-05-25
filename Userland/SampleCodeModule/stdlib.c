@@ -10,23 +10,23 @@
 #define ID_DRAW 0x4
 
 uint64_t sysWrite(int fd, char * buff, int length) {
-    return syscallWizard(0, fd, buff, length);
+    return syscall_wizard(0, fd, buff, length);
 }
 
 uint64_t sysRead(int fd, char * buff, int length) {
-    return syscallWizard(1, fd, buff, length);
+    return syscall_wizard(1, fd, buff, length);
 }
 
 uint64_t sysTimeTicks(){
-    return syscallWizard(2, NO_ARG, NO_ARG, NO_ARG);
+    return syscall_wizard(2, NO_ARG, NO_ARG, NO_ARG);
 }
 
 void sysClear() {
-    return syscallWizard(3, NO_ARG, NO_ARG, NO_ARG);
+    return syscall_wizard(3, NO_ARG, NO_ARG, NO_ARG);
 }
 
 void sysDraw() {
-    return syscallWizard(4, NO_ARG, NO_ARG, NO_ARG);
+    return syscall_wizard(4, NO_ARG, NO_ARG, NO_ARG);
 }
 
 int strlen(char* str) {

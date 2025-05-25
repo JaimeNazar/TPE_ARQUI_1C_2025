@@ -15,7 +15,7 @@ char* main_buff[1024];
 uint32_t current_buff = 0;
 
 void add_str(char* str) {
-	for (int i = 0; i < strLen(str); i++) 
+	for (int i = 0; i < strlen(str); i++) 
 		main_buff[current_buff++] = str[i];
 }
 
@@ -29,19 +29,19 @@ void miniShell() {
 	main_buff[1] = 'b';
 	main_buff[2] = 'c';
 
-	int lastTime = time_ticks();
+	int lastTime = sysTimeTicks();
 	int deltaTime = 0;
 	
 	while(1) {
 
 		if (deltaTime >= 1) {
- 			sys_clear();
-			write(1, "miniShell > ", strLen("miniShell > "));
- 			sys_draw();
-			lastTime = time_ticks();
+ 			sysClear();
+			sysWrite(1, "miniShell > ", strlen("miniShell > "));
+ 			sysDraw();
+			lastTime = sysTimeTicks();
 		}
 
-		deltaTime = time_ticks() - lastTime;
+		deltaTime = sysTimeTicks() - lastTime;
 	}
 }
 

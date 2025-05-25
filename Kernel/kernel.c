@@ -128,28 +128,7 @@ int main()
 
 	ncPrint("[Finished]");
 
-	scClear();
-
-	scPrint("TPE ARQUI!!!", 0xF2);
-	scNewline();
-	printTime();
-	scNewline();
-	scPrint("Escribi lo que quieras: ", 0x2F);
-
-	// Main loop controlled by ticks
-	int lastTime = ticks_elapsed();
-	int deltaTime = 0;
-	while(1) {
-
-		if (deltaTime >= 5) {
-
-			// Do something
-
-			lastTime = ticks_elapsed();
-		}
-
-		deltaTime = ticks_elapsed() - lastTime;
-	}
+	videoInitialize();
 	
 	return 0;
 }
