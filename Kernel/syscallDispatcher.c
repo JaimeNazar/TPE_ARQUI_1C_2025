@@ -38,8 +38,10 @@ int read(int fd, char * buff, int length) {
 
             while (read < length && (current = pollKeyboard()) != 0xA) {  // 0xA, Enter scancode
                 
-                if (current != 0)
+                if (current != 0) {
                     buff[read++] = current;
+                    drawChar(current, COLOR_WHITE);
+                }
             } 
             break;
     };

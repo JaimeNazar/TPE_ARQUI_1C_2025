@@ -1,4 +1,5 @@
-#include syscallDispatcher.c>
+#include<stdint.h>
+#include <syscallDispatcher.h>
 
 
 #define ZERO_EXCEPTION_ID 0
@@ -12,7 +13,7 @@ static void zero_division();
 void exceptionDispatcher(int exception) {
 	if (exception == ZERO_EXCEPTION_ID)
 		zero_division();
-	else if (exception == UNDEF_OP_CODE_EXCEPTION_ID)
+	else if (exception == UNDEF_OP_CODE_EXCEPTION_ID) {}
 	
 }
 
@@ -35,7 +36,8 @@ const char * registerString[] = {                               //todos con len 
     "R8:     ", "R9:     ", "R10:     ", "R11:    ", "R12:    ", "R13:    ", "R14:    ", "R15:    ",
     "RIP:    ", "CS:     ", "RFLAGS: ", "RSP:    ", "SS:     "
 };
-const unint64_t * registers = getRegisters();
+const uint64_t * registers = {1, 2, 3};	// FIX: lo deje asi para que compile
+//const uint64_t * registers = getRegisters();
 
 
 	write(2, "Registros: ", 11);

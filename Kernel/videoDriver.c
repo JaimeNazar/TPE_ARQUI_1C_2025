@@ -225,7 +225,7 @@ void videoSetFontsize(uint8_t size) {
     charsPerHeight = VBE_mode_info->height / font_size * 2;
 }
 
-void drawChar(char c, uint64_t x, uint64_t y, uint32_t hexColor) {
+void drawCharAt(char c, uint64_t x, uint64_t y, uint32_t hexColor) {
 
 	char* index = font_bitmap[c];    // get letter bitmap starting index
 	char pixel = 0; // Current pixel
@@ -265,24 +265,24 @@ void drawScreen() {
 
 // ------ TEXT MODE UTILS ------
 
+void drawChar(char c, uint32_t hexColor) {    
+    // New line if reached end
+    if (currentCharX >= charsPerWidth) {
+        currentCharX = 0;
+        currentCharY++;
+    }
+
+    drawCharAt(c, currentCharX * font_size, currentCharY * font_size * 2, hexColor);
+    currentCharX++;
+}
 /* Prints a string continiously on screen using a grid */
 void printText(char * str, int length, uint32_t hexColor) {
-
 	for (int i = 0; i < length; i++) {
         if (str[i] == '\n') {
             currentCharX = 0;
             currentCharY++;
         } else {
-            // New line if reached end
-            if (currentCharX >= charsPerWidth) {
-                currentCharX = 0;
-                currentCharY++;
-            }
-
-            drawChar(str[i], currentCharX * font_size, currentCharY * font_size * 2, hexColor);
-
-            currentCharX++;
+            drawChar(str[i], hexColor);
         }
 	}
-
 }

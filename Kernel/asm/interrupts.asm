@@ -69,7 +69,7 @@ SECTION .text
 	pushState
 
 	mov rdi, [rsp + 8]       ;guardo el rip para luego mostrarlo
-	mov [ripBackup], rdi
+	;mov [ripBackup], rdi
 
 	mov rdi, %1 ; pasaje de parametro
 

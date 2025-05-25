@@ -14,7 +14,7 @@ uint64_t sysWrite(int fd, char * buff, int length) {
 }
 
 uint64_t sysRead(int fd, char * buff, int length) {
-    return syscall_wizard(1, fd, buff, length);
+    return syscall_wizard(ID_READ, fd, buff, length);
 }
 
 uint64_t sysTimeTicks(){

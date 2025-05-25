@@ -1,6 +1,9 @@
 #include <miniShell.h>
 
 void shellInit() {
+
+	sysWrite(1, "miniShell > ", strlen("miniShell > "));
+
 	int lastTime = sysTimeTicks();
 	int deltaTime = 0;
 	
@@ -18,10 +21,13 @@ void shellInit() {
 
 }
 
+    char buffer[128];
 void shellUpdate() {
     
- 	sysClear();
-	sysWrite(1, "miniShell > ", strlen("miniShell > "));
+ 	//sysClear();
+
+    sysRead(1, buffer, 12);
+
  	sysDraw();
 }
 
