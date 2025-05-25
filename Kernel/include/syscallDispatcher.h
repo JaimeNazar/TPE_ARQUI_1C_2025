@@ -8,6 +8,6 @@
 
 int write(int fd, const char * buff, int length);
 int read(int fd, char * buff, int length);
-uint64_t sysCallDispatcher(uint64_t rax, ...);
+uint64_t syscallDispatcher(uint64_t rax, ...);
 
 #endif

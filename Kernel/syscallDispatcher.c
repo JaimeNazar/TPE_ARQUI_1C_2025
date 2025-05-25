@@ -9,9 +9,11 @@
 #define ID_TIMETICKS 4
 #define ID_SLEEP 5
 
-// Output style depends on file descriptor
+#define COLOR_WHITE 0xFFFFFFFF
+#define COLOR_AMBER 0x00FFBF00
 
-int write(int fd, char * buff, int length) {
+// Output style depends on file descriptor
+int write(int fd, const char * buff, int length) {
     switch (fd) {
         case 1:
             printText(buff, length, COLOR_WHITE);
@@ -40,10 +42,6 @@ int read(int fd, char * buff, int length) {
                     buff[read++] = current;
             } 
             break;
-
-        case 2:
-            ccPrint(buff, 0x04);
-            break;
     };
 
     return read;
@@ -54,7 +52,7 @@ uint64_t time_ticks() {
     return ticks_elapsed();
 }
 
-uint64_t sysCallDispatcher(uint64_t rax, ...) {
+uint64_t syscallDispatcher(uint64_t rax, ...) {
     va_list args;
     va_start(args, rax);  
 
@@ -62,11 +60,11 @@ uint64_t sysCallDispatcher(uint64_t rax, ...) {
 
     switch(rax) {
         case ID_WRITE:
-            int fd = va_arg(args, int);
-            const char* buff = va_arg(args, const char*);
-            int length = va_arg(args, int);
+            int fdWrite = va_arg(args, int);
+            const char* buffWrite = va_arg(args, const char*);
+            int lengthWrite = va_arg(args, int);
 
-            ret_val = write(fd, buff, length);
+            ret_val = write(fdWrite, buffWrite, lengthWrite);
             break;
         case ID_READ:
             int fd = va_arg(args, int);
