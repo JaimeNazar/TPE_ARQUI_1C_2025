@@ -1,4 +1,42 @@
 #include <syscallDispatcher.h>
+#include <time.h>
+
+#define ID_WRITE 0
+#define ID_READ 1
+#define ID_ 0
+#define ID_  0
+#define ID_ 0
+#define ID_SLEEP 5
+
+
+void syscallDispatcher(uint64_t rax, ...) {
+    va_list args;
+    va_start(args, rax);  
+
+    switch(rax) {
+        case 0:
+            write(va_arg(args, int), va_arg(args, const char*), va_arg(args, int));
+            break;
+        case 1:
+            read(va_arg(args, int), va_arg(args, char*), va_arg(args, int));
+            break;
+        case 5:
+            sleep(va_arg(args, uint64_t));
+            break;
+        default:
+            // Manejar  
+            break;
+    };
+
+    va_end(args);
+}
+
+
+
+
+
+
+
 
 // Output style depends on file descriptor
 int write(int fd, const char * buff, int length) {
@@ -48,21 +86,13 @@ int read(int fd, char * buff, int length) {
 
 }
 
-void syscallDispatcher(uint64_t rax, ...) {
-    va_list args;
-    va_start(args, rax);  
 
-    switch(rax) {
-        case 0:
-            write(va_arg(args, int), va_arg(args, const char*), va_arg(args, int));
-            break;
-        case 1:
-            read(va_arg(args, int), va_arg(args, char*), va_arg(args, int));
-            break;
-        default:
-            // Manejar  
-            break;
-    };
+void sleep(uint64_t ticks) {
+    uint64_t end = ticks_elapsed() + ticks;
 
-    va_end(args);
+    while (getCurrentTime() < end) {
+        
+    }
+
 }
+
