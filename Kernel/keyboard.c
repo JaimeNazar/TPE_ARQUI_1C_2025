@@ -47,6 +47,7 @@ char kbd_US [128] =
     0,  /* F12 Key */
     0,  /* All other keys are undefined */
 };
+
 static unsigned char keyValues[KEYS][2] = {
 	{0, 0},
 	{27, 27},
@@ -119,6 +120,7 @@ uint8_t pollKeyboard() {
 static char buffer[BUFFER_SIZE] = {0};
 static int currentKey = 0;
 static int nextToRead = 0;
+int altKey = 0;
 int shift = 0;
 int capsLock = 0;
 int registerPressed = 0;
