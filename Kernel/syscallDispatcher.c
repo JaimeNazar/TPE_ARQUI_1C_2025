@@ -1,5 +1,6 @@
 #include <syscallDispatcher.h>
 #include <time.h>
+#include <stdint.h>
 
 #define ID_WRITE 0
 #define ID_READ 1
@@ -14,13 +15,13 @@ void syscallDispatcher(uint64_t rax, ...) {
     va_start(args, rax);  
 
     switch(rax) {
-        case 0:
+        case ID_WRITE:
             write(va_arg(args, int), va_arg(args, const char*), va_arg(args, int));
             break;
-        case 1:
+        case ID_READ:
             read(va_arg(args, int), va_arg(args, char*), va_arg(args, int));
             break;
-        case 5:
+        case ID_SLEEP:
             sleep(va_arg(args, uint64_t));
             break;
         default:
@@ -90,7 +91,7 @@ int read(int fd, char * buff, int length) {
 void sleep(uint64_t ticks) {
     uint64_t end = ticks_elapsed() + ticks;
 
-    while (getCurrentTime() < end) {
+    while (ticks_elapsed() < end) {
         
     }
 
