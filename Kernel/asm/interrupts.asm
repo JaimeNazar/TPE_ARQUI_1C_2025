@@ -15,7 +15,13 @@ GLOBAL _irq05Handler
 
 GLOBAL _syscallHandler
 
+
+;exceptions.c
 GLOBAL _exception0Handler
+GLOBAL _exception6Handler
+
+GLOBAL get_rip
+GLOBAL get_registers
 
 EXTERN irqDispatcher
 EXTERN exceptionDispatcher
@@ -62,7 +68,11 @@ SECTION .text
 %macro irqHandlerMaster 1
 	pushState
 
+	mov rdi, [rsp + 8]       ;guardo el rip para luego mostrarlo
+	mov [ripBackup], rdi
+
 	mov rdi, %1 ; pasaje de parametro
+
 	call irqDispatcher
 
 	; signal pic EOI (End of Interrupt)
@@ -84,6 +94,28 @@ SECTION .text
 	popState
 	iretq
 %endmacro
+
+get_registers:
+mov [rdi],    rax
+    mov [rdi+8],  rbx
+    mov [rdi+16], rcx
+    mov [rdi+24], rdx
+    mov [rdi+32], rbp
+    mov [rdi+40], rdi
+    mov [rdi+48], rsi
+    mov [rdi+56], r8
+    mov [rdi+64], r9
+    mov [rdi+72], r10
+    mov [rdi+80], r11
+    mov [rdi+88], r12
+    mov [rdi+96], r13
+    mov [rdi+104], r14
+    mov [rdi+112], r15
+    ; DESPUES HAY QUE VER COMO HACEMOS CON ESTO Si quieres guardar RIP, CS, RFLAGS, RSP, SS, deberías pasarlos como argumentos o capturarlos en el handler de excepción
+    ret
+
+
+
 
 
 _hlt:
@@ -164,6 +196,17 @@ _syscallHandler:
 _exception0Handler:
 	exceptionHandler 0
 
+
+;Operation Invalid Code
+_exception6Handler:
+exceptionHandler 6
+
+
+get_rip:
+mov rax, [ripBuffer]
+ret
+
+
 haltcpu:
 	cli
 	hlt
@@ -171,3 +214,4 @@ haltcpu:
 
 SECTION .bss
 	aux resq 1
+	ripBuffer resb 8
