@@ -258,7 +258,6 @@ void drawScreen() {
     for (int i = 0; i < VBE_mode_info->height; i++) {
 		for (int j = 0; j < VBE_mode_info->width; j++) {
             putPixel(buffer[i][j], j, i);
-
 		}
 	}
 

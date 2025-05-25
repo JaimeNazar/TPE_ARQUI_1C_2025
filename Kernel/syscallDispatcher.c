@@ -4,71 +4,29 @@
 
 #define ID_WRITE 0
 #define ID_READ 1
-#define ID_ 0
-#define ID_  0
-#define ID_ 0
+#define ID_CLEARBUFFER 2
+#define ID_DRAWSCREEN  3
+#define ID_TIMETICKS 4
 #define ID_SLEEP 5
-#define ID_CLEARSCREEN 6
-
-
-void syscallDispatcher(uint64_t rax, ...) {
-    va_list args;
-    va_start(args, rax);  
-
-    switch(rax) {
-        case ID_WRITE:
-            write(va_arg(args, int), va_arg(args, const char*), va_arg(args, int));
-            break;
-        case ID_READ:
-            read(va_arg(args, int), va_arg(args, char*), va_arg(args, int));
-            break;
-        case ID_SLEEP:
-            sleep(va_arg(args, uint64_t));
-            break;
-        case ID_CLEARSCREEN:
-            //Syscall_clearScreen
-            clearScreen();
-            break;
-        default:
-            // Manejar  
-            break;
-    };
-
-    va_end(args);
-}
-
-
-
-
-
-
-
 
 // Output style depends on file descriptor
-int write(int fd, const char * buff, int length) {
+
+int write(int fd, char * buff, int length) {
     switch (fd) {
         case 1:
-            for (int i = 0; i < length; i++) {
-                if (buff[i] == '\n')
-                    ncNewline();
-                else
-                    ncPrintChar(buff[i]);
-            }
-
+            printText(buff, length, COLOR_WHITE);
             break;
 
         case 2:
-            ncPrint(buff);
+            printText(buff, length, COLOR_AMBER);
             break;
     };
 
-    return length;  // TODO: improve
+    return length;
 }
 
-// TODO: check if int or is size_t
-
 // Polls the keyboard until enter is pressed or reached length specified
-int read(int fd, char * buff, int length) { 
+int read(int fd, char * buff, int length) {
     
     int read = 0;
 
@@ -84,7 +42,7 @@ int read(int fd, char * buff, int length) {
             break;
 
         case 2:
-            ncPrint(buff);
+            ccPrint(buff, 0x04);
             break;
     };
 
@@ -92,9 +50,49 @@ int read(int fd, char * buff, int length) {
 
 }
 
-
-void clearScreen() {
-    uint64_t totalBytes = VBE_mode_info->pitch * VBE_mode_info->height;
-    memset((void*)VBE_mode_info->framebuffer, 0, totalBytes);
+uint64_t time_ticks() {
+    return ticks_elapsed();
 }
 
+uint64_t sysCallDispatcher(uint64_t rax, ...) {
+    va_list args;
+    va_start(args, rax);  
+
+    uint64_t ret_val = 0;
+
+    switch(rax) {
+        case ID_WRITE:
+            int fd = va_arg(args, int);
+            const char* buff = va_arg(args, const char*);
+            int length = va_arg(args, int);
+
+            ret_val = write(fd, buff, length);
+            break;
+        case ID_READ:
+            int fd = va_arg(args, int);
+            char* buff = va_arg(args, char*);
+            int length = va_arg(args, int);
+
+            ret_val = read(fd, buff, length);
+            break;
+        case ID_CLEARBUFFER:
+            clearBuffer();
+            break;
+        case ID_DRAWSCREEN:
+            drawScreen();
+            break;
+        case ID_TIMETICKS:
+            ret_val = ticks_elapsed();
+            break;
+        case ID_SLEEP:
+            sleep(va_arg(args, uint64_t));
+            break;
+        default:
+            // Manejar  
+            break;
+    };
+
+    va_end(args);
+
+    return ret_val;
+}
