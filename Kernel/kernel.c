@@ -108,6 +108,7 @@ void printTime(){
 int main()
 {	
 	load_idt();
+	videoInitialize();
 
 	ncPrint("[Kernel Main]");
 	ncNewline();
@@ -127,8 +128,6 @@ int main()
 	ncNewline();
 
 	ncPrint("[Finished]");
-
-	videoInitialize();
 	
 	return 0;
 }
