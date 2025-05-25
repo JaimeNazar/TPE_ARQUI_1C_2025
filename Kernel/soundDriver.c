@@ -34,7 +34,7 @@ void wait (uint32_t count) {
 }
 
 void bell(uint32_t frequency, uint32_t duration) {
-    sound_start(frequency);
+    sound_play(frequency);
     wait(duration);
     sound_stop();
 }
