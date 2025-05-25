@@ -11,6 +11,9 @@ typedef struct
     uint8_t month;
     uint8_t day;
 } timeData;
+
+extern uint8_t rtc(uint8_t selection);
+
 void timer_handler();
 int ticks_elapsed();
 int seconds_elapsed();

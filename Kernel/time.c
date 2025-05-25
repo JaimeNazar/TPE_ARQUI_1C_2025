@@ -28,9 +28,9 @@ void getTime(timeData *data) {
 	uint8_t RTCNeeded[] = {RTC_SECONDS, RTC_MINUTES, RTC_HOURS, RTC_DAY, RTC_MONTH, RTC_YEAR};
 	uint8_t Values[6];
 	for (int i = 0; i < 6; i++) {
-		outb(RTC_ADDRESS, RTCNeeded[i]);
-		Values[i] = inb(RTC_DATA);
+		Values[i] = rtc(RTCNeeded[i]);
 	}
+
 	data->seconds = Values[0];
 	data->minutes = Values[1];
 	data->hours = Values[2];
@@ -41,7 +41,7 @@ void getTime(timeData *data) {
 void sleep(uint64_t ticks) {
     uint64_t end = ticks_elapsed() + ticks;
 
-    while (getCurrentTime() < end) {
+    while (ticks_elapsed() < end) {
         
     }
 
