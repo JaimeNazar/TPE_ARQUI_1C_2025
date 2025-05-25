@@ -8,6 +8,7 @@
 #define ID_  0
 #define ID_ 0
 #define ID_SLEEP 5
+#define ID_CLEARSCREEN 6
 
 
 void syscallDispatcher(uint64_t rax, ...) {
@@ -23,6 +24,10 @@ void syscallDispatcher(uint64_t rax, ...) {
             break;
         case ID_SLEEP:
             sleep(va_arg(args, uint64_t));
+            break;
+        case ID_CLEARSCREEN:
+            //Syscall_clearScreen
+            clearScreen();
             break;
         default:
             // Manejar  
@@ -88,12 +93,8 @@ int read(int fd, char * buff, int length) {
 }
 
 
-void sleep(uint64_t ticks) {
-    uint64_t end = ticks_elapsed() + ticks;
-
-    while (ticks_elapsed() < end) {
-        
-    }
-
+void clearScreen() {
+    uint64_t totalBytes = VBE_mode_info->pitch * VBE_mode_info->height;
+    memset((void*)VBE_mode_info->framebuffer, 0, totalBytes);
 }
 

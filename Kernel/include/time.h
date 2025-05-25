@@ -4,5 +4,17 @@
 void timer_handler();
 int ticks_elapsed();
 int seconds_elapsed();
+void getTime(timeData *data);
+void sleep(uint64_t ticks);
+typedef struct
+{
+    uint8_t seconds;
+    uint8_t minutes;
+    int8_t hours;
+    uint16_t year;
+    uint8_t month;
+    uint8_t day;
+} timeData;
+
 
 #endif
