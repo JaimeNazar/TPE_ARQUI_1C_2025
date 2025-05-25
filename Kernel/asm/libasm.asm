@@ -64,12 +64,18 @@ get_keyboard_status:
 get_keyboard_output:
 	push rbp
 	mov rbp, rsp
-	
-	xor rax, rax
-	in al, 60h		; Read output register
 
-	leave
-	ret
+    mov rax, 0
+
+.cicle:
+	in al, 64h
+    and al, 0x01
+    je .cicle
+    in al, 60h
+
+	mov rsp, rbp
+	pop rbp
+    ret
 
 
 outb:
