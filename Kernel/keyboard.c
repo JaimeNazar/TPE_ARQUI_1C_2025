@@ -64,7 +64,7 @@ static unsigned char keyValues[KEYS][2] = {
 	{'-', '_'},
 	{'=', '+'},
 	{'\b', '\b'},
-	{9, 9},
+	{'\t','\t'},
 	{'q', 'Q'}, // 16
 	{'w', 'W'},
 	{'e', 'E'},
@@ -113,7 +113,8 @@ uint8_t pollKeyboard() {
 	while(!(get_keyboard_status() & 0x01)); // Poll keyboard until it has a key for us
 
 	uint8_t scancode = get_keyboard_output();
-  	get_keyboard_output();  // Ignore key release
+  get_keyboard_output();  // Ignore key release
+  scancode = 
 	return kbd_US[scancode];
   
 }
@@ -123,11 +124,14 @@ static int nextToRead = 0;
 int altKey = 0;
 int shift = 0;
 int capsLock = 0;
-int registerPressed = 0;
+
 void keyPress() {
 
-    uint8_t key = get_keyboard_output();
+  buffer[currentKey++] = keyValues[key][altKey];
 
+
+}
+char filtroCaracter(char c){
     switch (key)
 	{
 	case R_SHIFT_PRESS:
@@ -141,19 +145,12 @@ void keyPress() {
 	case CAPS_LOCK_PRESS:
 		capsLock = 1 - capsLock;
 		break;
-	}
-  if(key>MAX_PRESS_KEY)
-    return;
-
-  
-  if (currentKey >= BUFFER_SIZE) {
-    return;
   }
-  if((key>15&&key<26)||(key>29&&key<39)||(key>43&&key<50)){
+  
+  if((key>=keyValues['q']&&key<=keyValues['p'])||(key>=keyValues['a']&&key<=keyValues['l'])||(key>=keyValues['z']&&key<=keyValues['m'])){
     altKey = capsLock ? !shift : shift;
   }
   else altKey = shift; 
-  buffer[currentKey++] = keyValues[key][altKey];
 
-
+  return keyValues[key][altKey];
 }
