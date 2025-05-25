@@ -3,6 +3,10 @@ GLOBAL rtc
 GLOBAL get_keyboard_status
 GLOBAL get_keyboard_output
 
+; soundDriver
+GLOBAL outb
+GLOBAL inb
+
 section .text
 	
 cpuVendor:
@@ -68,3 +72,19 @@ get_keyboard_output:
 	ret
 
 
+outb:
+
+    mov dx, di        ; DI contiene el puerto (uint16_t)
+    mov al, sil       ; SIL contiene el valor (uint8_t)
+    out dx, al		  ; Escribe AL en el puerto DX
+
+	
+    ret
+
+inb:
+
+    mov dx, di        ; DI contiene el puerto
+    in al, dx
+    movzx eax, al     ; Expande AL a EAX ( lo pasa de uint8_t a uint32_t llenandolo con ceros)
+
+    ret
