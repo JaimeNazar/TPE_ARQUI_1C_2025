@@ -1,11 +1,7 @@
 #ifndef _TIME_H_
 #define _TIME_H_
+#include <stdint.h>
 
-void timer_handler();
-int ticks_elapsed();
-int seconds_elapsed();
-void getTime(timeData *data);
-void sleep(uint64_t ticks);
 typedef struct
 {
     uint8_t seconds;
@@ -15,6 +11,12 @@ typedef struct
     uint8_t month;
     uint8_t day;
 } timeData;
+void timer_handler();
+int ticks_elapsed();
+int seconds_elapsed();
+void getTime(timeData *data);
+void sleep(uint64_t ticks);
+
 
 
 #endif
