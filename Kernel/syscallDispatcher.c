@@ -31,12 +31,12 @@ int write(int fd, const char * buff, int length) {
 int read(int fd, char * buff, int length) {
     
     int read = 0;
-
+    char current;
     switch (fd) {
         case 1:
-            char current;
+            
 
-            while (read < length && getNextKey(current)) {  // 0xA, Enter scancode
+            while (read < length && getNextKey(&current)) {  // 0xA, Enter scancode
                  if (current == '\n') { // Enter
                     buff[read++] = '\n';
                     

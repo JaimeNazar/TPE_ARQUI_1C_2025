@@ -3,15 +3,16 @@
 #define KEYS 58
 #define BUFFER_SIZE 1000
 #define ESC 0x01
-#define ENTER 0x1C
-#define BACKSPACE 0x0E
-#define TAB 0x0F
+#define ENTER 28
+#define BACKSPACE 14
+#define TAB 15	
 #define L_SHIFT_PRESS 0x2A
 #define L_SHIFT_RELEASE 0xAA
 #define R_SHIFT_PRESS 0x36
 #define R_SHIFT_RELEASE 0xB6
 #define CAPS_LOCK_PRESS 0x3A
 #define MAX_PRESS_KEY 0x70
+
 // Scancode to ASCII for US keyboard layout
 char kbd_US [128] =
 {
@@ -118,16 +119,25 @@ int shift = 0;
 int capsLock = 0;
 
 void keyPress() {
+    uint8_t sc = get_keyboard_output();
 
-  uint8_t scancode = get_keyboard_output();
-  scancode = filtroCaracter(scancode);
-  if(countToRead < BUFFER_SIZE) {
-    buffer[nextToWrite++] = scancode; // Agrega el caracter al buffer
-    countToRead++;
-    if(nextToWrite >= BUFFER_SIZE) {
-    nextToWrite = 0;
+    // Procesamos modificadores sin filtrar (presión y liberación)
+    
+		
+        if (sc > 0x81 && sc!=R_SHIFT_RELEASE && sc!=L_SHIFT_RELEASE)
+            return; 
+        
+        sc = filtroCaracter(sc);
+		if (sc == 0x00) // Si el código es 0, no hacemos nada
+			return; // Si es un código de liberación, no hacemos nada más
+
+    // Si pasó la validación, lo agrego al buffer
+    if(countToRead < BUFFER_SIZE) {
+        buffer[nextToWrite++] = sc;
+        countToRead++;
+        if(nextToWrite >= BUFFER_SIZE)
+            nextToWrite = 0;
     }
-  }
 }
 char getNextKey(char* c){ //devuelve 1 si hay un caracter para leer, 0 si no hay y lo pone en c
   if(countToRead > 0) {
@@ -140,28 +150,32 @@ char getNextKey(char* c){ //devuelve 1 si hay un caracter para leer, 0 si no hay
   }
   return 0; // No hay caracteres para leer
 }
-char filtroCaracter(char key){
-    switch (key)
-	{
-	case R_SHIFT_PRESS:
-	case L_SHIFT_PRESS:
-		shift = 1;
-		break;
-	case R_SHIFT_RELEASE:
-	case L_SHIFT_RELEASE:
-		shift = 0;
-		break;
-	case CAPS_LOCK_PRESS:
-		capsLock = 1 - capsLock;
-		break;
-  }
-  
-  if((key>=keyValues['q']&&key<=keyValues['p'])||(key>=keyValues['a']&&key<=keyValues['l'])||(key>=keyValues['z']&&key<=keyValues['m'])){
-    altKey = capsLock ? !shift : shift;
-  }
-  else altKey = shift; 
-
-  return keyValues[key][altKey];
+char filtroCaracter(char key) {
+    // Primero, actualizamos el estado de los modificadores y descartamos el evento
+    if(key == L_SHIFT_PRESS || key == R_SHIFT_PRESS) {
+        shift = !shift; 
+        return 0;
+    }
+    if(key == L_SHIFT_RELEASE || key == R_SHIFT_RELEASE) {
+        shift = !shift;
+        return 0;
+    }
+    if(key == CAPS_LOCK_PRESS) {
+        capsLock = !capsLock;
+        return 0;
+    }
+    
+    // Evitamos índices fuera de rango
+    if(key >= KEYS)
+        return 0;
+    
+    // Para las letras se hace XOR entre shift y capsLock; para otros, se utiliza shift
+    if((key >= 16 && key <= 25) || (key >= 30 && key <= 38) || (key >= 44 && key <= 50))
+        altKey = (shift ^ capsLock) ? 1 : 0;
+    else
+        altKey = shift ? 1 : 0;
+        
+    return keyValues[key][altKey];
 }
 char canRead() {
   return countToRead > 0;
