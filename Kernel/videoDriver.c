@@ -265,7 +265,7 @@ void drawScreen() {
 
 }
 
-// ------ TEXT MODE UTILS ------
+
 
 void drawChar(char c, uint32_t hexColor) {    
     // New line if reached end
@@ -273,7 +273,27 @@ void drawChar(char c, uint32_t hexColor) {
         currentCharX = 0;
         currentCharY++;
     }
-
+    if(c=='\b') {
+        if(currentCharX<=0){
+            if(currentCharY>0) {
+                currentCharY--;
+                currentCharX = charsPerWidth - 1;
+                drawCharAt(' ', currentCharX * font_size, currentCharY * font_size * 2, hexColor);
+            } else {
+                return; // No more characters to delete
+            }
+        } else {
+            currentCharX--;
+        }
+        return;
+    }
+    if(c=='\t') {
+        if(currentCharX + 4 >= charsPerWidth) {
+            return;
+        } 
+        currentCharX += 4; // Move to next tab position
+        
+    }
     drawCharAt(c, currentCharX * font_size, currentCharY * font_size * 2, hexColor);
     currentCharX++;
 }

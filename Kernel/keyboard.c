@@ -109,29 +109,38 @@ static unsigned char keyValues[KEYS][2] = {
 	{' ', ' '},
 };
 
-uint8_t pollKeyboard() {
-	while(!(get_keyboard_status() & 0x01)); // Poll keyboard until it has a key for us
-
-	uint8_t scancode = get_keyboard_output();
-  get_keyboard_output();  // Ignore key release
-  scancode = 
-	return kbd_US[scancode];
-  
-}
-static char buffer[BUFFER_SIZE] = {0};
-static int currentKey = 0;
-static int nextToRead = 0;
-int altKey = 0;
+static char buffer[BUFFER_SIZE] = {0};//Buffer ciclico de teclado
+static int nextToWrite = 0; //Siguiente posicion a escribir
+static int nextToRead = 0; //Siguiente posicion a leer
+static int countToRead = 0; //Cantidad de caracteres a leer
+int altKey = 0; // determina cuando se utiliza shift y capslock
 int shift = 0;
 int capsLock = 0;
 
 void keyPress() {
 
-  buffer[currentKey++] = keyValues[key][altKey];
-
-
+  uint8_t scancode = get_keyboard_output();
+  scancode = filtroCaracter(scancode);
+  if(countToRead < BUFFER_SIZE) {
+    buffer[nextToWrite++] = scancode; // Agrega el caracter al buffer
+    countToRead++;
+    if(nextToWrite >= BUFFER_SIZE) {
+    nextToWrite = 0;
+    }
+  }
 }
-char filtroCaracter(char c){
+char getNextKey(char* c){ //devuelve 1 si hay un caracter para leer, 0 si no hay y lo pone en c
+  if(countToRead > 0) {
+    if(nextToRead >= BUFFER_SIZE) {
+      nextToRead = 0;
+    }
+    *c = buffer[nextToRead++];
+    countToRead--;
+    return 1; // Hay un caracter para leer
+  }
+  return 0; // No hay caracteres para leer
+}
+char filtroCaracter(char key){
     switch (key)
 	{
 	case R_SHIFT_PRESS:
@@ -153,4 +162,7 @@ char filtroCaracter(char c){
   else altKey = shift; 
 
   return keyValues[key][altKey];
+}
+char canRead() {
+  return countToRead > 0;
 }

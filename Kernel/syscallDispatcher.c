@@ -36,15 +36,23 @@ int read(int fd, char * buff, int length) {
         case 1:
             char current;
 
-            while (read < length && (current = pollKeyboard()) != 0xA) {  // 0xA, Enter scancode
-                
-                if (current != 0) {
-                    buff[read++] = current;
-                    drawChar(current, COLOR_WHITE);
+            while (read < length && getNextKey(current)) {  // 0xA, Enter scancode
+                 if (current == '\n') { // Enter
+                    buff[read++] = '\n';
+                    
+                    //LOGICA DE ENTER
+                    break; // Stop reading on Enter
+                } 
+                if (read >= length) {
+                    break;
                 }
-            } 
-            break;
-    };
+                buff[read++] = current;
+                drawChar(current, COLOR_WHITE);
+                
+            
+            }
+        break;
+    }
 
     return read;
 
