@@ -12,5 +12,5 @@ void clearBuffer();
 void drawChar(char c, uint32_t hexColor);
 void printText(char * str, int length, uint32_t hexColor);
 void videoSetFontsize(uint8_t size);
-
+void nextLine();
 #endif

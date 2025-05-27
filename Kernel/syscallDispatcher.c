@@ -30,7 +30,7 @@ int write(int fd, const char * buff, int length) {
 // Polls the keyboard until enter is pressed or reached length specified
 int read(int fd, char * buff, int length) {
     
-    int read = 0;
+    static int read = 0;
 
     switch (fd) {
         case 1:
@@ -40,8 +40,8 @@ int read(int fd, char * buff, int length) {
                 current =pollKeyboard();
                 if (current == '\n') { // Enter
                     buff[read++] = '\n';
-                    
-                    //LOGICA DE ENTER
+                    void nextLine();
+                    read = 0; // Reset read count
                     break; // Stop reading on Enter
                 } 
                 if(current!= 0){

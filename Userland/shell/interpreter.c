@@ -1,10 +1,9 @@
-#include <stdlib.h>
-#include <miniShell.h>
+#include <interpreter.h>
 
 //Add as necessary
-#define COMMANDS 5
+
 static char *commandList[] = {
-    "help",
+    "help",     
     "clear",
     "echo",
     "game",
@@ -29,15 +28,18 @@ ECHO,
 GAME,
 TIME,
 //COMPLETAR
-}
+};
 
-
-void commandHandler(char* command) {
-
-    if (command == NULL) {
-        return;
+int idHandler(char* command) {
+    for (int i = 0; i < COMMANDS; i++)
+    {
+        if (strcmp(command, commandList[i]) == 0) {
+        return i;} 
     }
-    
+    return -1; // error
+}
+void commandHandler(char* command) {
+    sysWrite(2, "A", 1);
     int commandID = idHandler(command);
 
 
@@ -63,18 +65,14 @@ void commandHandler(char* command) {
     }
     
 }
-
-
-//case sensitive
-int idHandler(char* command) {
-    for (size_t i = 0; i < COMMANDS; i++)
-    {
-        if (strcmp(command, commandList[i]) == 0) {
-        return i;} 
-    }
-    return -1; // error
+char **getCommandList(){
+    return commandList;
 }
+//case sensitive
 
+char **getCommandListDescription() {
+    return commandListDescription;
+}
 
 
 

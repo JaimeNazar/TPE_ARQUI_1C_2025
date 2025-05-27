@@ -195,7 +195,10 @@ void videoInitialize() {
 // Represents the char grid positions when working with printing strings
 static int currentCharX = 0;    // Top-left corner
 static int currentCharY = 0;
-
+void nextLine() {
+    currentCharX = 0;
+    currentCharY++;
+}
 void putPixel(uint32_t hexColor, uint64_t x, uint64_t y) {
 
     if (x >= VBE_mode_info->width || y >= VBE_mode_info->height)
@@ -275,8 +278,7 @@ void drawScreen() {
 void drawChar(char c, uint32_t hexColor) {    
     // New line if reached end
     if (currentCharX >= charsPerWidth) {
-        currentCharX = 0;
-        currentCharY++;
+        void nextLine();
     }
     if(c=='\b') {
         if(currentCharX<=0){
@@ -361,3 +363,4 @@ void drawDec(uint64_t value, uint32_t hexColor) {
 	for (i = 0; bufferBase[i] != 0; i++)
 		drawChar(bufferBase[i], hexColor);
 }
+

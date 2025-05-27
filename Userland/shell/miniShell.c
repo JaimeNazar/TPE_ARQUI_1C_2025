@@ -1,9 +1,9 @@
 #include <miniShell.h>
-
+char buffer[128];
 void shellInit() {
 
 	sysWrite(1, "miniShell > ", strlen("miniShell > "));
-
+	sysRead(1, buffer, 12);
 	int lastTime = sysTimeTicks();
 	int deltaTime = 0;
 	
@@ -21,14 +21,21 @@ void shellInit() {
 
 }
 
-    char buffer[128];
+    
+	uint32_t currentCommandLength = 0;
 void shellUpdate() {
     
-    sysRead(1, buffer, 12);
+    sysRead(1, buffer, 1);
 
-    sysWrite(2, buffer, 12);
+    sysWrite(2, buffer, 1);
+	if(buffer[currentCommandLength]=='\n') {
+		commandHandler(buffer);
+		currentCommandLength = 0;
 
- 	sysDraw();
+	}
+	currentCommandLength ++;
+	
+	sysDraw();
 }
 
 
@@ -43,8 +50,10 @@ void shellUpdate() {
 
 
 void helpCommand() {
+	char **commandList = getCommandList();
+	char **commandListDescription = getCommandListDescription();
 	sysWrite(1, "Available commands:\n", 20);
-	for (size_t i = 0; i < COMMANDS; i++) {
+	for (int i = 0; i < COMMANDS; i++) {
 		sysWrite(1, commandList[i], strlen(commandList[i]));
 		sysWrite(1, commandListDescription[i], strlen(commandListDescription[i]));
 		sysWrite(1, "\n", 1);
@@ -71,7 +80,7 @@ void timeCommand() {
 
 
 void error(char* command) {
-	sysWrite(1, "Command %s not found \n",command, 21 + strlen(command));
+	sysWrite(1, "Command not found \n", 21 + strlen(command));
 	sysWrite(1, " type 'help' for a list of commands\n", 36);
 }
 
