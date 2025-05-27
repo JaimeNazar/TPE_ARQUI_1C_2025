@@ -26,6 +26,8 @@ void shellUpdate() {
     
     sysRead(1, buffer, 12);
 
+    sysWrite(2, buffer, 12);
+
  	sysDraw();
 }
 

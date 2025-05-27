@@ -34,8 +34,6 @@ int read(int fd, char * buff, int length) {
     char current;
     switch (fd) {
         case 1:
-            
-
             while (read < length && getNextKey(&current)) {  // 0xA, Enter scancode
                  if (current == '\n') { // Enter
                     buff[read++] = '\n';
@@ -43,13 +41,9 @@ int read(int fd, char * buff, int length) {
                     //LOGICA DE ENTER
                     break; // Stop reading on Enter
                 } 
-                if (read >= length) {
-                    break;
-                }
+
                 buff[read++] = current;
                 drawChar(current, COLOR_WHITE);
-                
-            
             }
         break;
     }

@@ -127,7 +127,7 @@ void keyPress() {
         if (sc > 0x81 && sc!=R_SHIFT_RELEASE && sc!=L_SHIFT_RELEASE)
             return; 
         
-        sc = filtroCaracter(sc);
+        sc = characterFilter(sc);
 		if (sc == 0x00) // Si el código es 0, no hacemos nada
 			return; // Si es un código de liberación, no hacemos nada más
 
@@ -150,7 +150,7 @@ char getNextKey(char* c){ //devuelve 1 si hay un caracter para leer, 0 si no hay
   }
   return 0; // No hay caracteres para leer
 }
-char filtroCaracter(char key) {
+char characterFilter(char key) {
     // Primero, actualizamos el estado de los modificadores y descartamos el evento
     if(key == L_SHIFT_PRESS || key == R_SHIFT_PRESS) {
         shift = !shift; 
