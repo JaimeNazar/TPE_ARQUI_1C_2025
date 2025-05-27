@@ -184,11 +184,11 @@ static int font_size = DEFAULT_FONT_SIZE;
 static int charsPerWidth;
 static int charsPerHeight;
 
-static uint32_t buffer[800][800];
+static uint32_t buffer[768][768];
 
 void videoInitialize() {
     charsPerWidth = VBE_mode_info->width / font_size;
-    charsPerHeight = VBE_mode_info->height / font_size * 2;  // Characters are double the width in height
+    charsPerHeight = VBE_mode_info->height / (font_size * 2);  // Characters are double the width in height
 }
 
 // Represents the char grid positions when working with printing strings
@@ -212,8 +212,8 @@ void putPixel(uint32_t hexColor, uint64_t x, uint64_t y) {
 void drawSquare(uint64_t x, uint64_t y, uint64_t size, uint32_t hexColor) { // TODO: Check if there is a faster approach
 	for (int i = 0; i < size; i++) {
 		for (int j = 0; j < size; j++) {
-			putPixel(hexColor, x+i, y+j);
-          //  buffer[y+i][x+j] = hexColor;
+			//putPixel(hexColor, x+i, y+j);
+            buffer[y+i][x+j] = hexColor;
 		}
 	}
 }
@@ -222,7 +222,7 @@ void videoSetFontsize(uint8_t size) {
     font_size = size;
 
     charsPerWidth = VBE_mode_info->width / font_size;
-    charsPerHeight = VBE_mode_info->height / font_size * 2;
+    charsPerHeight = VBE_mode_info->height / (font_size * 2);
 }
 
 void drawCharAt(char c, uint64_t x, uint64_t y, uint32_t hexColor) {
@@ -248,10 +248,12 @@ void clearBuffer() {
     for (int i = 0; i < VBE_mode_info->height; i++) {
 		for (int j = 0; j < VBE_mode_info->width; j++) {
 
-            putPixel(0, j, i);
-			//buffer[i][j] = 0;
+            //putPixel(0, j, i);
+			buffer[i][j] = 0;
 		}
 	}
+
+    drawDec(VBE_mode_info->height, 0xFFFFFFFF);
 
     currentCharX = currentCharY = 0;
 }
@@ -259,13 +261,11 @@ void clearBuffer() {
 void drawScreen() {
     for (int i = 0; i < VBE_mode_info->height; i++) {
 		for (int j = 0; j < VBE_mode_info->width; j++) {
-            //putPixel(buffer[i][j], j, i);
+            putPixel(buffer[i][j], j, i);
 		}
 	}
 
 }
-
-
 
 void drawChar(char c, uint32_t hexColor) {    
     // New line if reached end
@@ -298,6 +298,7 @@ void drawChar(char c, uint32_t hexColor) {
     drawCharAt(c, currentCharX * font_size, currentCharY * font_size * 2, hexColor);
     currentCharX++;
 }
+
 /* Prints a string continiously on screen using a grid */
 void printText(char * str, int length, uint32_t hexColor) {
 	for (int i = 0; i < length; i++) {
@@ -308,4 +309,50 @@ void printText(char * str, int length, uint32_t hexColor) {
             drawChar(str[i], hexColor);
         }
 	}
+}
+
+// TODO: Clean up
+static char bufferBase[64] = { '0' };
+
+// From naiveConsole
+static uint32_t uintToBase(uint64_t value, char * bufferBase, uint32_t base)
+{
+	char *p = bufferBase;
+	char *p1, *p2;
+	uint32_t digits = 0;
+
+	//Calculate characters for each digit
+	do
+	{
+		uint32_t remainder = value % base;
+		*p++ = (remainder < 10) ? remainder + '0' : remainder + 'A' - 10;
+		digits++;
+	}
+	while (value /= base);
+
+	// Terminate string in bufferBase.
+	*p = 0;
+
+	//Reverse string in bufferBase.
+	p1 = bufferBase;
+	p2 = p - 1;
+	while (p1 < p2)
+	{
+		char tmp = *p1;
+		*p1 = *p2;
+		*p2 = tmp;
+		p1++;
+		p2--;
+	}
+
+	return digits;
+}
+
+void drawDec(uint64_t value, uint32_t hexColor) {
+	int i;
+
+    uintToBase(value, bufferBase, 10);
+
+	for (i = 0; bufferBase[i] != 0; i++)
+		drawChar(bufferBase[i], hexColor);
 }
