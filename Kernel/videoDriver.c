@@ -184,7 +184,8 @@ static int font_size = DEFAULT_FONT_SIZE;
 static int charsPerWidth;
 static int charsPerHeight;
 
-static uint32_t buffer[768][768];
+static uint32_t buffer[740][1050];
+//uint32_t buffeDr[768*768];
 
 void videoInitialize() {
     charsPerWidth = VBE_mode_info->width / font_size;
