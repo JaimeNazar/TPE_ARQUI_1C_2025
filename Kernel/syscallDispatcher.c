@@ -31,19 +31,19 @@ int write(int fd, const char * buff, int length) {
 int read(int fd, char * buff, int length) {
     
     int read = 0;
-    char current;
+
     switch (fd) {
         case 1:
-            while (read < length && getNextKey(&current)) {  // 0xA, Enter scancode
-                 if (current == '\n') { // Enter
-                    buff[read++] = '\n';
+            char current;
+            
+            while (read<length) {
+                current = pollKeyboard();
+                if (current == '\n') { // Enter
+                    
                     
                     //LOGICA DE ENTER
                     break; // Stop reading on Enter
-                } 
-
-                buff[read++] = current;
-                drawChar(current, COLOR_WHITE);
+                }
             }
         break;
     }
@@ -74,7 +74,7 @@ uint64_t syscallDispatcher(uint64_t rax, ...) {
             int fd = va_arg(args, int);
             char* buff = va_arg(args, char*);
             int length = va_arg(args, int);
-
+            
             ret_val = read(fd, buff, length);
             break;
         case ID_CLEARBUFFER:

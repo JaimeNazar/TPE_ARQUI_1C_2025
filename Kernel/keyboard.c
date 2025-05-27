@@ -117,38 +117,13 @@ static int countToRead = 0; //Cantidad de caracteres a leer
 int altKey = 0; // determina cuando se utiliza shift y capslock
 int shift = 0;
 int capsLock = 0;
+uint8_t pollKeyboard() {
+    while(!(get_keyboard_status() & 0x01));
 
-void keyPress() {
-    uint8_t sc = get_keyboard_output();
+    uint8_t scancode = get_keyboard_output();
+    scancode = characterFilter(scancode);
+	return scancode;
 
-    // Procesamos modificadores sin filtrar (presión y liberación)
-    
-		
-        if (sc > 0x81 && sc!=R_SHIFT_RELEASE && sc!=L_SHIFT_RELEASE)
-            return; 
-        
-        sc = characterFilter(sc);
-		if (sc == 0x00) // Si el código es 0, no hacemos nada
-			return; // Si es un código de liberación, no hacemos nada más
-
-    // Si pasó la validación, lo agrego al buffer
-    if(countToRead < BUFFER_SIZE) {
-        buffer[nextToWrite++] = sc;
-        countToRead++;
-        if(nextToWrite >= BUFFER_SIZE)
-            nextToWrite = 0;
-    }
-}
-char getNextKey(char* c){ //devuelve 1 si hay un caracter para leer, 0 si no hay y lo pone en c
-  if(countToRead > 0) {
-    if(nextToRead >= BUFFER_SIZE) {
-      nextToRead = 0;
-    }
-    *c = buffer[nextToRead++];
-    countToRead--;
-    return 1; // Hay un caracter para leer
-  }
-  return 0; // No hay caracteres para leer
 }
 char characterFilter(char key) {
     // Primero, actualizamos el estado de los modificadores y descartamos el evento
