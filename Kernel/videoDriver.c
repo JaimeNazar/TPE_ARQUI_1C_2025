@@ -211,6 +211,10 @@ void putPixel(uint32_t hexColor, uint64_t x, uint64_t y) {
 
 /* Draws a square, the top-left corner has the position specified */
 void drawSquare(uint64_t x, uint64_t y, uint64_t size, uint32_t hexColor) { // TODO: Check if there is a faster approach
+
+    if (x + size >= MAX_WIDTH || y + size >= MAX_HEIGHT || x < 0 || y < 0)
+        return;
+
 	for (int i = 0; i < size; i++) {
 		for (int j = 0; j < size; j++) {
 			//putPixel(hexColor, x+i, y+j);
