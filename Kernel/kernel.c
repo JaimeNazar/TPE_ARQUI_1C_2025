@@ -15,8 +15,8 @@ extern uint8_t endOfKernel;
 
 static const uint64_t PageSize = 0x1000;
 
-static void * const sampleCodeModuleAddress = (void*)0xA00000;
-static void * const sampleDataModuleAddress = (void*)0xB00000;
+static void * const userCodeModuleAddress = (void*)0xA00000;
+static void * const userDataModuleAddress = (void*)0xB00000;
 
 typedef int (*EntryPoint)();
 
@@ -49,8 +49,8 @@ void * initializeKernelBinary()
 	ncPrint("[Loading modules]");
 	ncNewline();
 	void * moduleAddresses[] = {
-		sampleCodeModuleAddress,
-		sampleDataModuleAddress
+		userCodeModuleAddress,
+		userDataModuleAddress
 	};
 
 	loadModules(&endOfKernelBinary, moduleAddresses);
@@ -113,10 +113,7 @@ int main()
 	load_idt();
 	videoInitialize();
 
-	
-	ncPrintHex(((EntryPoint)sampleCodeModuleAddress)());
-	
-	
+	((EntryPoint)userCodeModuleAddress)();
 	
 	return 0;
 }

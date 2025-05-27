@@ -1,13 +1,13 @@
 include Makefile.inc
 
-MAIN_DATA=0001-mainDataModule.bin
+MAIN_DATA=0001-userDataModule.bin
 
-all: mainModule mainDataModule
+all: userCodeModule userDataModule
 
-mainModule:
+userCodeModule:
 	cd shell; make
 
-mainDataModule:
+userDataModule:
 	printf "This is sample data." >> $(MAIN_DATA) && dd if=/dev/zero bs=1 count=1 >> $(MAIN_DATA)
 
 clean:
@@ -15,4 +15,4 @@ clean:
 	rm -rf *.bin
 
 
-.PHONY: mainModule all clean
+.PHONY: userCodeModule all clean
