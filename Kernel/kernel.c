@@ -15,8 +15,8 @@ extern uint8_t endOfKernel;
 
 static const uint64_t PageSize = 0x1000;
 
-static void * const sampleCodeModuleAddress = (void*)0x400000;
-static void * const sampleDataModuleAddress = (void*)0x500000;
+static void * const sampleCodeModuleAddress = (void*)0xA00000;
+static void * const sampleDataModuleAddress = (void*)0xB00000;
 
 typedef int (*EntryPoint)();
 
@@ -74,6 +74,9 @@ void * initializeKernelBinary()
 	ncNewline();
 	ncPrint("  bss: 0x");
 	ncPrintHex((uint64_t)&bss);
+	ncPrint(" (size: 0x");
+	ncPrintDec(&endOfKernel - &bss);
+	ncPrint(" bytes)");
 	ncNewline();
 
 	ncPrint("[Done]");

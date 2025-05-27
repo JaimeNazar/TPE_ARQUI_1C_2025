@@ -184,7 +184,7 @@ static int font_size = DEFAULT_FONT_SIZE;
 static int charsPerWidth;
 static int charsPerHeight;
 
-static uint32_t buffer[740][1050];
+static uint32_t buffer[MAX_HEIGHT][MAX_WIDTH];
 //uint32_t buffeDr[768*768];
 
 void videoInitialize() {
@@ -254,7 +254,7 @@ void clearBuffer() {
 		}
 	}
 
-    drawDec(VBE_mode_info->height, 0xFFFFFFFF);
+    //drawDec(VBE_mode_info->height, 0xFFFFFFFF);
 
     currentCharX = currentCharY = 0;
 }

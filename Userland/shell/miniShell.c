@@ -24,8 +24,6 @@ void shellInit() {
     char buffer[128];
 void shellUpdate() {
     
- 	//sysClear();
-
     sysRead(1, buffer, 12);
 
  	sysDraw();
