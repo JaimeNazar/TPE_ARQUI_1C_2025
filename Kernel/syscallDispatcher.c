@@ -86,6 +86,7 @@ uint64_t syscallDispatcher(uint64_t rax, ...) {
             int lengthWrite = va_arg(args, int);
 
             ret_val = write(fdWrite, buffWrite, lengthWrite);
+            drawScreen();
             break;
         case ID_READ:
             int fd = va_arg(args, int);
