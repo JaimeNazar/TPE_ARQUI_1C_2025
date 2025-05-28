@@ -4,7 +4,7 @@ void shellInit() {
 
 	sysWrite(1, "miniShell > ", strlen("miniShell > "));
 	sysDraw();
-	sysRead(1, buffer, 12);
+	
 	int lastTime = sysTimeTicks();
 	int deltaTime = 0;
 	
