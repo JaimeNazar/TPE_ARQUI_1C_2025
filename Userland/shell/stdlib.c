@@ -1,5 +1,8 @@
 #include<stdlib.h>
 
+// TODO: move constants to header
+#define STDOUT 0x1
+
 #define NO_ARG 0x0
 
 // Syscalls IDs
@@ -10,8 +13,46 @@
 #define ID_TIMETICKS 0x4
 #define ID_TIME 0x6
 
+// ------ AUXILIARY ------
+
+// From naiveConsole implementation
+static uint32_t uintToBase(uint64_t value, char * bufferBase, uint32_t base)
+{
+	char *p = bufferBase;
+	char *p1, *p2;
+	uint32_t digits = 0;
+
+	//Calculate characters for each digit
+	do
+	{
+		uint32_t remainder = value % base;
+		*p++ = (remainder < 10) ? remainder + '0' : remainder + 'A' - 10;
+		digits++;
+	}
+	while (value /= base);
+
+	// Terminate string in bufferBase.
+	*p = 0;
+
+	//Reverse string in bufferBase.
+	p1 = bufferBase;
+	p2 = p - 1;
+	while (p1 < p2)
+	{
+		char tmp = *p1;
+		*p1 = *p2;
+		*p2 = tmp;
+		p1++;
+		p2--;
+	}
+
+	return digits;
+}
+
+
 // ------ UTILS ------
 
+// TODO: make them all static?
 int strlen(char* str) {
 	int count = 0;
 	while (str[count++] != 0);
@@ -35,13 +76,44 @@ int strcmp(char* str1, char* str2) {
 void printf(char* ftm, ...) {
 
     // Variable arguments list
-    va_list ptr;
-    va_start(ptr, str);
+    va_list args;
+    va_start(args,  ftm);
 
+    for (int i = 0; ftm[i] != '\0'; i++) {
 
+        if (ftm[i] == '%') {
+        
+            char next = ftm[i+1];
+
+            char *toAppend;
+            switch(next){
+                case 's':
+                    toAppend = va_arg(args, char*);
+                    break;
+                case 'd':
+                    toAppend = stoi(va_arg(args, int));// Parse to string
+                    break;
+
+                default:
+                    break;
+            }
+
+            sysWrite(STDOUT, toAppend, strlen(toAppend));
+            i++;
+        } else {
+            sysWrite(STDOUT, ftm + i, 1);
+        }
+    }
 
     // End
-    va_end(ptr);
+    va_end(args);
+}
+
+#define BASE_TEN 10
+
+char * stoi(int value) {
+    uintToBase(value, bufferBase, BASE_TEN);
+    return bufferBase;
 }
 
 // ------ SYSCALLS ------

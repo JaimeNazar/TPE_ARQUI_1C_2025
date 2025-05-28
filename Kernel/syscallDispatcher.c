@@ -47,8 +47,8 @@ int read(int fd, char * buff, int length) {
                 } 
                 if(current!= 0){
                     buff[read++] = current;
-                drawChar(current, COLOR_WHITE);
-                drawScreen();
+                    drawChar(current, COLOR_WHITE);
+                    drawScreen();
                 }
                 
             }
@@ -86,7 +86,6 @@ uint64_t syscallDispatcher(uint64_t rax, ...) {
             int lengthWrite = va_arg(args, int);
 
             ret_val = write(fdWrite, buffWrite, lengthWrite);
-            drawScreen();
             break;
         case ID_READ:
             int fd = va_arg(args, int);

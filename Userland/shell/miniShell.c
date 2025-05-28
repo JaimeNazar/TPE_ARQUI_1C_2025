@@ -5,6 +5,8 @@ void shellInit() {
 
 	sysWrite(1, "miniShell > ", strlen("miniShell > "));
 	sysDraw();
+
+	printf("hola %d ", 10);
 	
 	int lastTime = sysTimeTicks();
 	int deltaTime = 0;

@@ -2,6 +2,9 @@
 #define STDLIB_H
 
 #include <stdint.h>
+#include <stdarg.h>
+
+static char bufferBase[64] = { '0' };
 
 extern uint64_t syscall_wizard(uint64_t rax, uint64_t rdi, uint64_t rsi, uint64_t rdx);
 
@@ -10,6 +13,7 @@ int strcmp(char* str1, char* str2);
 int strlen(char* str);
 
 void printf(char* ftm, ...);
+char * stoi(int value);
 
 // Syscalls
 uint64_t sysWrite(int fd, char * buff, int length);
