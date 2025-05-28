@@ -27,12 +27,12 @@ uint32_t currentCommandLength = 0;
 void shellUpdate() {
     
     sysRead(1, buffer, 128);
-
-	commandHandler(buffer);
-	
-	sysWrite(1, "miniShell > ", strlen("miniShell > "));
-	
 	sysDraw();
+    commandHandler(buffer);
+    
+    sysWrite(1, "miniShell > ", strlen("miniShell > "));
+    
+    sysDraw();
 }
 
 //Commands
@@ -66,7 +66,7 @@ void timeCommand() {
 }
 
 void error() {
-	sysWrite(1, "Command not found \n", 21);
+	sysWrite(1, "\nCommand not found \n", 22);
 	sysWrite(1, " type 'help' for a list of commands\n", 36);
 }
 
