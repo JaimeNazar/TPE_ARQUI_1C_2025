@@ -1,5 +1,5 @@
-#ifndef INTERPRETER_H
-#define INTERPRETER_H
+#ifndef SHELL_UTILS_H
+#define SHELL_UTILS_H
 
 #include <stdlib.h>
 #include <miniShell.h>

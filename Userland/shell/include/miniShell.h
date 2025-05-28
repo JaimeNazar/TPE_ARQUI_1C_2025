@@ -1,6 +1,7 @@
 #ifndef MINISHELL_H
 #define MINISHELL_H
-#include <interpreter.h>
+
+#include <shellUtils.h>
 #include <stdlib.h>
 
 
