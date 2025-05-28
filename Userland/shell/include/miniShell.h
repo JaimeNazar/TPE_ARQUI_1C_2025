@@ -13,5 +13,5 @@ void clearCommand();
 void echoCommand();
 void gameCommand();
 void timeCommand();
-void error(char* command);
+void error();
 #endif
