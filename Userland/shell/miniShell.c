@@ -79,8 +79,8 @@ void timeCommand() {
 }
 
 
-void error(char* command) {
-	sysWrite(1, "Command not found \n", 21 + strlen(command));
+void error() {
+	sysWrite(1, "Command not found \n", 21);
 	sysWrite(1, " type 'help' for a list of commands\n", 36);
 }
 

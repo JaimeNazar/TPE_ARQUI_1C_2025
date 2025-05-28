@@ -60,7 +60,7 @@ void commandHandler(char* command) {
             timeCommand();
             break;
         default:
-            error(command);
+            error();
             break;
     }
     
