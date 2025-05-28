@@ -11,6 +11,7 @@ uint64_t sysRead(int fd, char * buff, int length);
 uint64_t sysTimeTicks();
 void sysClear();
 void sysDraw();
+void sysTime(int code);
 int strcmp(char* str1, char* str2);
 // Utils
 int strlen(char* str);

@@ -8,6 +8,7 @@
 #define ID_CLEARBUFFER 0x2
 #define ID_DRAWSCREEN 0x3
 #define ID_TIMETICKS 0x4
+#define ID_TIME 0x6
 
 uint64_t sysWrite(int fd, char * buff, int length) {
     return syscall_wizard(0, fd, buff, length);
@@ -29,8 +30,9 @@ void sysDraw() {
     return syscall_wizard(ID_DRAWSCREEN, NO_ARG, NO_ARG, NO_ARG);
 }
 
-
-
+void sysTime(int code) {
+    return syscall_wizard(ID_TIME, code, NO_ARG, NO_ARG);
+}
 
 int strlen(char* str) {
 	int count = 0;
