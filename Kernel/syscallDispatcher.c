@@ -8,6 +8,7 @@
 #define ID_DRAWSCREEN  3
 #define ID_TIMETICKS 4
 #define ID_SLEEP 5
+#define ID_TIME 6
 
 #define COLOR_WHITE 0xFFFFFFFF
 #define COLOR_AMBER 0x00FFBF00
@@ -46,10 +47,10 @@ int read(int fd, char * buff, int length) {
                 } 
                 if(current!= 0){
                     buff[read++] = current;
-                drawChar(current, COLOR_WHITE);
+                    drawChar(current, COLOR_WHITE);
+                    drawScreen();
                 }
                 
-
             }
         break;
     }
@@ -60,6 +61,16 @@ int read(int fd, char * buff, int length) {
 
 uint64_t time_ticks() {
     return ticks_elapsed();
+}
+
+uint64_t time(uint8_t code) {
+
+    uint8_t number = rtc(code);
+
+    int upperBits = number & 0xF0;
+    int lowerBits = number & 0x0F;
+
+    return upperBits * 10 + lowerBits;
 }
 
 uint64_t syscallDispatcher(uint64_t rax, ...) {
@@ -94,6 +105,9 @@ uint64_t syscallDispatcher(uint64_t rax, ...) {
             break;
         case ID_SLEEP:
             sleep(va_arg(args, uint64_t));
+            break;
+        case ID_TIME:
+            ret_val = time(va_arg(args, uint8_t));
             break;
         default:
             // Manejar  

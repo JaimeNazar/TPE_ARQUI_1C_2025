@@ -1,4 +1,5 @@
 #include <miniShell.h>
+
 char buffer[128];
 void shellInit() {
 
@@ -21,27 +22,20 @@ void shellInit() {
 	}
 
 }
-
     
-	uint32_t currentCommandLength = 0;
+uint32_t currentCommandLength = 0;
 void shellUpdate() {
     
-    sysRead(1, buffer, 1);
+    sysRead(1, buffer, 128);
 
-    sysWrite(2, buffer, 1);
-	if(buffer[currentCommandLength]=='\n') {
-		commandHandler(buffer);
-		currentCommandLength = 0;
-
-	}
-	currentCommandLength ++;
+	commandHandler(buffer);
+	
+	sysWrite(1, "miniShell > ", strlen("miniShell > "));
 	
 	sysDraw();
 }
 
 //Commands
-
-
 void helpCommand() {
 	char **commandList = getCommandList();
 	char **commandListDescription = getCommandListDescription();
@@ -70,7 +64,6 @@ void gameCommand() {
 void timeCommand() {
 	sysWrite(1, "Time command not implemented yet\n", 33);
 }
-
 
 void error() {
 	sysWrite(1, "Command not found \n", 21);

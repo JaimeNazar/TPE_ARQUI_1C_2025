@@ -39,9 +39,8 @@ int idHandler(char* command) {
     return -1; // error
 }
 void commandHandler(char* command) {
-    sysWrite(2, "A", 1);
+    
     int commandID = idHandler(command);
-
 
     switch (commandID) {
         case HELP: 
