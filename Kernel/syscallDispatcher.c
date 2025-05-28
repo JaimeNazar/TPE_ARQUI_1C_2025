@@ -47,6 +47,7 @@ int read(int fd, char * buff, int length) {
                 if(current!= 0){
                     buff[read++] = current;
                 drawChar(current, COLOR_WHITE);
+                drawScreen();
                 }
                 
 
