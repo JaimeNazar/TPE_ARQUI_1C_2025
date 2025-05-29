@@ -20,31 +20,39 @@ int write(int fd, const char * buff, int length) {
 // Polls the keyboard until enter is pressed or reached length specified
 int read(int fd, char * buff, int length) {
     
-    static int read = 0;
+    int count = 0;
 
     switch (fd) {
         case 1:
             char current;
-            
-            while (read < length) {
-                current = pollKeyboard();
+            while (count<length) {
+                current =pollKeyboard();
                 if (current == '\n') { // Enter
-                    buff[read++] = '\n';
+                    buff[count++] = '\n';
                     void nextLine();
-                    read = 0; // Reset read count
                     break; // Stop reading on Enter
                 } 
                 
+                if(current == '\b'&&canErase()) { // Backspace
+                    if (count > 0) {
+                        count--;
+                        
+                        drawChar('\b', COLOR_WHITE); 
+                        drawScreen();
+                        continue;
+                    }
+                    
+                }
                 if(current!= 0){
-                    buff[read++] = current;
-                    drawChar(current, COLOR_WHITE);
-                    drawScreen();
+                    buff[count++] = current;
+                drawChar(current, COLOR_WHITE);
+                drawScreen();
                 }
             }
         break;
     }
 
-    return read;
+    return count;
 
 }
 

@@ -3,11 +3,11 @@
 //Add as necessary
 
 static char *commandList[] = {
-    "help",     
-    "clear",
-    "echo",
-    "game",
-    "time"
+    "help\n",
+    "clear\n",
+    "echo\n",
+    "game\n",
+    "time\n"
 };
 
 
