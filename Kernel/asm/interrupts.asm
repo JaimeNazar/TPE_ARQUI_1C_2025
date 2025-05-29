@@ -96,7 +96,7 @@ SECTION .text
 %endmacro
 
 get_registers:
-mov [rdi],    rax
+	mov [rdi],    rax
     mov [rdi+8],  rbx
     mov [rdi+16], rcx
     mov [rdi+24], rdx

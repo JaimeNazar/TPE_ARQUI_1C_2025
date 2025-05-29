@@ -2,17 +2,6 @@
 #include <time.h>
 #include <stdint.h>
 
-#define ID_WRITE 0
-#define ID_READ 1
-#define ID_CLEARBUFFER 2
-#define ID_DRAWSCREEN  3
-#define ID_TIMETICKS 4
-#define ID_SLEEP 5
-#define ID_TIME 6
-
-#define COLOR_WHITE 0xFFFFFFFF
-#define COLOR_AMBER 0x00FFBF00
-
 // Output style depends on file descriptor
 int write(int fd, const char * buff, int length) {
     switch (fd) {
@@ -59,11 +48,11 @@ int read(int fd, char * buff, int length) {
 
 }
 
-uint64_t time_ticks() {
+static uint64_t time_ticks() {
     return ticks_elapsed();
 }
 
-uint64_t time(uint8_t code) {
+static uint64_t time(uint8_t code) {
 
     uint8_t number = rtc(code);
 

@@ -9,7 +9,6 @@
 extern void outb(uint16_t port, uint8_t value);
 extern uint8_t inb(uint16_t port);
 
-
 void soundPlay(uint32_t freq);
 void soundStop(void);
 
