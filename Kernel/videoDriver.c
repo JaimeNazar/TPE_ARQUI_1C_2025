@@ -185,7 +185,6 @@ static int charsPerWidth;
 static int charsPerHeight;
 
 static uint32_t buffer[MAX_HEIGHT][MAX_WIDTH];
-//uint32_t buffeDr[768*768];
 
 void videoInitialize() {
     charsPerWidth = VBE_mode_info->width / font_size;
@@ -195,10 +194,7 @@ void videoInitialize() {
 // Represents the char grid positions when working with printing strings
 static int currentCharX = 0;    // Top-left corner
 static int currentCharY = 0;
-void nextLine() {
-    currentCharX = 0;
-    currentCharY++;
-}
+
 void putPixel(uint32_t hexColor, uint64_t x, uint64_t y) {
 
     if (x >= VBE_mode_info->width || y >= VBE_mode_info->height)
@@ -224,13 +220,6 @@ void drawSquare(uint64_t x, uint64_t y, uint64_t size, uint32_t hexColor) { // T
             buffer[y+i][x+j] = hexColor;
 		}
 	}
-}
-
-void videoSetFontsize(uint8_t size) {
-    font_size = size;
-
-    charsPerWidth = VBE_mode_info->width / font_size;
-    charsPerHeight = VBE_mode_info->height / (font_size * 2);
 }
 
 void drawCharAt(char c, uint64_t x, uint64_t y, uint32_t hexColor) {
@@ -271,6 +260,21 @@ void drawScreen() {
 		}
 	}
 
+}
+
+
+// ------ TEXT UTILS ------
+
+void nextLine() {
+    currentCharX = 0;
+    currentCharY++;
+}
+
+void videoSetFontsize(uint8_t size) {
+    font_size = size;
+
+    charsPerWidth = VBE_mode_info->width / font_size;
+    charsPerHeight = VBE_mode_info->height / (font_size * 2);
 }
 
 void drawChar(char c, uint32_t hexColor) {    
