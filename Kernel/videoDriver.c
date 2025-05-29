@@ -260,15 +260,15 @@ void drawScreen() {
 
 static void scroll() {
 
-    for (int k = 0; k < font_size*2; k++) { // More one char height up
-        for (int i = 0; i < VBE_mode_info->height-1; i++) {
-            for (int j = 0; j < VBE_mode_info->width; j++) {
-                buffer[i][j] = buffer[i+1][j];
-            }
+    for (int i = 0; i < VBE_mode_info->height-font_size*2; i++) {
+        for (int j = 0; j < VBE_mode_info->width; j++) {
+            buffer[i][j] = buffer[i+font_size*2][j];
         }
+    }
 
-        for (int i = 0; i < VBE_mode_info->width; i++) {
-            buffer[VBE_mode_info->height-1][i] = 0;         // More eficient than writing a whole line of chars with drawChar
+    for (int i = VBE_mode_info->height - font_size*2; i < VBE_mode_info->height; i++) {
+        for (int j = 0; j < VBE_mode_info->width; j++) {
+            buffer[i][j] = 0;
         }
     }
     
