@@ -5,9 +5,9 @@
 #include <miniShell.h>
 
 
-#define COMMANDS 5
+#define COMMANDS 6
 
 char **getCommandList();
 char **getCommandListDescription();
-void commandHandler(char* command);
+void commandHandler(char* command, int length);
 #endif

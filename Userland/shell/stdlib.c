@@ -11,8 +11,11 @@
 #define ID_CLEARBUFFER 0x2
 #define ID_DRAWSCREEN 0x3
 #define ID_TIMETICKS 0x4
+#define ID_SLEEP 0x5
 #define ID_TIME 0x6
 #define ID_GETKEY 0x8
+#define ID_BEEP 0x7
+
 
 // ------ AUXILIARY ------
 
@@ -57,20 +60,20 @@ static uint32_t uintToBase(uint64_t value, char * bufferBase, uint32_t base)
 int strlen(char* str) {
 	int count = 0;
 	while (str[count++] != 0);
-
 	return count;
 }
 
-int strcmp(char* str1, char* str2) {
+int strcmp(char* str1, char* str2, int length1, int lenght2) {
+    if(length1 != lenght2) {                                    //helps with cases like clearrrr or helppp
+        return length1 - lenght2;
+    }
     int i = 0;
-    while (str1[i] != 0 && str2[i] != 0) {
+    while (str1[i] != '\0' && str2[i] != '\0') {
         if (str1[i] != str2[i]) {
             return str1[i] - str2[i];
         }
         i++;
     }
-
-    return str1[i] - str2[i];
 }
 
 /* Recieves null terminated string, parse it and print it */
@@ -145,3 +148,12 @@ void sysTime(int code) {
 void sysKey(uint8_t * c) {
     return syscall_wizard(ID_GETKEY,&c, NO_ARG, NO_ARG);
 }
+
+void sysSleep(int duration) {
+    return syscall_wizard(ID_SLEEP, duration, NO_ARG, NO_ARG);
+}
+
+void sysBeep(int freq, int duration) {
+    return syscall_wizard(ID_BEEP, freq, duration, NO_ARG);
+}
+

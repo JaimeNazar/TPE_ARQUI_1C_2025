@@ -3,20 +3,22 @@
 //Add as necessary
 
 static char *commandList[] = {
-    "help\n",
-    "clear\n",
-    "echo\n",
-    "game\n",
-    "time\n"
+    "help",     
+    "clear",
+    "sleep",
+    "game",
+    "time",
+    "beep"
 };
 
-
+//TAMBIEN IR CAMBIANDO EL COMMNADS EN shellUtils.h
 static char *commandListDescription[] = {
     " - Shows available commands",
     " - Clears the screen",
-    " - Echoes input back to the user",
+    " - puts the shell to sleep for a specified time",
     " - Starts a game",
-    " - Displays the current time"
+    " - Displays the current time",
+    " - Beeps with a frequency and duration"
 };
 
 
@@ -24,23 +26,24 @@ static char *commandListDescription[] = {
 typedef enum{
 HELP = 0,
 CLEAR,
-ECHO,
+SLEEP,
 GAME,
 TIME,
+BEEP
 //COMPLETAR
 };
 
-int idHandler(char* command) {
+int idHandler(char* command, int length) {
     for (int i = 0; i < COMMANDS; i++)
     {
-        if (strcmp(command, commandList[i]) == 0) {
-        return i;} 
+        if (strcmp(command, commandList[i], length, strlen(commandList[i])) == 0) {
+            return i;} 
     }
     return -1; // error
 }
-void commandHandler(char* command) {
+void commandHandler(char* command, int length) {
     
-    int commandID = idHandler(command);
+    int commandID = idHandler(command, length);
 
     switch (commandID) {
         case HELP: 
@@ -49,8 +52,8 @@ void commandHandler(char* command) {
         case CLEAR: 
             sysClear();
             break;
-        case ECHO: 
-            echoCommand();
+        case SLEEP: 
+            sleepCommand();
             break;
         case GAME:
            gameCommand();
@@ -58,6 +61,9 @@ void commandHandler(char* command) {
         case TIME: 
             timeCommand();
             break;
+        case BEEP: 
+            beepCommand();
+        break;
         default:
             error();
             break;

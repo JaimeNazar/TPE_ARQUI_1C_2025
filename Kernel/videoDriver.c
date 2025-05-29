@@ -258,6 +258,24 @@ void drawScreen() {
 
 // ------ TEXT UTILS ------
 
+static void scroll() {
+
+    for (int i = 0; i < VBE_mode_info->height-font_size*2; i++) {
+        for (int j = 0; j < VBE_mode_info->width; j++) {
+            buffer[i][j] = buffer[i+font_size*2][j];
+        }
+    }
+
+    for (int i = VBE_mode_info->height - font_size*2; i < VBE_mode_info->height; i++) {
+        for (int j = 0; j < VBE_mode_info->width; j++) {
+            buffer[i][j] = 0;
+        }
+    }
+    
+    currentCharY = charsPerHeight-2;  // Its unknown how much we overshoot the limit
+    currentCharX = 0;
+}
+
 void nextLine() {
     currentCharX = 0;
     currentCharY++;
@@ -271,10 +289,16 @@ void videoSetFontsize(uint8_t size) {
 }
 
 void drawChar(char c, uint32_t hexColor) {    
+
+    // Check if bottom of screen was reached
+    if (currentCharY >= charsPerHeight-1)
+        scroll();
+
     // New line if reached end
     if (currentCharX >= charsPerWidth) {
         void nextLine();
     }
+
     if(c=='\b') {
         if(!canErase()) {
             return; // Cannot erase, do nothing
