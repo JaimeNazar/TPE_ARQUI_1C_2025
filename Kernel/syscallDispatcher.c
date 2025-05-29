@@ -98,6 +98,11 @@ uint64_t syscallDispatcher(uint64_t rax, ...) {
         case ID_TIME:
             ret_val = time(va_arg(args, uint8_t));
             break;
+        case ID_BEEP:
+            int freq = va_arg(args, int);
+            int duration = va_arg(args, int);
+            bell(freq, duration);
+            break;
         default:
             // Manejar  
             break;

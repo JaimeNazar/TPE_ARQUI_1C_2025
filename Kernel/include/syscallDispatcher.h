@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <keyboard.h>
 #include <videoDriver.h>
+#include <soundDriver.h>
 #include <stdarg.h>
 
 #define ID_WRITE 0
@@ -13,6 +14,7 @@
 #define ID_TIMETICKS 4
 #define ID_SLEEP 5
 #define ID_TIME 6
+#define ID_BEEP 7
 
 #define COLOR_WHITE 0xFFFFFFFF
 #define COLOR_AMBER 0x00FFBF00
