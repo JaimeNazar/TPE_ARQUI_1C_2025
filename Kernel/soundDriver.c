@@ -12,7 +12,8 @@ void soundPlay(uint32_t freq) {
 
     // Habilita el speaker (bits 0 y 1 del puerto 0x61)
     uint8_t tmp = inb(0x61);
-    outb(0x61, tmp | 3);
+  	if (tmp != (tmp | 3)) 
+ 		outb(0x61, tmp | 3);
 }
 
 void soundStop() {
