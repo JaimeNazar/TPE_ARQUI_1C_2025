@@ -3,7 +3,7 @@
 //Add as necessary
 
 static char *commandList[] = {
-    "help\n",
+    "help\n",     
     "clear\n",
     "echo\n",
     "game\n",
@@ -30,17 +30,17 @@ TIME,
 //COMPLETAR
 };
 
-int idHandler(char* command) {
+int idHandler(char* command, int length) {
     for (int i = 0; i < COMMANDS; i++)
     {
-        if (strcmp(command, commandList[i]) == 0) {
-        return i;} 
+        if (strcmp(command, commandList[i], length) == 0) {
+            return i;} 
     }
     return -1; // error
 }
-void commandHandler(char* command) {
+void commandHandler(char* command, int length) {
     
-    int commandID = idHandler(command);
+    int commandID = idHandler(command, length);
 
     switch (commandID) {
         case HELP: 

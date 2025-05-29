@@ -5,8 +5,6 @@ void shellInit() {
 
 	sysWrite(1, "miniShell > ", strlen("miniShell > "));
 	sysDraw();
-
-	printf("hola %d %s", 10, "asfgfds");
 	
 	sysDraw();
 	int lastTime = sysTimeTicks();
@@ -26,12 +24,12 @@ void shellInit() {
 
 }
     
-uint32_t currentCommandLength = 0;
 void shellUpdate() {
     
-    sysRead(1, buffer, 128);
+    int realLen = sysRead(1, buffer, 128);
 	sysDraw();
-    commandHandler(buffer);
+
+    commandHandler(buffer, realLen);
     
     sysWrite(1, "miniShell > ", strlen("miniShell > "));
     
@@ -42,7 +40,7 @@ void shellUpdate() {
 void helpCommand() {
 	char **commandList = getCommandList();
 	char **commandListDescription = getCommandListDescription();
-	sysWrite(1, "Available commands:\n", 20);
+	sysWrite(1, "\nAvailable commands:\n", 21);
 	for (int i = 0; i < COMMANDS; i++) {
 		sysWrite(1, commandList[i], strlen(commandList[i]));
 		sysWrite(1, commandListDescription[i], strlen(commandListDescription[i]));
@@ -57,20 +55,20 @@ void clearCommand() {
 
 //me parece que no se va a poder implementar porque el strcmp marcaria algo como "echo Hola Mundo como un error"
 void echoCommand() {
-	sysWrite(1, "Echo command not implemented yet\n", 33);
+	sysWrite(1, "\nEcho command not implemented yet\n", 34);
 }
 
 void gameCommand() {
-	sysWrite(1, "Game command not implemented yet\n", 33);
+	sysWrite(1, "\nGame command not implemented yet\n", 34);
 }
 
 void timeCommand() {
-	sysWrite(1, "Time command not implemented yet\n", 33);
+	sysWrite(1, "\nTime command not implemented yet\n", 34);
 }
 
 void error() {
 	sysWrite(1, "\nCommand not found \n", 22);
-	sysWrite(1, " type 'help' for a list of commands\n", 36);
+	sysWrite(1, " \ntype 'help' for a list of commands\n", 37);
 }
 
 

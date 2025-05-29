@@ -9,7 +9,7 @@ static char bufferBase[64] = { '0' };
 extern uint64_t syscall_wizard(uint64_t rax, uint64_t rdi, uint64_t rsi, uint64_t rdx);
 
 // Utils
-int strcmp(char* str1, char* str2);
+int strcmp(char* str1, char* str2, int length);
 int strlen(char* str);
 
 void printf(char* ftm, ...);

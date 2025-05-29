@@ -56,20 +56,17 @@ static uint32_t uintToBase(uint64_t value, char * bufferBase, uint32_t base)
 int strlen(char* str) {
 	int count = 0;
 	while (str[count++] != 0);
-
 	return count;
 }
 
-int strcmp(char* str1, char* str2) {
+int strcmp(char* str1, char* str2, int length) {
     int i = 0;
-    while (str1[i] != 0 && str2[i] != 0) {
+    while (str1[i] != '\0' && str2[i] != '\0' && i < length) {
         if (str1[i] != str2[i]) {
             return str1[i] - str2[i];
         }
         i++;
     }
-
-    return str1[i] - str2[i];
 }
 
 /* Recieves null terminated string, parse it and print it */

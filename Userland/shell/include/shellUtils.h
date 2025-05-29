@@ -9,5 +9,5 @@
 
 char **getCommandList();
 char **getCommandListDescription();
-void commandHandler(char* command);
+void commandHandler(char* command, int length);
 #endif
