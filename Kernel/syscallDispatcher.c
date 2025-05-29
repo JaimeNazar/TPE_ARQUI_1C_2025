@@ -37,20 +37,20 @@ int read(int fd, char * buff, int length) {
         case 1:
             char current;
             
-            while (read<length) {
-                current =pollKeyboard();
+            while (read < length) {
+                current = pollKeyboard();
                 if (current == '\n') { // Enter
                     buff[read++] = '\n';
                     void nextLine();
                     read = 0; // Reset read count
                     break; // Stop reading on Enter
                 } 
+                
                 if(current!= 0){
                     buff[read++] = current;
                     drawChar(current, COLOR_WHITE);
                     drawScreen();
                 }
-                
             }
         break;
     }

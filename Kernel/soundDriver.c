@@ -9,7 +9,7 @@ extern void outb(uint16_t port, uint8_t value);
 extern uint8_t inb(uint16_t port);
 
 
-void sound_play(uint32_t freq) {
+void soundPlay(uint32_t freq) {
     uint16_t divisor = (uint16_t)(PIT_FREQ / freq);
 
     // Configura el canal 2 del PIT
@@ -22,7 +22,7 @@ void sound_play(uint32_t freq) {
     outb(0x61, tmp | 3);
 }
 
-void sound_stop() {
+void soundStop() {
     uint8_t tmp = inb(0x61);
     outb(0x61, tmp & 0xFC);
 }
@@ -34,7 +34,7 @@ void wait (uint32_t count) {
 }
 
 void bell(uint32_t frequency, uint32_t duration) {
-    sound_play(frequency);
+    soundPlay(frequency);
     wait(duration);
-    sound_stop();
+    soundStop();
 }

@@ -244,8 +244,6 @@ void drawCharAt(char c, uint64_t x, uint64_t y, uint32_t hexColor) {
 void clearBuffer() {
     for (int i = 0; i < VBE_mode_info->height; i++) {
 		for (int j = 0; j < VBE_mode_info->width; j++) {
-
-            putPixel(buffer[i][j], j, i);
             //putPixel(0, j, i);
 			buffer[i][j] = 0;
 		}
@@ -257,6 +255,7 @@ void clearBuffer() {
 void drawScreen() {
     for (int i = 0; i < VBE_mode_info->height; i++) {
 		for (int j = 0; j < VBE_mode_info->width; j++) {
+            putPixel(buffer[i][j], j, i);
 		}
 	}
 
