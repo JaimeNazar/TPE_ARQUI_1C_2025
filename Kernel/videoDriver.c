@@ -256,12 +256,11 @@ void clearBuffer() {
     for (int i = 0; i < VBE_mode_info->height; i++) {
 		for (int j = 0; j < VBE_mode_info->width; j++) {
 
+            putPixel(buffer[i][j], j, i);
             //putPixel(0, j, i);
 			buffer[i][j] = 0;
 		}
 	}
-
-    //drawDec(VBE_mode_info->height, 0xFFFFFFFF);
 
     currentCharX = currentCharY = 0;
 }
@@ -269,7 +268,6 @@ void clearBuffer() {
 void drawScreen() {
     for (int i = 0; i < VBE_mode_info->height; i++) {
 		for (int j = 0; j < VBE_mode_info->width; j++) {
-            putPixel(buffer[i][j], j, i);
 		}
 	}
 
@@ -317,50 +315,3 @@ void printText(char * str, int length, uint32_t hexColor) {
         }
 	}
 }
-
-// TODO: Clean up
-static char bufferBase[64] = { '0' };
-
-// From naiveConsole
-static uint32_t uintToBase(uint64_t value, char * bufferBase, uint32_t base)
-{
-	char *p = bufferBase;
-	char *p1, *p2;
-	uint32_t digits = 0;
-
-	//Calculate characters for each digit
-	do
-	{
-		uint32_t remainder = value % base;
-		*p++ = (remainder < 10) ? remainder + '0' : remainder + 'A' - 10;
-		digits++;
-	}
-	while (value /= base);
-
-	// Terminate string in bufferBase.
-	*p = 0;
-
-	//Reverse string in bufferBase.
-	p1 = bufferBase;
-	p2 = p - 1;
-	while (p1 < p2)
-	{
-		char tmp = *p1;
-		*p1 = *p2;
-		*p2 = tmp;
-		p1++;
-		p2--;
-	}
-
-	return digits;
-}
-
-void drawDec(uint64_t value, uint32_t hexColor) {
-	int i;
-
-    uintToBase(value, bufferBase, 10);
-
-	for (i = 0; bufferBase[i] != 0; i++)
-		drawChar(bufferBase[i], hexColor);
-}
-
