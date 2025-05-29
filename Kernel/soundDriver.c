@@ -2,13 +2,6 @@
 #include <stdint.h>
 #include <time.h>
 
-#define PIT_FREQ 1193180
-
-//funciones implementadas en libasm
-extern void outb(uint16_t port, uint8_t value);
-extern uint8_t inb(uint16_t port);
-
-
 void soundPlay(uint32_t freq) {
     uint16_t divisor = (uint16_t)(PIT_FREQ / freq);
 

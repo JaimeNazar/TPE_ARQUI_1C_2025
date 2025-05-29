@@ -4,6 +4,14 @@
 #include <stdint.h>
 #include <lib.h>
 
+#define MAX_WIDTH 1920
+#define MAX_HEIGHT 1080
+
+#define DEFAULT_FONT_SIZE 8 // 8 pixels wide
+#define CHAR_BITMAP_WIDTH 8
+#define CHAR_BITMAP_HEIGHT 16
+
+
 void videoInitialize();
 void putPixel(uint32_t hexColor, uint64_t x, uint64_t y);
 

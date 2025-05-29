@@ -5,7 +5,7 @@
 #include <naiveConsole.h>
 #include <styledConsole.h>
 #include <idtLoader.h>
-
+#include <soundDriver.h>
 extern uint8_t text;
 extern uint8_t rodata;
 extern uint8_t data;
@@ -112,7 +112,7 @@ int main()
 {	
 	load_idt();
 	videoInitialize();
-
+	//bell(300, 300);
 	((EntryPoint)userCodeModuleAddress)();
 	
 	return 0;
