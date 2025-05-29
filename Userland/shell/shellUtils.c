@@ -3,14 +3,14 @@
 //Add as necessary
 
 static char *commandList[] = {
-    "help\n",     
-    "clear\n",
-    "echo\n",
-    "game\n",
-    "time\n"
+    "help",     
+    "clear",
+    "echo",
+    "game",
+    "time"
 };
 
-
+//TAMBIEN IR CAMBIANDO EL COMMNADS EN shellUtils.h
 static char *commandListDescription[] = {
     " - Shows available commands",
     " - Clears the screen",
@@ -33,7 +33,7 @@ TIME,
 int idHandler(char* command, int length) {
     for (int i = 0; i < COMMANDS; i++)
     {
-        if (strcmp(command, commandList[i], length) == 0) {
+        if (strcmp(command, commandList[i], length, strlen(commandList[i])) == 0) {
             return i;} 
     }
     return -1; // error

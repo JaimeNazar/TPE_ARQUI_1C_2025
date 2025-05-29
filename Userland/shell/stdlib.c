@@ -59,9 +59,12 @@ int strlen(char* str) {
 	return count;
 }
 
-int strcmp(char* str1, char* str2, int length) {
+int strcmp(char* str1, char* str2, int length1, int lenght2) {
+    if(length1 != lenght2) {                                    //helps with cases like clearrrr or helppp
+        return length1 - lenght2;
+    }
     int i = 0;
-    while (str1[i] != '\0' && str2[i] != '\0' && i < length) {
+    while (str1[i] != '\0' && str2[i] != '\0') {
         if (str1[i] != str2[i]) {
             return str1[i] - str2[i];
         }
