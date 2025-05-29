@@ -112,7 +112,7 @@ int main()
 {	
 	load_idt();
 	videoInitialize();
-	//bell(300, 300);
+	
 	((EntryPoint)userCodeModuleAddress)();
 	
 	return 0;
