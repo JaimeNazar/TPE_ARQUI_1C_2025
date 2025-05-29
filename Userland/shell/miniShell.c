@@ -53,9 +53,8 @@ void clearCommand() {
 }
 
 
-//me parece que no se va a poder implementar porque el strcmp marcaria algo como "echo Hola Mundo como un error"
-void echoCommand() {
-	sysWrite(1, "\nEcho command not implemented yet\n", 34);
+void sleepCommand() {
+	sysSleep(10); // Sleep for 1 second
 }
 
 void gameCommand() {
@@ -66,10 +65,19 @@ void timeCommand() {
 	sysWrite(1, "\nTime command not implemented yet\n", 34);
 }
 
+//no me anda
+void beepCommand() {
+	sysBeep(400, 20);
+}
+
+
+
 void error() {
 	sysWrite(1, "\nCommand not found \n", 22);
 	sysWrite(1, " \ntype 'help' for a list of commands\n", 37);
 }
+
+
 
 
 

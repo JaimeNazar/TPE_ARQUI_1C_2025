@@ -5,18 +5,20 @@
 static char *commandList[] = {
     "help",     
     "clear",
-    "echo",
+    "sleep",
     "game",
-    "time"
+    "time",
+    "beep"
 };
 
 //TAMBIEN IR CAMBIANDO EL COMMNADS EN shellUtils.h
 static char *commandListDescription[] = {
     " - Shows available commands",
     " - Clears the screen",
-    " - Echoes input back to the user",
+    " - puts the shell to sleep for a specified time",
     " - Starts a game",
-    " - Displays the current time"
+    " - Displays the current time",
+    " - Beeps with a frequency and duration"
 };
 
 
@@ -24,9 +26,10 @@ static char *commandListDescription[] = {
 typedef enum{
 HELP = 0,
 CLEAR,
-ECHO,
+SLEEP,
 GAME,
 TIME,
+BEEP
 //COMPLETAR
 };
 
@@ -49,8 +52,8 @@ void commandHandler(char* command, int length) {
         case CLEAR: 
             sysClear();
             break;
-        case ECHO: 
-            echoCommand();
+        case SLEEP: 
+            sleepCommand();
             break;
         case GAME:
            gameCommand();
@@ -58,6 +61,9 @@ void commandHandler(char* command, int length) {
         case TIME: 
             timeCommand();
             break;
+        case BEEP: 
+            beepCommand();
+        break;
         default:
             error();
             break;

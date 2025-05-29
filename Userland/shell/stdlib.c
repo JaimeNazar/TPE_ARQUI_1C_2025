@@ -11,7 +11,10 @@
 #define ID_CLEARBUFFER 0x2
 #define ID_DRAWSCREEN 0x3
 #define ID_TIMETICKS 0x4
+#define ID_SLEEP 0x5
 #define ID_TIME 0x6
+#define ID_BEEP 0x7
+
 
 // ------ AUXILIARY ------
 
@@ -141,3 +144,12 @@ void sysDraw() {
 void sysTime(int code) {
     return syscall_wizard(ID_TIME, code, NO_ARG, NO_ARG);
 }
+
+void sysSleep(int duration) {
+    return syscall_wizard(ID_SLEEP, duration, NO_ARG, NO_ARG);
+}
+
+void sysBeep(int freq, int duration) {
+    return syscall_wizard(ID_BEEP, freq, duration, NO_ARG);
+}
+
