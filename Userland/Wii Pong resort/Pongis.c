@@ -22,19 +22,19 @@ uint32_t ball_x = 0;
 uint32_t ball_y = 0;
 uint32_t hole_x = 0;
 uint32_t hole_y = 0;
-uint32_t vel_x = 0;
-uint32_t vel_y = 0;
-uint32_t acceleration_x = 0;
-uint32_t acceleration_y = 0;
-uint32_t angle = 0;
+uint32_t vel1_x = 0;
+uint32_t vel1_y = 0;
+uint32_t acceleration1_x = 0;
+uint32_t acceleration1_y = 0;
+uint32_t angle1 = 0;
+uint32_t vel2_x = 0;
+uint32_t vel2_y = 0;
+uint32_t acceleration2_x = 0;
+uint32_t acceleration2_y = 0;
+uint32_t angle2 = 0;
 
-A 10
-B 11
-C 12
-D 13
-E 14
-F 15
-uint16_t bitMap[][20] = {
+
+uint16_t Auto[][20] = {
     {0x0E70,0x0E70,0x0E70,0x0000,0x0000,0x0E70,0x0E70,0x0E70,0x0E70,0x0E70,0x0E70,0x0E70,0x0E70,0x0E70,0x0000,0x0810,0x0E70,0x0E70,0x0000,0x0E70,}, //amarrillo
     {0x0180,0x1188,0x2184,0x300C,0x2004,0x2184,0x318C,0x2184,0x2184,0x2184,0x2184,0x2184,0x2184,0x318C,0x300C,0x300C,0x318C,0x318C,0x318C,0x1188,},//rojo
     {0x0000,0x0000,0x1008,0x0000,0x0000,0x0000,0x0000,0x0000,0x0000,0x0000,0x0000,0x0000,0x0000,0x0000,0x0000,0x0000,0x0000,0x0000,0x0000,0x0000,},//blanco
@@ -46,10 +46,40 @@ void drawBall(uint32_t x, uint32_t y) {
     
 }
 void play(){
-
+    char c;
+    while(sysKey(&c)!=0) {
+        switch(c) {
+            case 'w':
+                acceleration_y--;
+                ve
+                break;
+            case 's':
+                pos1_y++;
+                break;
+            case 'a':
+                pos1_x--;
+                break;
+            case 'd':
+                pos1_x++;
+                break;
+            case 'i':
+                pos2_y--;
+                break;
+            case 'k':
+                pos2_y++;
+                break;
+            case 'j':
+                pos2_x--;
+                break;
+            case 'l':
+                pos2_x++;
+                break;
+        }
+        drawBall(ball_x, ball_y);
+    }
 }
 
 
-void eliminator(){
+void Pongis(){
     
 }

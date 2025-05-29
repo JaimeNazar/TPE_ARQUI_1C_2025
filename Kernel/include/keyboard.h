@@ -9,7 +9,7 @@ extern char get_keyboard_output();
 
 uint8_t pollKeyboard();
 void keyPress();
-char getNextKey(char* c);
+
 char characterFilter(char c);
 char canRead();
 #endif

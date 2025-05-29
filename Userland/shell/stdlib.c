@@ -12,6 +12,7 @@
 #define ID_DRAWSCREEN 0x3
 #define ID_TIMETICKS 0x4
 #define ID_TIME 0x6
+#define ID_GETKEY 0x8
 
 // ------ AUXILIARY ------
 
@@ -140,4 +141,7 @@ void sysDraw() {
 
 void sysTime(int code) {
     return syscall_wizard(ID_TIME, code, NO_ARG, NO_ARG);
+}
+void sysKey(uint8_t * c) {
+    return syscall_wizard(ID_GETKEY,&c, NO_ARG, NO_ARG);
 }

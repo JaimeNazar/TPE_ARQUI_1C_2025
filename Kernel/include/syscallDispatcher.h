@@ -15,12 +15,14 @@
 #define ID_SLEEP 5
 #define ID_TIME 6
 #define ID_BEEP 7
-
+#define ID_GETKEY 8
 #define COLOR_WHITE 0xFFFFFFFF
 #define COLOR_AMBER 0x00FFBF00
 
 int write(int fd, const char * buff, int length);
 int read(int fd, char * buff, int length);
 uint64_t syscallDispatcher(uint64_t rax, ...);
+uint8_t saveKey();
+char getNextKey(char* c);
 
 #endif
