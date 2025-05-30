@@ -92,7 +92,8 @@ SECTION .text
 	call exceptionDispatcher
 
 	popState
-	iretq
+	jmp userland
+
 %endmacro
 
 get_registers:
@@ -195,12 +196,13 @@ _syscallHandler:
 ;Zero Division Exception
 _exception0Handler:
 	exceptionHandler 0
+	jmp userland
 
 
 ;Operation Invalid Code
-_exception6Handler:
+_exception06Handler:
 	exceptionHandler 6
-
+	jmp userland
 
 get_rip:
 mov rax, [ripBuffer]
@@ -211,6 +213,9 @@ haltcpu:
 	cli
 	hlt
 	ret
+
+section .rodata
+	userland equ 0xA00000
 
 SECTION .bss
 	aux resq 1
