@@ -3,12 +3,6 @@
 
 #include <stdint.h>
 
- uint32_t AutoL[][21];
- uint32_t AutoR[][21];
- uint32_t AutoD[][21];
- uint32_t AutoU[][21];
- uint32_t pelota[][15];
-
 typedef struct {
     uint64_t x;
     uint64_t y;
@@ -22,10 +16,6 @@ typedef struct {
     int x_offset;
     int y_offset;
 } body;
-
- body p1;
- body p2;
- body ball;
 
 void drawBall(void);
 void play(void);
