@@ -16,11 +16,14 @@ GLOBAL get_r14
 GLOBAL get_r15
 
 GLOBAL get_registers
-GLOBAL get_eip
+
+GLOBAL get_rip
 GLOBAL get_cs
 GLOBAL get_rflags
 GLOBAL get_last_rsp
 GLOBAL get_ss
+
+GLOBAL get_special_registers
 
 section .text
 
@@ -198,6 +201,17 @@ get_r15:
 ; Returns general purpose registers
 get_registers:
 	push rbp
+	mov rbp, rsp
+
+	mov rax, regs
+
+	mov rsp, rbp
+    pop rbp	
+	ret
+
+; Saves general registers current state
+save_registers:
+	push rbp
     mov rbp, rsp
 
 	mov [regs], rax ; General Purpose Registers
@@ -216,15 +230,13 @@ get_registers:
 	mov [regs+8*13], r14
 	mov [regs+8*14], r15
 
-	mov rax, regs
-
 	mov rsp, rbp
     pop rbp	
 	ret
 
 ; ------ SPECIAL REGISTERS ------
-; These must be called during an interrups
-get_eip:
+; These must be called during an interrupt
+get_rip:
 
 	push rbp
     mov rbp, rsp
@@ -279,5 +291,42 @@ get_ss:
     pop rbp	
     ret
 
+	; Returns special registers vector
+get_special_registers:
+	push rbp
+    mov rbp, rsp
+
+	mov rax, spec_regs
+
+	mov rsp, rbp
+    pop rbp	
+    ret
+
+	; Save special registers state, should be  called right after interrupt
+save_special_registers:
+	push rbp
+    mov rbp, rsp
+
+	mov rax, [rbp+8]	; Start with offset due to return address also being on the stack
+	mov [regs], rax 	; rip
+
+	mov rax, [rbp+8*2]
+	mov [regs+8], rax	; cs
+
+	mov rax, [rbp+8*3]
+	mov [regs+8*2], rax	; rflags
+
+	mov rax, [rbp+8*4]
+	mov [regs+8*3], rax	; last rsp
+
+	mov rax, [rbp+8*5]
+	mov [regs+8*4], rax ; ss
+
+	mov rsp, rbp
+    pop rbp	
+	ret
+
+
 section .bss
 	regs resq 15
+	spec_regs resq 5

@@ -3,10 +3,23 @@
 #include <registers.h>
 #include <interrupts.h>
 
+#include <videoDriver.h>
+
 #define ZERO_EXCEPTION_ID 0
 #define UNDEF_OP_CODE_EXCEPTION_ID 6 //https://wiki.osdev.org/Interrupt_Descriptor_Table
-#define GENERAL_REGISTERS 15 
+#define GENERAL_REGISTERS_COUNT 15 
+#define SPECIAL_REGISTERS_COUNT 5 
 #define MSG_LENGTH 8
+
+const char * generalRegisterString[] = {                               //todos con len = 8
+	"RAX:    ", "RBX:    ", "RCX:    ", "RDX:    ",
+	"RBP:    ", "RDI:    ", "RSI:    ",
+	"R8:     ", "R9:     ", "R10:     ", "R11:    ", "R12:    ", "R13:    ", "R14:    ", "R15:    "
+};
+
+const char * specialRegisterString[] = {
+	"RIP:    ", "CS:     ", "RFLAGS: ", "RSP:    ", "SS:     "
+};
 
 static int strlen(char* str) {
 	int count = 0;
@@ -18,13 +31,25 @@ static void printError(char * str) {
 	write(2, str, strlen(str));
 }
 
+uint64_t* spec_reg;
+
+// TODO: End up using the getChar method from sycallDispatcher
 static void printHex(uint64_t value) {
 	do
 	{
 		uint32_t remainder = value % 16;
-		write(2, (remainder < 10) ? remainder + '0' : remainder + 'A' - 10, 1);
+		drawChar((remainder < 10) ? remainder + '0' : remainder + 'A' - 10, 0xFFFFFFFF);
 	}
 	while (value /= 16);
+}
+
+/* Prints a map, in this case, used the registers mapped to their values */
+static void printMap(const char** keys, uint64_t* values, int lenght)  {
+	for (int i = 0 ; i < lenght; i++) {
+		write(2, keys[i], MSG_LENGTH);
+		printHex(values[i]);
+		write(2, "\n", 1);
+	}
 }
 
 static void exceptionMsg(const char* msg, const int len) {
@@ -34,30 +59,18 @@ static void exceptionMsg(const char* msg, const int len) {
 	write(2, "\n", 1);
 
 	printError("Instruction Pointer: ");
-	write(2, get_rip(), len);
+	printHex(get_rip());
 	write(2, "\n", 1);
-
-
-	drawScreen();
-	const char * registerString[] = {                               //todos con len = 8
-		"RAX:    ", "RBX:    ", "RCX:    ", "RDX:    ",
-		"RBP:    ", "RDI:    ", "RSI:    ",
-		"R8:     ", "R9:     ", "R10:     ", "R11:    ", "R12:    ", "R13:    ", "R14:    ", "R15:    ",
-		"RIP:    ", "CS:     ", "RFLAGS: ", "RSP:    ", "SS:     "
-	};
-
-	const uint64_t * registers = get_registers();
-
 
 	write(2, "Registers: ", 11);
 	write(2, "\n", 1);
-	// Imprimir registros
-	for (int i = 0; i < GENERAL_REGISTERS; i++) {
-		write(2, registerString[i], MSG_LENGTH);
-		printHex(registers[i]);
-		write(2, "\n", 1);
 
-	}
+	// Print general purpose registers
+	printMap(generalRegisterString, get_registers(), GENERAL_REGISTERS_COUNT);
+
+	// Print special registers
+	printMap(specialRegisterString, get_special_registers(), SPECIAL_REGISTERS_COUNT);
+
 
 	drawScreen();
 	
@@ -77,7 +90,7 @@ static void undefined_op_code() {
 }
 
 void exceptionDispatcher(int exception) {
-
+	
 	if (exception == ZERO_EXCEPTION_ID)
 		zero_division();
 	else if (exception == UNDEF_OP_CODE_EXCEPTION_ID) {}

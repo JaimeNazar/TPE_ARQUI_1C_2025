@@ -20,13 +20,18 @@ uint64_t get_r13();
 uint64_t get_r14();
 uint64_t get_r15();
 
+
+void save_registers();
 uint64_t* get_registers();
 
-// Special registers, only work for interrupts
-uint64_t get_eip();
+// Special registers, will only work for interrupts
+uint64_t get_rip();
 uint64_t get_cs();   // Code segment
 uint64_t get_rflags();
 uint64_t get_last_rsp();
 uint64_t get_ss();   // Stack segment
+
+uint64_t* get_special_registers();
+void save_special_registers();
 
 #endif // REGISTERS_H

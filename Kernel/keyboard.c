@@ -117,6 +117,7 @@ static int countToRead = 0; //Cantidad de caracteres a leer
 int altKey = 0; // determina cuando se utiliza shift y capslock
 int shift = 0;
 int capsLock = 0;
+
 uint8_t pollKeyboard() {
     while(!(get_keyboard_status() & 0x01));
 
@@ -125,6 +126,7 @@ uint8_t pollKeyboard() {
 	return scancode;
 
 }
+
 char characterFilter(char key) {
     // Primero, actualizamos el estado de los modificadores y descartamos el evento
     if(key == L_SHIFT_PRESS || key == R_SHIFT_PRESS) {

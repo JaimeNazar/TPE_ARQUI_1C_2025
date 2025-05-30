@@ -20,9 +20,6 @@ GLOBAL _syscallHandler
 GLOBAL _exception0Handler
 GLOBAL _exception06Handler
 
-GLOBAL get_rip
-GLOBAL get_registers
-
 EXTERN irqDispatcher
 EXTERN exceptionDispatcher
 EXTERN syscallDispatcher
@@ -181,10 +178,6 @@ _exception0Handler:
 _exception06Handler:
 	exceptionHandler 6
 	jmp userland
-
-get_rip:
-	mov rax, [ripBuffer]
-	ret
 
 haltcpu:
 	cli
