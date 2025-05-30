@@ -22,6 +22,7 @@ void int_20() {
 	timer_handler();
 }
 
-void int_21() {
-	;
+void int_21() { 
+	drawChar('A', 0xFFFFFF);
+    drawScreen();
 }
