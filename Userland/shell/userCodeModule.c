@@ -3,7 +3,8 @@
 
 int main() {
 
-	shellInit();
+	//shellInit();
+	while(1) {}
 
 	return 0;
 }

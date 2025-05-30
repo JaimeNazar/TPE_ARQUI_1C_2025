@@ -1,5 +1,6 @@
 #include <stdint.h>
 #include <syscallDispatcher.h>
+#include <interrupts.h>
 
 #define ZERO_EXCEPTION_ID 0
 #define UNDEF_OP_CODE_EXCEPTION_ID 6 //https://wiki.osdev.org/Interrupt_Descriptor_Table
@@ -39,12 +40,12 @@ static void exceptionMsg(const char* msg, const int len) {
 
 	}
 
-	
  // ACA DEBERIA DE VOLVER A LA SHELL SEGUN LA CONSIGNA DEL TPE, TODAVIA NO ESTA IMPLEMENTADO
 
 }
 
 static void zero_division() {
+	_sti();
 	exceptionMsg("Division by zero", 17);
 }
 
@@ -54,6 +55,7 @@ static void undefined_op_code() {
 }
 
 void exceptionDispatcher(int exception) {
+
 	if (exception == ZERO_EXCEPTION_ID)
 		zero_division();
 	else if (exception == UNDEF_OP_CODE_EXCEPTION_ID) {}

@@ -18,7 +18,7 @@ GLOBAL _syscallHandler
 
 ;exceptions.c
 GLOBAL _exception0Handler
-GLOBAL _exception6Handler
+GLOBAL _exception06Handler
 
 GLOBAL get_rip
 GLOBAL get_registers
@@ -127,7 +127,7 @@ _cli:
 	cli
 	ret
 
-
+; Enable hardware interrupts
 _sti:
 	sti
 	ret
@@ -199,7 +199,7 @@ _exception0Handler:
 
 ;Operation Invalid Code
 _exception6Handler:
-exceptionHandler 6
+	exceptionHandler 6
 
 
 get_rip:
