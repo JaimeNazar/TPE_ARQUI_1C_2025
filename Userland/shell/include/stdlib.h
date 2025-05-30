@@ -23,5 +23,7 @@ uint64_t sysTimeTicks();
 void sysClear();
 void sysDraw();
 void sysTime(int code);
+void sysConfigBitmap(uint32_t *bitmap,uint32_t hexColor,int width);
+void sysDrawBitmap(uint64_t x, uint64_t y,int bitmapSize);
 
 #endif

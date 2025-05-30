@@ -15,6 +15,8 @@
 #define ID_TIME 0x6
 #define ID_GETKEY 0x8
 #define ID_BEEP 0x7
+#define ID_DRAWBITMAP 0x9
+#define ID_CONFIGBITMAP 0xA
 
 
 // ------ AUXILIARY ------
@@ -194,5 +196,11 @@ void sysSleep(int duration) {
 
 void sysBeep(int freq, int duration) {
     return syscall_wizard(ID_BEEP, freq, duration, NO_ARG);
+}
+void sysDrawBitmap(uint64_t x, uint64_t y,int bitmapSize) {
+    syscall_wizard(ID_DRAWBITMAP, x, y, bitmapSize);
+}
+void sysConfigBitmap(uint32_t *bitmap,uint32_t hexColor,int width){
+    syscall_wizard(ID_CONFIGBITMAP, bitmap, hexColor, width);
 }
 

@@ -254,7 +254,33 @@ void drawScreen() {
 	}
 
 }
+uint32_t (*bm)[21];
+uint32_t hc = 0xFFFFFF; 
+int w = 0;
 
+void ConfigBitmap(uint32_t *bitmap,uint32_t hexColor,int width){
+    bm = (uint32_t (*)[21])bitmap;  // Bitmap data
+    hc = hexColor; // Hex color to draw the bitmap
+    w = width;     // Width of the bitmap
+    
+
+    if (w <= 0) {
+        w = 1;
+        
+    }
+}
+void drawBitMap( uint64_t x, uint64_t y,int bitmapPixelSize) {
+
+    for (int i = 0; i < w; i++) {
+        uint32_t row = bm[i];  // Cada fila de bits
+        for (int j = 0; j < w; j++) {
+            // Verificamos si el bit en la posición j está encendido
+            if ((row >> (w - 1 - j)) & 1) {
+                drawSquare(x + j * bitmapPixelSize, y + i * bitmapPixelSize, bitmapPixelSize, hc);
+            }
+        }
+    }
+}
 
 // ------ TEXT UTILS ------
 

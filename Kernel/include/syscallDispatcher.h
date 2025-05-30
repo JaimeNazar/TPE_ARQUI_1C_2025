@@ -16,6 +16,9 @@
 #define ID_TIME 6
 #define ID_BEEP 7
 #define ID_GETKEY 8
+#define ID_DRAWBITMAP 9
+#define ID_CONFIGBITMAP 10
+
 #define COLOR_WHITE 0xFFFFFFFF
 #define COLOR_AMBER 0x00FFBF00
 

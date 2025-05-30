@@ -3,7 +3,7 @@
 
 #include <shellUtils.h>
 #include <stdlib.h>
-
+#include "../../Wii Pong resort/Pongis.h"
 
 #define SHELL_PROMPT "miniShell > "
 
