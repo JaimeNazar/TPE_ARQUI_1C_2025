@@ -1,45 +1,65 @@
 #include <stdint.h>
 #include <syscallDispatcher.h>
+#include <registers.h>
 #include <interrupts.h>
 
 #define ZERO_EXCEPTION_ID 0
 #define UNDEF_OP_CODE_EXCEPTION_ID 6 //https://wiki.osdev.org/Interrupt_Descriptor_Table
-#define CANT_REGISTERS 14 //POR AHORA CON LA FUNCION SON 14 PERO FALTAN LOS RAROS COMO RFLAGS, RSP, SS
+#define GENERAL_REGISTERS 15 
+#define MSG_LENGTH 8
 
-extern uint64_t* get_registers();
+static int strlen(char* str) {
+	int count = 0;
+	while (str[count++] != 0);
+	return count;
+}
+
+static void printError(char * str) {
+	write(2, str, strlen(str));
+}
+
+static void printHex(uint64_t value) {
+	do
+	{
+		uint32_t remainder = value % 16;
+		write(2, (remainder < 10) ? remainder + '0' : remainder + 'A' - 10, 1);
+	}
+	while (value /= 16);
+}
 
 static void exceptionMsg(const char* msg, const int len) {
 	
-	write(2, "Excepcion: ", 11);
+	printError("Excepcion: ");
 	write(2, msg, len);
+	write(2, "\n", 1);
+
+	printError("Instruction Pointer: ");
+	write(2, get_rip(), len);
 	write(2, "\n", 1);
 
 
 	drawScreen();
-	// write(2, "Instruction Pointer: ", 21);
-	// write(2, get_rip(), len);
-	// write(2, "\n", 1);
+	const char * registerString[] = {                               //todos con len = 8
+		"RAX:    ", "RBX:    ", "RCX:    ", "RDX:    ",
+		"RBP:    ", "RDI:    ", "RSI:    ",
+		"R8:     ", "R9:     ", "R10:     ", "R11:    ", "R12:    ", "R13:    ", "R14:    ", "R15:    ",
+		"RIP:    ", "CS:     ", "RFLAGS: ", "RSP:    ", "SS:     "
+	};
+
+	const uint64_t * registers = get_registers();
 
 
-	// const char * registerString[] = {                               //todos con len = 8
-	// 	"RAX:    ", "RBX:    ", "RCX:    ", "RDX:    ",
-	// 	"RBP:    ", "RDI:    ", "RSI:    ",
-	// 	"R8:     ", "R9:     ", "R10:     ", "R11:    ", "R12:    ", "R13:    ", "R14:    ", "R15:    ",
-	// 	"RIP:    ", "CS:     ", "RFLAGS: ", "RSP:    ", "SS:     "
-	// };
+	write(2, "Registers: ", 11);
+	write(2, "\n", 1);
+	// Imprimir registros
+	for (int i = 0; i < GENERAL_REGISTERS; i++) {
+		write(2, registerString[i], MSG_LENGTH);
+		printHex(registers[i]);
+		write(2, "\n", 1);
 
-	// const uint64_t * registers = get_registers();
+	}
 
-
-	// write(2, "Registers: ", 11);
-	// write(2, "\n", 1);
-	// // Imprimir registros
-	// for (int i = 0; i < CANT_REGISTERS; i++) {
-	// 	write(2, registerString[i], 8);
-	// 	write(2, registers[i], 8); // QUE LONGITUD DEBERIAMOS DE PONER ACA??
-	// 	write(2, "\n", 1);
-
-	// }
+	drawScreen();
 	
  // ACA DEBERIA DE VOLVER A LA SHELL SEGUN LA CONSIGNA DEL TPE, TODAVIA NO ESTA IMPLEMENTADO
 

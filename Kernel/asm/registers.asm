@@ -1,26 +1,33 @@
-GLOBAL getRAX
-GLOBAL getRBX
-GLOBAL getRCX
-GLOBAL getRDX
-GLOBAL getRSI
-GLOBAL getRDI
-GLOBAL getRSP
-GLOBAL getRBP
-GLOBAL getR8
-GLOBAL getR9
-GLOBAL getR10
-GLOBAL getR11
-GLOBAL getR12
-GLOBAL getR13
-GLOBAL getR14
-GLOBAL getR15
+GLOBAL get_rax
+GLOBAL get_rbx
+GLOBAL get_rcx
+GLOBAL get_rdx
+GLOBAL get_rsi
+GLOBAL get_rdi
+GLOBAL get_rsp
+GLOBAL get_rbp
+GLOBAL get_r8
+GLOBAL get_r9
+GLOBAL get_r10
+GLOBAL get_r11
+GLOBAL get_r12
+GLOBAL get_r13
+GLOBAL get_r14
+GLOBAL get_r15
+
+GLOBAL get_registers
+GLOBAL get_eip
+GLOBAL get_cs
+GLOBAL get_rflags
+GLOBAL get_last_rsp
+GLOBAL get_ss
 
 section .text
 
-getRAX:
+get_rax:
 	ret
 
-getRBX:
+get_rbx:
 
 	push rbp
     mov rbp, rsp
@@ -31,7 +38,7 @@ getRBX:
     pop rbp	
     ret
 
-getRCX:
+get_rcx:
 
 	push rbp
     mov rbp, rsp
@@ -42,7 +49,7 @@ getRCX:
     pop rbp	
     ret
 
-getRDX:
+get_rdx:
 
 	push rbp
     mov rbp, rsp
@@ -54,7 +61,7 @@ getRDX:
     ret
 
 
-getRSI:
+get_rsi:
 
 	push rbp
     mov rbp, rsp
@@ -65,7 +72,7 @@ getRSI:
     pop rbp	
     ret
 
-getRDI:
+get_rdi:
 
 	push rbp
     mov rbp, rsp
@@ -76,7 +83,7 @@ getRDI:
     pop rbp	
     ret
 
-getRSP:
+get_rsp:
 
 	push rbp
     mov rbp, rsp
@@ -87,7 +94,7 @@ getRSP:
     pop rbp	
     ret
 
-getRBP:
+get_rbp:
 
 	push rbp
     mov rbp, rsp
@@ -99,7 +106,7 @@ getRBP:
     ret
 
 
-getR8:
+get_r8:
 
 	push rbp
     mov rbp, rsp
@@ -110,7 +117,7 @@ getR8:
     pop rbp	
     ret
 
-getR9:
+get_r9:
 
 	push rbp
     mov rbp, rsp
@@ -121,7 +128,7 @@ getR9:
     pop rbp	
     ret
 
-getR10:
+get_r10:
 
 	push rbp
     mov rbp, rsp
@@ -132,7 +139,7 @@ getR10:
     pop rbp	
     ret
 
-getR11:
+get_r11:
 
 	push rbp
     mov rbp, rsp
@@ -143,7 +150,7 @@ getR11:
     pop rbp	
     ret
 
-getR12:
+get_r12:
 
 	push rbp
     mov rbp, rsp
@@ -154,7 +161,7 @@ getR12:
     pop rbp	
     ret
 
-getR13:
+get_r13:
 
 	push rbp
     mov rbp, rsp
@@ -165,7 +172,7 @@ getR13:
     pop rbp	
     ret
 
-getR14:
+get_r14:
 
 	push rbp
     mov rbp, rsp
@@ -176,7 +183,7 @@ getR14:
     pop rbp	
     ret
 
-getR15:
+get_r15:
 
 	push rbp
     mov rbp, rsp
@@ -187,3 +194,90 @@ getR15:
     pop rbp	
     ret
 
+
+; Returns general purpose registers
+get_registers:
+	push rbp
+    mov rbp, rsp
+
+	mov [regs], rax ; General Purpose Registers
+	mov [regs+8], rbx
+	mov [regs+8*2], rcx
+	mov [regs+8*3], rdx
+	mov [regs+8*4], rsi
+	mov [regs+8*5], rdi
+	mov [regs+8*6], rsp
+	mov [regs+8*7], rbp
+	mov [regs+8*8], r8
+	mov [regs+8*9], r9
+	mov [regs+8*10], r10
+	mov [regs+8*11], r12
+	mov [regs+8*12], r13
+	mov [regs+8*13], r14
+	mov [regs+8*14], r15
+
+	mov rax, regs
+
+	mov rsp, rbp
+    pop rbp	
+	ret
+
+; ------ SPECIAL REGISTERS ------
+; These must be called during an interrups
+get_eip:
+
+	push rbp
+    mov rbp, rsp
+
+	mov rax, [rbp]
+
+	mov rsp, rbp
+    pop rbp	
+    ret
+
+get_cs:
+
+	push rbp
+    mov rbp, rsp
+
+	mov rax, [rbp+8]
+
+	mov rsp, rbp
+    pop rbp	
+    ret
+
+get_rflags:
+
+	push rbp
+    mov rbp, rsp
+
+	mov rax, [rbp+8*2]
+
+	mov rsp, rbp
+    pop rbp	
+    ret
+
+get_last_rsp:
+
+	push rbp
+    mov rbp, rsp
+
+	mov rax, [rbp+8*3]
+
+	mov rsp, rbp
+    pop rbp	
+    ret
+
+get_ss:
+
+	push rbp
+    mov rbp, rsp
+
+	mov rax, [rbp+8*4]
+
+	mov rsp, rbp
+    pop rbp	
+    ret
+
+section .bss
+	regs resq 15
