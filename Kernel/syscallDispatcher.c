@@ -109,13 +109,12 @@ static uint64_t time(uint8_t code) {
     return upperBits * 10 + lowerBits;
 }
 
-#include <interrupts.h>
 uint64_t syscallDispatcher(uint64_t rax, ...) {
     va_list args;
     va_start(args, rax);  
 
     uint64_t ret_val = 0;
-    _sti();
+    
     switch(rax) {
         case ID_WRITE:
             int fdWrite = va_arg(args, int);

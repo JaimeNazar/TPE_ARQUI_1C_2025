@@ -109,22 +109,12 @@ void printTime(){
 }
 
 
-#include <videoDriver.h>
 
 int main()
 {	
 	load_idt();
 	videoInitialize();
 	
-
-	write(1, "Antes ddddd", 11);
-	drawScreen();
-
-	//int test = 8 / 0;
-
-	drawScreen();
-	write(1, "Despues     ", 11);
-	drawScreen();
 	((EntryPoint)userCodeModuleAddress)();
 	
 	return 0;
