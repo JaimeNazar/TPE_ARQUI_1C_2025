@@ -39,8 +39,8 @@ char getNextKey(char* c) {
 }
 
 
-uint8_t saveKey() {
-    uint8_t c = get_keyboard_output();
+char saveKey() {
+    char c = get_keyboard_output();
     c = characterFilter(c);
 
     if (inputBuffer.contador < BUFFER_SIZE) {
