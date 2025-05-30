@@ -65,12 +65,7 @@ get_keyboard_output:
 	push rbp
 	mov rbp, rsp
 
-    mov rax, 0
-
-.cicle:
-	in al, 64h
-    and al, 0x01
-    je .cicle
+	xor rax, rax
     in al, 60h
 
 	mov rsp, rbp
