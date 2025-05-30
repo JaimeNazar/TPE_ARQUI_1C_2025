@@ -76,6 +76,45 @@ int strcmp(char* str1, char* str2, int length1, int lenght2) {
     }
 }
 
+
+void intToStr(int value, char *str) {
+    int i = 0;
+    int isNegative = 0;
+
+    // Manejo del 0
+    if (value == 0) {
+        str[i++] = '0';
+        str[i] = '\0';
+        return;
+    }
+
+    // Si es negativo
+    if (value < 0) {
+        isNegative = 1;
+        value = -value;
+    }
+
+    // Convertir los dígitos al revés
+    while (value != 0) {
+        int digit = value % 10;
+        str[i++] = digit + '0';
+        value /= 10;
+    }
+
+    if (isNegative)
+        str[i++] = '-';
+
+    str[i] = '\0';
+
+    // Invertir el string
+    for (int j = 0, k = i - 1; j < k; j++, k--) {
+        char tmp = str[j];
+        str[j] = str[k];
+        str[k] = tmp;
+    }
+}
+
+
 /* Recieves null terminated string, parse it and print it */
 void printf(char* ftm, ...) {
 

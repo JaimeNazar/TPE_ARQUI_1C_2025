@@ -11,8 +11,10 @@ void shellInit();
 void shellUpdate();
 void helpCommand();
 void clearCommand();
-void echoCommand();
+void sleepCommand();
 void gameCommand();
 void timeCommand();
+void beepCommand();
+void ticksCommand();
 void error();
 #endif

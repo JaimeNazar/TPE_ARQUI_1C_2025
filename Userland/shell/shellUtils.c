@@ -1,25 +1,26 @@
 #include <shellUtils.h>
 
 //Add as necessary
-
 static char *commandList[] = {
     "help",     
     "clear",
     "sleep",
     "game",
     "time",
-    "beep"
+    "beep",
+    "ticks"
 };
 
-//TAMBIEN IR CAMBIANDO EL COMMNADS EN shellUtils.h
-static char *commandListDescription[] = {
-    " - Shows available commands",
+char *commandListDescription[] = {
+    " - Shows this help message",
     " - Clears the screen",
-    " - puts the shell to sleep for a specified time",
-    " - Starts a game",
-    " - Displays the current time",
-    " - Beeps with a frequency and duration"
+    " - Sleeps for 1 second",
+    " - Starts the game",
+    " - Shows the current time",
+    " - Makes a beep sound",
+    " - Displays the number of ticks elapsed since system start"
 };
+
 
 
 
@@ -29,7 +30,8 @@ CLEAR,
 SLEEP,
 GAME,
 TIME,
-BEEP
+BEEP,
+TICKS
 //COMPLETAR
 };
 
@@ -63,7 +65,10 @@ void commandHandler(char* command, int length) {
             break;
         case BEEP: 
             beepCommand();
-        break;
+            break;
+        case TICKS: 
+            ticksCommand();
+            break;
         default:
             error();
             break;

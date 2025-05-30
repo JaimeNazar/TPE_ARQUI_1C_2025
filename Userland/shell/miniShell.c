@@ -70,6 +70,14 @@ void beepCommand() {
 	sysBeep(400, 20);
 }
 
+void ticksCommand() {
+	uint64_t ticks = sysTimeTicks();
+	char buffer[32];
+	intToStr(ticks, buffer);
+	sysWrite(1, "\nTicks: ", strlen("\nTicks: "));
+	sysWrite(1, buffer, strlen(buffer));
+	sysWrite(1, "\n", 1);
+}
 
 
 void error() {
