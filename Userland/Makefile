@@ -1,18 +1,26 @@
 include Makefile.inc
 
-MAIN_DATA=0001-userDataModule.bin
+MODULE=0003-pongisCodeModule.bin
+SOURCES=$(wildcard [^_]*.c)
+SOURCES_ASM=$(wildcard asm/*.asm)
+OBJECTS=$(SOURCES:.c=.o)
+OBJECTS_ASM=$(SOURCES_ASM:.asm=.o)
 
-all: userCodeModule userDataModule
+LOADEROBJECT=$(LOADERSRC:.asm=.o)
+STATICLIBS=
 
-userCodeModule:
-	cd shell; make
+all: $(MODULE)
 
-userDataModule:
-	printf "This is sample data." >> $(MAIN_DATA) && dd if=/dev/zero bs=1 count=1 >> $(MAIN_DATA)
+$(MODULE): $(OBJECTS) $(STATICLIBS) $(OBJECTS_ASM)
+	$(LD) $(LDFLAGS) -o ../$(MODULE) $(OBJECTS) $(OBJECTS_ASM) $(STATICLIBS)
+
+%.o: %.c
+	$(GCC) $(GCCFLAGS) -I./include -c $< -o $@
+
+%.o : %.asm
+	$(ASM) $(ASMFLAGS) $< -o $@
 
 clean:
-	cd shell; make clean
-	rm -rf *.bin
+	rm -rf asm/*.o c/*.o *.o
 
-
-.PHONY: userCodeModule all clean
+.PHONY: all clean print

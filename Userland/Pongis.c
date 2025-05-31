@@ -1,5 +1,5 @@
 #include <stdint.h>
-#include "Pongis.h"
+#include <Pongis.h>
 
 #define B 0x000000
 #define G 0x00FF00
