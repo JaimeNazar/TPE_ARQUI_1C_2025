@@ -115,10 +115,6 @@ int main()
 	load_idt();
 	videoInitialize();
 	
-	int sum = 1+3;
-
-	int test = 8/0;
-
 	((EntryPoint)userCodeModuleAddress)();
 	
 	return 0;
