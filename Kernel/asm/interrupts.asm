@@ -24,6 +24,10 @@ EXTERN irqDispatcher
 EXTERN exceptionDispatcher
 EXTERN syscallDispatcher
 
+; Registers utils
+EXTERN save_registers
+EXTERN save_special_registers
+
 SECTION .text
 
 %macro pushState 0
@@ -82,6 +86,9 @@ SECTION .text
 
 
 %macro exceptionHandler 1
+	call save_special_registers	; Save current state of registers memory
+	call save_registers	; Exception handler will use it later
+
 	pushState
 
 	mov rdi, %1 ; pasaje de parametro
@@ -89,7 +96,7 @@ SECTION .text
 
 	popState
 
-	mov rsp, userland
+	mov rpi, userland
 	iretq
 
 %endmacro

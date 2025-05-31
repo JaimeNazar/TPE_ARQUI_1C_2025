@@ -31,19 +31,30 @@ static void printError(char * str) {
 	write(2, str, strlen(str));
 }
 
-uint64_t* spec_reg;
-
 // TODO: End up using the getChar method from sycallDispatcher
 static void printHex(uint64_t value) {
+	// TODO: Move it to a define
+	char hexNumber[8];	// Template for the hex representation of a 64 bit value
+
+	int count = 0; // Count how many hex characters the current number contains
+
 	do
 	{
 		uint32_t remainder = value % 16;
-		drawChar((remainder < 10) ? remainder + '0' : remainder + 'A' - 10, 0xFFFFFFFF);
+		hexNumber[count++] = (remainder < 10) ? remainder + '0' : remainder + 'A' - 10;	// TODO: add additional validations
 	}
 	while (value /= 16);
+
+	// TODO:check if there is a better way
+	for (int i = 0; i < 8 - count; i++)
+		write(1, "0", 1);	// TODO: fix this
+
+	write(1, hexNumber, count);
 }
 
-/* Prints a map, in this case, used the registers mapped to their values */
+/* Prints a map, in this case, used the registers mapped to their values 
+ * TODO: It prints them in columns of 3
+ */
 static void printMap(const char** keys, uint64_t* values, int lenght)  {
 	for (int i = 0 ; i < lenght; i++) {
 		write(2, keys[i], MSG_LENGTH);
@@ -62,12 +73,12 @@ static void exceptionMsg(const char* msg, const int len) {
 	printHex(get_rip());
 	write(2, "\n", 1);
 
-	write(2, "Registers: ", 11);
-	write(2, "\n", 1);
+	write(2, "General Registers: \n", strlen("General Registers: \n"));
 
 	// Print general purpose registers
 	printMap(generalRegisterString, get_registers(), GENERAL_REGISTERS_COUNT);
 
+	write(2, "Special Registers: \n", strlen("Special Registers: \n"));
 	// Print special registers
 	printMap(specialRegisterString, get_special_registers(), SPECIAL_REGISTERS_COUNT);
 

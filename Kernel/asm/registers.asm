@@ -16,6 +16,7 @@ GLOBAL get_r14
 GLOBAL get_r15
 
 GLOBAL get_registers
+GLOBAL save_registers
 
 GLOBAL get_rip
 GLOBAL get_cs
@@ -24,6 +25,7 @@ GLOBAL get_last_rsp
 GLOBAL get_ss
 
 GLOBAL get_special_registers
+GLOBAL save_special_registers
 
 section .text
 
