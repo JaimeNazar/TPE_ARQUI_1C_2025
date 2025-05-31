@@ -348,7 +348,7 @@ void drawChar(char c, uint32_t hexColor) {
             return;
         } 
         currentCharX += 4; // Move to next tab position
-        
+        return;
     }
     drawCharAt(c, currentCharX * font_size, currentCharY * font_size * 2, hexColor);
     currentCharX++;

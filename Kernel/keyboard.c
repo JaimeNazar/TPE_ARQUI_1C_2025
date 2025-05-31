@@ -143,7 +143,7 @@ char characterFilter(char key) {
     }
     
     // Evitamos índices fuera de rango
-    if(key >= KEYS)
+    if(key >= KEYS||key<0)
         return 0;
     
     // Para las letras se hace XOR entre shift y capsLock; para otros, se utiliza shift

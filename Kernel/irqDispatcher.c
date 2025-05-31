@@ -23,6 +23,5 @@ void int_20() {
 }
 
 void int_21() { 
-	drawChar('A', 0xFFFFFF);
-    drawScreen();
+	
 }
