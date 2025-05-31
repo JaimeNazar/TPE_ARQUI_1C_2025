@@ -96,7 +96,6 @@ SECTION .text
 
 	popState
 
-	mov rpi, userland
 	iretq
 
 %endmacro
