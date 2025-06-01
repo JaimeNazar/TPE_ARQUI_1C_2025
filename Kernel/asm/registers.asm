@@ -18,12 +18,6 @@ GLOBAL get_r15
 GLOBAL get_registers
 GLOBAL save_registers
 
-GLOBAL get_rip
-GLOBAL get_cs
-GLOBAL get_rflags
-GLOBAL get_last_rsp
-GLOBAL get_ss
-
 GLOBAL get_special_registers
 GLOBAL save_special_registers
 
@@ -237,61 +231,7 @@ save_registers:
 	ret
 
 ; ------ SPECIAL REGISTERS ------
-; These must be called during an interrupt
-get_rip:
-
-	push rbp
-    mov rbp, rsp
-
-	mov rax, [rbp]
-
-	mov rsp, rbp
-    pop rbp	
-    ret
-
-get_cs:
-
-	push rbp
-    mov rbp, rsp
-
-	mov rax, [rbp+8]
-
-	mov rsp, rbp
-    pop rbp	
-    ret
-
-get_rflags:
-
-	push rbp
-    mov rbp, rsp
-
-	mov rax, [rbp+8*2]
-
-	mov rsp, rbp
-    pop rbp	
-    ret
-
-get_last_rsp:
-
-	push rbp
-    mov rbp, rsp
-
-	mov rax, [rbp+8*3]
-
-	mov rsp, rbp
-    pop rbp	
-    ret
-
-get_ss:
-
-	push rbp
-    mov rbp, rsp
-
-	mov rax, [rbp+8*4]
-
-	mov rsp, rbp
-    pop rbp	
-    ret
+; These must only be called during an interrupt
 
 	; Returns special registers vector
 get_special_registers:
@@ -309,20 +249,20 @@ save_special_registers:
 	push rbp
     mov rbp, rsp
 
-	mov rax, [rbp+8]	; Start with offset due to return address also being on the stack
-	mov [regs], rax 	; rip
-
-	mov rax, [rbp+8*2]
-	mov [regs+8], rax	; cs
+	mov rax, [rbp+8*2]	; Start with offset due to return address and rbp also being on the stack
+	mov [spec_regs], rax 	; rip
 
 	mov rax, [rbp+8*3]
-	mov [regs+8*2], rax	; rflags
+	mov [spec_regs+8], rax	; cs
 
 	mov rax, [rbp+8*4]
-	mov [regs+8*3], rax	; last rsp
+	mov [spec_regs+8*2], rax	; rflags
 
 	mov rax, [rbp+8*5]
-	mov [regs+8*4], rax ; ss
+	mov [spec_regs+8*3], rax	; last rsp
+
+	mov rax, [rbp+8*6]
+	mov [spec_regs+8*4], rax ; ss
 
 	mov rsp, rbp
     pop rbp	

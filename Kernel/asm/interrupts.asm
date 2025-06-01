@@ -86,7 +86,7 @@ SECTION .text
 
 
 %macro exceptionHandler 1
-	call save_special_registers	; Save current state of registers memory
+	call save_special_registers	; Save current state of registers memory, which reside in stack base
 	call save_registers	; Exception handler will use it later
 
 	pushState
@@ -96,7 +96,10 @@ SECTION .text
 
 	popState
 
-	iretq
+	mov rax, userland
+	mov [rsp], rax	; Set return address to userland
+
+	iretq	
 
 %endmacro
 
@@ -177,13 +180,11 @@ _syscallHandler:
 ;Zero Division Exception
 _exception0Handler:
 	exceptionHandler 0
-	jmp userland
 
 
 ;Operation Invalid Code
 _exception06Handler:
 	exceptionHandler 6
-	jmp userland
 
 haltcpu:
 	cli
@@ -191,7 +192,7 @@ haltcpu:
 	ret
 
 section .rodata
-	userland equ 0xA00000
+	userland equ 0a00000h
 
 SECTION .bss
 	aux resq 1
