@@ -249,8 +249,8 @@ void sysDraw() {
 void sysTime(int code) {
     return syscall_wizard(ID_TIME, code, NO_ARG, NO_ARG);
 }
-void sysKey(uint8_t * c) {
-    return syscall_wizard(ID_GETKEY,&c, NO_ARG, NO_ARG);
+char sysKey() {
+    return syscall_wizard(ID_GETKEY,NO_ARG, NO_ARG, NO_ARG);
 }
 
 void sysSleep(int duration) {

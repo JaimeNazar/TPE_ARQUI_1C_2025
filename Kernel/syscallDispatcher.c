@@ -18,6 +18,14 @@ int write(int fd, const char * buff, int length) {
 
     return length;
 }
+char gameKey() {
+    if(canRead()){
+    char c;
+    getNextKey(c);
+    return c;
+    }
+    
+}
 
 // Polls the keyboard until enter is pressed or reached length specified
 int read(int fd, char * buff, int length) {
@@ -118,8 +126,7 @@ uint64_t syscallDispatcher(uint64_t rax, ...) {
             bell(freq, duration);
             break;
         case ID_GETKEY:
-            uint8_t* c = va_arg(args, uint8_t*);
-            ret_val = getNextKey(c);
+            ret_val = gameKey();
             break;
         case ID_DRAWBITMAP: 
             uint64_t x = va_arg(args, uint64_t);

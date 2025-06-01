@@ -61,25 +61,15 @@ void drawBall(void) {
 }
 
 void play(void) {
-    char c;
-    sysKey(&c);
-    switch(c) {
-        case 'w': break;
-        case 's': break;
-        case 'a': break;
-        case 'd': break;
-    }
+    char c = sysKey();
+    sysWrite(1,c,1);
+    if(c=='w') {sysWrite(1,'A',1);}
+    sysDraw();
 }
 
 void Pongis(void) {
-    sysConfigBitmap(4, Y, 21);
-    sysDrawBitmap(50, 50, AutoD[0]);
-    sysConfigBitmap(4, R, 21);
-    sysDrawBitmap(50, 50, AutoD[1]);
-    sysConfigBitmap(4, W, 21);
-    sysDrawBitmap(50, 50, AutoD[2]);
-    sysConfigBitmap(4, DG, 21);
-    sysDrawBitmap(50, 50, AutoD[3]);
     
-    sysDraw();
+    while(1){
+        play();
+    }
 }

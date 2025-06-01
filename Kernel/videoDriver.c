@@ -321,7 +321,7 @@ void drawChar(char c, uint32_t hexColor) {
     if (currentCharX >= charsPerWidth) {
         void nextLine();
     }
-
+    
     if(c=='\b') {
         if(!canErase()) {
             return; // Cannot erase, do nothing
