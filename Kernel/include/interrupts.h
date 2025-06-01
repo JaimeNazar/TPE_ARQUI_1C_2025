@@ -8,6 +8,20 @@
 #ifndef INTERRUPS_H_
 #define INTERRUPS_H_
 
+#include <stdint.h>
+
+#define GENERAL_REGISTERS_COUNT 15 
+#define SPECIAL_REGISTERS_COUNT 5 
+#define MSG_LENGTH 8
+
+#define HEX_BASE 16
+#define HEX_64_TEMPLATE "0x0000000000000000"
+#define HEX_64_TEMPLATE_OFFSET 2 // Skip first two characters
+#define HEX_64_TEMPLATE_LENGHT 18
+
+void interruptsDumpRegisters();
+
+// --- From asm file ---
 void _irq00Handler(void);
 void _irq01Handler(void);
 void _irq02Handler(void);
