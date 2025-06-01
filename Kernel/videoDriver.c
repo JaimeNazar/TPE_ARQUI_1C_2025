@@ -205,8 +205,10 @@ void putPixel(uint32_t hexColor, uint64_t x, uint64_t y) {
 /* Draws a square, the top-left corner has the position specified */
 void drawSquare(uint64_t x, uint64_t y, uint64_t size, uint32_t hexColor) { // TODO: Check if there is a faster approach
 
-    if (x + size >= MAX_WIDTH || y + size >= MAX_HEIGHT || x < 0 || y < 0)
+    // Ignore any drawing request outsize buffer limits
+    if (x + size >= MAX_WIDTH || y + size >= MAX_HEIGHT || x < 0 || y < 0){
         return;
+    }
 
 	for (int i = 0; i < size; i++) {
 		for (int j = 0; j < size; j++) {
@@ -218,7 +220,7 @@ void drawSquare(uint64_t x, uint64_t y, uint64_t size, uint32_t hexColor) { // T
 
 void drawCharAt(char c, uint64_t x, uint64_t y, uint32_t hexColor) {
 
-	char* index = font_bitmap[c];    // get letter bitmap starting index
+	unsigned char* index = font_bitmap[c];    // get letter bitmap starting index
 	char pixel = 0; // Current pixel
 
     int bitmapPixelSize = font_size / CHAR_BITMAP_WIDTH;    // This allows the font size to be the pixel width of a char
@@ -254,12 +256,15 @@ void drawScreen() {
 	}
 
 }
-uint32_t (*bm)[21];
+
+// ------ BITMAP UTILS ------
+
+uint32_t *bm;
 uint32_t hc = 0xFFFFFF; 
 int w = 0;
 
-void ConfigBitmap(uint32_t *bitmap,uint32_t hexColor,int width){
-    bm = (uint32_t (*)[21])bitmap;  // Bitmap data
+void ConfigBitmap(uint32_t *bitmap, uint32_t hexColor, int width){
+    bm = bitmap;  // Bitmap data
     hc = hexColor; // Hex color to draw the bitmap
     w = width;     // Width of the bitmap
     
@@ -269,7 +274,7 @@ void ConfigBitmap(uint32_t *bitmap,uint32_t hexColor,int width){
         
     }
 }
-void drawBitMap( uint64_t x, uint64_t y,int bitmapPixelSize) {
+void drawBitMap(uint64_t x, uint64_t y, int bitmapPixelSize) {
 
     for (int i = 0; i < w; i++) {
         uint32_t row = bm[i];  // Cada fila de bits
@@ -355,7 +360,7 @@ void drawChar(char c, uint32_t hexColor) {
 }
 
 /* Prints a string continiously on screen using a grid */
-void printText(char * str, int length, uint32_t hexColor) {
+void printText(const char * str, int length, uint32_t hexColor) {
 	for (int i = 0; i < length; i++) {
         if (str[i] == '\n') {
             currentCharX = 0;

@@ -63,10 +63,6 @@ int read(int fd, char * buff, int length) {
 
 }
 
-static uint64_t time_ticks() {
-    return ticks_elapsed();
-}
-
 static uint64_t time(uint8_t code) {
 
     uint8_t number = rtc(code);
@@ -111,10 +107,10 @@ uint64_t syscallDispatcher(uint64_t rax, ...) {
             ret_val = ticks_elapsed();
             break;
         case ID_SLEEP:
-            sleep(va_arg(args, uint64_t));
+            sleep(va_arg(args, int));
             break;
         case ID_TIME:
-            ret_val = time(va_arg(args, uint8_t));
+            ret_val = time(va_arg(args, int));
             break;
         case ID_BEEP:
             int freq = va_arg(args, int);

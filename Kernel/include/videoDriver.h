@@ -22,7 +22,7 @@ void drawChar(char c, uint32_t hexColor);
 void drawBitMap(uint64_t x, uint64_t y,int size);
 void ConfigBitmap(uint32_t *bitmap,uint32_t hexColor,int width);
 // Text utils
-void printText(char * str, int length, uint32_t hexColor);
+void printText(const char * str, int length, uint32_t hexColor);
 void videoSetFontsize(uint8_t size);
 void nextLine();
 int canErase();

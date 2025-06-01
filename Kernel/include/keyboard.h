@@ -8,7 +8,6 @@
 
 
 #define KEYS 58
-#define BUFFER_SIZE 1000
 #define ESC 0x01
 #define ENTER 28
 #define BACKSPACE 14
