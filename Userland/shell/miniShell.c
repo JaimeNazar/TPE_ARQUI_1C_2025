@@ -54,9 +54,9 @@ void clearCommand() {
 }
 
 
-void sleepCommand() {
-	sysWrite(1, "\nGame command not implemented yet\n", 34);
-	// sysSleep(10); // Sleep for 1 second
+void sleepCommand(int duration) {
+	sysSleep(duration); // Sleep for 1 second
+	sysWrite(1, "\n", 1);
 }
 
 void gameCommand() {
@@ -68,8 +68,9 @@ void timeCommand() {
 }
 
 //no me anda
-void beepCommand() {
-	sysBeep(400, 20);
+void beepCommand(int frequency, int duration) {
+	sysBeep(frequency, duration);
+	sysWrite(1, "\n", 1);
 }
 
 void ticksCommand() {

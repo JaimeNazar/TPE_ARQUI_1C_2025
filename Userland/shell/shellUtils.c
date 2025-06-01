@@ -17,10 +17,10 @@ static char *commandList[] = {
 char *commandListDescription[] = {
     " - Shows this help message",
     " - Clears the screen",
-    " - Sleeps for 1 second",
+    " - Puts the system to sleep for a specified amount of ticks",
     " - Starts the game",
     " - Shows the current time",
-    " - Makes a beep sound",
+    " - Makes a beep sound for a specified frecuency and time",
     " - Displays the number of ticks elapsed since system start",
     " - Echoes the input back to the user"
 };
@@ -31,10 +31,10 @@ static const int argumentsPerCommand[] = {
     0, // clear
     1, // sleep
     0, // game
-    1, // time
-    1, // beep
+    0, // time
+    2, // beep
     0, // ticks
-    0  // echo
+    0  // echo, special case
 
 };
 
@@ -80,12 +80,12 @@ void commandHandler(char* command, int length) {
         case CLEAR: 
             sysClear();
             break;
-        case SLEEP:                                 //ALGO ASI DEBERIAN DE ESTAR IMPLEMENTADAS SI LE QUERES PASAR UN NUMERO
+        case SLEEP: 
             int arg = strToInt(arguments[1]);
             if (arg == -1){
                 errorInvalidArgument(arguments[1]);
             }
-            else{sleepCommand();}                  
+            else{sleepCommand(arg);}                  
             break;
         case GAME:
            gameCommand();
@@ -94,7 +94,13 @@ void commandHandler(char* command, int length) {
             timeCommand();
             break;
         case BEEP: 
-            beepCommand();
+            int arg1 = strToInt(arguments[1]);
+            int arg2 = strToInt(arguments[2]);
+            if (arg1 == -1){
+                errorInvalidArgument(arguments[1]);
+            } else if (arg2 == -1){
+                errorInvalidArgument(arguments[2]);
+            } else{beepCommand(arg1,arg2);}
             break;
         case TICKS: 
             ticksCommand();
