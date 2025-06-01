@@ -26,5 +26,6 @@ void sysDraw();
 void sysTime(int code);
 void sysConfigBitmap(int bitmapSize,uint32_t hexColor,int width);
 void sysDrawBitmap(uint64_t x, uint64_t y,uint32_t *bitmap);
+void sysRegisters(int fd);
 
 #endif

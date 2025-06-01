@@ -21,6 +21,7 @@
 #define ID_BEEP 0x7
 #define ID_DRAWBITMAP 0x9
 #define ID_CONFIGBITMAP 0xA
+#define ID_DUMPREGS 0xB
 
 
 // ------ AUXILIARY ------
@@ -266,3 +267,6 @@ void sysConfigBitmap(int bitmapSize,uint32_t hexColor,int width){
     syscall_wizard(ID_CONFIGBITMAP, bitmapSize, hexColor, width);
 }
 
+void sysRegisters() {
+    return syscall_wizard(ID_DUMPREGS, 1, NO_ARG, NO_ARG);
+}

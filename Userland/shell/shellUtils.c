@@ -11,7 +11,8 @@ static char *commandList[] = {
     "time",
     "beep",
     "ticks",
-    "echo"
+    "echo",
+    "registers"
 };
 
 char *commandListDescription[] = {
@@ -22,7 +23,8 @@ char *commandListDescription[] = {
     " - Shows the current time",
     " - Makes a beep sound for a specified frecuency and time",
     " - Displays the number of ticks elapsed since system start",
-    " - Echoes the input back to the user"
+    " - Echoes the input back to the user",
+    " - Shows the current values of each register"
 };
 
 
@@ -34,7 +36,8 @@ static const int argumentsPerCommand[] = {
     0, // time
     2, // beep
     0, // ticks
-    0  // echo, special case
+    0, // echo, special case
+    0  // registers
 
 };
 
@@ -48,7 +51,8 @@ GAME,
 TIME,
 BEEP,
 TICKS,
-ECHO
+ECHO,
+REGISTERS
 //COMPLETAR
 };
 
@@ -107,6 +111,9 @@ void commandHandler(char* command, int length) {
             break;
         case ECHO: 
             echoCommand(arguments, cant);
+            break;
+        case REGISTERS: 
+            registersCommand();
             break;
         default:
             error();

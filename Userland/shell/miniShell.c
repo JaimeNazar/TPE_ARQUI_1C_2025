@@ -93,6 +93,12 @@ void echoCommand(char* arguments[MAX_ARGS], int cant) {
 	sysWrite(1, "\n", 1);
 }
 
+
+void registersCommand(){
+	sysWrite(1, "\n", 1);
+	sysRegisters(1);
+}
+
 void error() {
 	sysWrite(1, "\nCommand not found \n", 22);
 	sysWrite(1, " \ntype 'help' for a list of commands\n", 37);
