@@ -259,10 +259,10 @@ void sysSleep(int duration) {
 void sysBeep(int freq, int duration) {
     return syscall_wizard(ID_BEEP, freq, duration, NO_ARG);
 }
-void sysDrawBitmap(uint64_t x, uint64_t y,int bitmapSize) {
-    syscall_wizard(ID_DRAWBITMAP, x, y, bitmapSize);
+void sysDrawBitmap(uint64_t x, uint64_t y,uint32_t *bitmap) {
+    syscall_wizard(ID_DRAWBITMAP, x, y, bitmap);
 }
-void sysConfigBitmap(uint32_t *bitmap,uint32_t hexColor,int width){
-    syscall_wizard(ID_CONFIGBITMAP, bitmap, hexColor, width);
+void sysConfigBitmap(int bitmapSize,uint32_t hexColor,int width){
+    syscall_wizard(ID_CONFIGBITMAP, bitmapSize, hexColor, width);
 }
 

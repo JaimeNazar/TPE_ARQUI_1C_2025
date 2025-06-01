@@ -42,6 +42,7 @@ typedef struct vbe_mode_info_structure * VBEInfoPtr;
 
 VBEInfoPtr VBE_mode_info = (VBEInfoPtr) 0x0000000000005C00;
 
+
 // Each index represents the ascii code of the letter
 unsigned char font_bitmap[][16] = {
     { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  },       //0x00, 
@@ -254,25 +255,19 @@ void drawScreen() {
 	}
 
 }
-uint32_t (*bm)[21];
+int bitmapPixelSize;
 uint32_t hc = 0xFFFFFF; 
 int w = 0;
 
-void ConfigBitmap(uint32_t *bitmap,uint32_t hexColor,int width){
-    bm = (uint32_t (*)[21])bitmap;  // Bitmap data
+void ConfigBitmap(int bps,uint32_t hexColor,int width){
+    bitmapPixelSize = bps;   
     hc = hexColor; // Hex color to draw the bitmap
-    w = width;     // Width of the bitmap
-    
-
-    if (w <= 0) {
-        w = 1;
-        
-    }
+    w = (width <= 0) ? 1 : width;
 }
-void drawBitMap( uint64_t x, uint64_t y,int bitmapPixelSize) {
+void drawBitMap( uint64_t x, uint64_t y,uint32_t *bitmap) {
 
     for (int i = 0; i < w; i++) {
-        uint32_t row = bm[i];  // Cada fila de bits
+        uint32_t row = bitmap[i];  // Cada fila de bits
         for (int j = 0; j < w; j++) {
             // Verificamos si el bit en la posición j está encendido
             if ((row >> (w - 1 - j)) & 1) {
