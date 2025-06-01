@@ -3,7 +3,7 @@
 
 #include <shellUtils.h>
 #include <stdlib.h>
-#include <Pongis.h>
+#include <pongis.h>
 
 #define SHELL_PROMPT "miniShell > "
 
