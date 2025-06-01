@@ -1,6 +1,7 @@
 #include <syscallDispatcher.h>
 #include <time.h>
 #include <stdint.h>
+#include <interrupts.h>
 #define BUFFER_SIZE 5
 
 typedef struct{
@@ -113,8 +114,11 @@ uint64_t syscallDispatcher(uint64_t rax, ...) {
     va_list args;
     va_start(args, rax);  
 
+
+    // Re-enable interrupts
+    _sti();
+
     uint64_t ret_val = 0;
-    
     switch(rax) {
         case ID_WRITE:
             int fdWrite = va_arg(args, int);
