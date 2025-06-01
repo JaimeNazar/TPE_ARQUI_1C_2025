@@ -6,6 +6,8 @@
 #include <pongis.h>
 
 #define SHELL_PROMPT "miniShell > "
+#define MAX_ARGS 16
+
 
 void shellInit();
 void shellUpdate();
@@ -16,6 +18,7 @@ void gameCommand();
 void timeCommand();
 void beepCommand();
 void ticksCommand();
+void echoCommand(char* arguments[MAX_ARGS], int cant);
 void error();
 void errorByArguments(char* command, int cant);
 void errorInvalidArgument(char* argument);

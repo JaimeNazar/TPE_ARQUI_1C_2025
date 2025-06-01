@@ -1,5 +1,6 @@
 #include <miniShell.h>
 
+
 char buffer[128];
 void shellInit() {
 
@@ -80,6 +81,16 @@ void ticksCommand() {
 	sysWrite(1, "\n", 1);
 }
 
+
+void echoCommand(char* arguments[MAX_ARGS], int cant) {
+
+	sysWrite(1, "\n", 1);
+	for (int i = 1; i < cant; i++) {
+		sysWrite(1, arguments[i], strlen(arguments[i]));
+		sysWrite(1, " ", 1); 
+	}
+	sysWrite(1, "\n", 1);
+}
 
 void error() {
 	sysWrite(1, "\nCommand not found \n", 22);

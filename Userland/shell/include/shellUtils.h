@@ -5,7 +5,7 @@
 #include <miniShell.h>
 
 
-#define COMMANDS 7
+#define COMMANDS 8
 
 char **getCommandList();
 char **getCommandListDescription();

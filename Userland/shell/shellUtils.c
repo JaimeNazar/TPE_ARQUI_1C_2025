@@ -10,7 +10,8 @@ static char *commandList[] = {
     "game",
     "time",
     "beep",
-    "ticks"
+    "ticks",
+    "echo"
 };
 
 char *commandListDescription[] = {
@@ -20,7 +21,8 @@ char *commandListDescription[] = {
     " - Starts the game",
     " - Shows the current time",
     " - Makes a beep sound",
-    " - Displays the number of ticks elapsed since system start"
+    " - Displays the number of ticks elapsed since system start",
+    " - Echoes the input back to the user"
 };
 
 
@@ -31,7 +33,9 @@ static const int argumentsPerCommand[] = {
     0, // game
     1, // time
     1, // beep
-    0  // ticks
+    0, // ticks
+    0  // echo
+
 };
 
 
@@ -43,7 +47,8 @@ SLEEP,
 GAME,
 TIME,
 BEEP,
-TICKS
+TICKS,
+ECHO
 //COMPLETAR
 };
 
@@ -64,7 +69,7 @@ void commandHandler(char* command, int length) {
 
     int commandID = idHandler(arguments[0], strlen(arguments[0]));
 
-    if ( commandID != -1 && argumentsPerCommand[commandID] != cant - 1 ) {      //primero me fijo si dado el comando, la cantidad de argumentos es correcta
+    if ( commandID != -1 && commandID != ECHO && argumentsPerCommand[commandID] != cant - 1 ) {      //primero me fijo si dado el comando, la cantidad de argumentos es correcta
         errorByArguments(arguments[0], argumentsPerCommand[commandID]);
     }
     else {
@@ -93,6 +98,9 @@ void commandHandler(char* command, int length) {
             break;
         case TICKS: 
             ticksCommand();
+            break;
+        case ECHO: 
+            echoCommand(arguments, cant);
             break;
         default:
             error();
