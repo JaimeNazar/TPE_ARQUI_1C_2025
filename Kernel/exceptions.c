@@ -1,19 +1,4 @@
-#include <stdint.h>
-#include <syscallDispatcher.h>
-#include <registers.h>
-#include <interrupts.h>
-
-#include <videoDriver.h>
-
-#define ZERO_EXCEPTION_ID 0
-#define UNDEF_OP_CODE_EXCEPTION_ID 6 //https://wiki.osdev.org/Interrupt_Descriptor_Table
-#define GENERAL_REGISTERS_COUNT 15 
-#define SPECIAL_REGISTERS_COUNT 5 
-#define MSG_LENGTH 8
-
-#define HEX_BASE 16
-#define HEX_64_TEMPLATE "0x0000000000000000"
-#define HEX_64_TEMPLATE_LENGHT 18
+#include<exceptions.h>
 
 const char * generalRegisterString[] = {                               //todos con len = 8
 	"RAX:    ", "RBX:    ", "RCX:    ", "RDX:    ",
@@ -35,18 +20,22 @@ static void printError(char * str) {
 	write(2, str, strlen(str));
 }
 
-// TODO: End up using the getChar method from sycallDispatcher
+/*
+ * Prints hex representaiton of 64 bit value
+ * NOTE: The for doesnt stop if the raminder is 0 because it need to rewrite 
+ * any previoud character left on the template in an earlier call
+*/
 static void printHex(uint64_t value) {
 	char* template = HEX_64_TEMPLATE;	// Template for the hex representation of a 64 bit value
 
 	// Fill in template with actual hex values
-	for (int i = HEX_64_TEMPLATE_LENGHT - 1; i >= 0; i--) {
+	for (int i = HEX_64_TEMPLATE_LENGHT - 1; i >= HEX_64_TEMPLATE_OFFSET; i--) {
 		value /= HEX_BASE;
 		uint32_t remainder = value % HEX_BASE;
 		template[i] = (remainder < 10) ? remainder + '0' : remainder + 'A' - 10;
 	}
 
-	write(1, template, HEX_64_TEMPLATE_LENGHT);
+	write(2, template, HEX_64_TEMPLATE_LENGHT);
 }
 
 /* Prints a map, in this case, used the registers mapped to their values 
@@ -60,48 +49,55 @@ static void printMap(const char** keys, uint64_t* values, int lenght)  {
 	}
 }
 
-static void exceptionMsg(const char* msg, const int len) {
+static void exceptionMsg(const char* msg) {
 	
 	printError("Excepcion: ");
-	write(2, msg, len);
+	write(2, msg, strlen(msg));
 	write(2, "\n", 1);
-
-	printError("Instruction Pointer: ");
-	printHex(get_rip());
-	write(2, "\n", 1);
-
-	write(2, "General Registers: \n", strlen("General Registers: \n"));
+	
+	char *general = "General Registers: \n";
+	write(2, general, strlen(general));
 
 	// Print general purpose registers
 	printMap(generalRegisterString, get_registers(), GENERAL_REGISTERS_COUNT);
 
-	write(2, "Special Registers: \n", strlen("Special Registers: \n"));
+	char *special = "Special Registers: \n";
+	write(2, special, strlen(special));
 	// Print special registers
 	printMap(specialRegisterString, get_special_registers(), SPECIAL_REGISTERS_COUNT);
 
-
-	drawScreen();
-	
- // ACA DEBERIA DE VOLVER A LA SHELL SEGUN LA CONSIGNA DEL TPE, TODAVIA NO ESTA IMPLEMENTADO
-
+	char *waitInput = "\n\n Press enter to resume normal execution \n";
+	write(2, waitInput, strlen(waitInput));
 }
 
 static void zero_division() {
-	_sti();	// Re-enable hardware interrupts
-	exceptionMsg("Division by zero", 17);
+	char *msg = "Division by zero";
+	exceptionMsg(msg);
 }
 
 
 static void undefined_op_code() {
-	_sti();
-	exceptionMsg("Undefined operation code", 25);
+	char *msg = "Division by zero";
+	exceptionMsg(msg);
 }
 
 void exceptionDispatcher(int exception) {
 	
 	if (exception == ZERO_EXCEPTION_ID)
 		zero_division();
-	else if (exception == UNDEF_OP_CODE_EXCEPTION_ID) {}
+	else if (exception == UNDEF_OP_CODE_EXCEPTION_ID)
+		undefined_op_code();
 	
+	drawScreen();
+
+	// Re-enable interrupts
+	_sti();
+
+	// Wait for user to press enter before resuming execution
+	char c = 0;
+	while (c != '\n') {
+		while(!canRead());
+		getNextKey(&c);
+	}
 }
 
