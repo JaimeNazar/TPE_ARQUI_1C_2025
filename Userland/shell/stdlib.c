@@ -267,6 +267,6 @@ void sysConfigBitmap(int bitmapSize,uint32_t hexColor,int width){
     syscall_wizard(ID_CONFIGBITMAP, bitmapSize, hexColor, width);
 }
 
-void sysRegisters() {
-    return syscall_wizard(ID_DUMPREGS, 1, NO_ARG, NO_ARG);
+void sysRegisters(int fd) {
+    return syscall_wizard(ID_DUMPREGS, fd, NO_ARG, NO_ARG);
 }
