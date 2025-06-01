@@ -8,16 +8,16 @@ static int strlen(char* str) {
 
 // Outputs text into the STDERR file descriptor
 static void printError(char * str) {
-	write(2, str, strlen(str));
+	write(STDERR, str, strlen(str));
 }
 
 static void exceptionMsg(const char* msg) {
 	
 	printError("Excepcion: ");
 	printError(msg);
-	write(2, "\n", 1);
+	write(STDERR, "\n", 1);
 
-	interruptsDumpRegisters();
+	interruptsDumpRegisters(STDERR);
 
 	printError("\n\n Press enter to resume normal execution \n");
 }

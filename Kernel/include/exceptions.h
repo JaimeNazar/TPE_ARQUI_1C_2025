@@ -6,6 +6,8 @@
 #include <registers.h>
 #include <interrupts.h>
 
+#define STDERR 2    // Error file descriptor
+
 #define ZERO_EXCEPTION_ID 0
 #define UNDEF_OP_CODE_EXCEPTION_ID 6 //https://wiki.osdev.org/Interrupt_Descriptor_Table
 

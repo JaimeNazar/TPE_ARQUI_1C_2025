@@ -133,6 +133,10 @@ uint64_t syscallDispatcher(uint64_t rax, ...) {
             int width = va_arg(args, int);
             ConfigBitmap(bitmapPixelSize, hexColor, width);
             break;
+        case ID_DUMP_REGS:
+            int fdDump = va_arg(args, int);
+            interruptsDumpRegisters(fdDump);
+            break;
         default:
             // Manejar  
             break;

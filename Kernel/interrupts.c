@@ -21,7 +21,7 @@ static int strlen(char* str) {
  * NOTE: The for doesnt stop if the raminder is 0 because it need to rewrite 
  * any previoud character left on the template in an earlier call
 */
-static void printHex(uint64_t value) {
+static void printHex(uint64_t value, int fd) {
 	char* template = HEX_64_TEMPLATE;	// Template for the hex representation of a 64 bit value
 
 	// Fill in template with actual hex values
@@ -31,31 +31,31 @@ static void printHex(uint64_t value) {
 		template[i] = (remainder < 10) ? remainder + '0' : remainder + 'A' - 10;
 	}
 
-	write(2, template, HEX_64_TEMPLATE_LENGHT);
+	write(fd, template, HEX_64_TEMPLATE_LENGHT);
 }
 
 /* Prints a map, in this case, used the registers mapped to their values 
  * TODO: It prints them in columns of 3
  */
-static void printMap(const char** keys, uint64_t* values, int lenght)  {
+static void printMap(const char** keys, uint64_t* values, int lenght, int fd)  {
 	for (int i = 0 ; i < lenght; i++) {
-		write(2, keys[i], MSG_LENGTH);
-		printHex(values[i]);
-		write(2, "\n", 1);
+		write(fd, keys[i], MSG_LENGTH);
+		printHex(values[i], fd);
+		write(fd, "\n", 1);
 	}
 }
 
-void interruptsDumpRegisters(){
+void interruptsDumpRegisters(int fd){
     char *general = "General Registers: \n";
-	write(2, general, strlen(general));
+	write(fd, general, strlen(general));
 
 	// Print general purpose registers
-	printMap(generalRegisterString, get_registers(), GENERAL_REGISTERS_COUNT);
+	printMap(generalRegisterString, get_registers(), GENERAL_REGISTERS_COUNT, fd);
 
 	char *special = "Special Registers: \n";
-	write(2, special, strlen(special));
+	write(fd, special, strlen(special));
 
 	// Print special registers
-	printMap(specialRegisterString, get_special_registers(), SPECIAL_REGISTERS_COUNT);
+	printMap(specialRegisterString, get_special_registers(), SPECIAL_REGISTERS_COUNT, fd);
 
 }
