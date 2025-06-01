@@ -2,15 +2,8 @@
 #include <time.h>
 #include <stdint.h>
 #include <interrupts.h>
-#define BUFFER_SIZE 5
+#include <keyboard.h>
 
-typedef struct{
-    int contador;
-    char buffer[6];
-    char nextToWrite; // Siguiente posicion a escribir
-    char nextToRead; // Siguiente posicion a leer
-
-}CicleBuffer;
 // Output style depends on file descriptor
 int write(int fd, const char * buff, int length) {
     switch (fd) {
@@ -26,37 +19,6 @@ int write(int fd, const char * buff, int length) {
     return length;
 }
 
-CicleBuffer inputBuffer = {0, {0}, 0, 0};
-char getNextKey(char* c) {
-    if (inputBuffer.contador > 0) {
-        *c = inputBuffer.buffer[inputBuffer.nextToRead];
-        inputBuffer.nextToRead = (inputBuffer.nextToRead + 1) % BUFFER_SIZE;
-        inputBuffer.contador--;
-        return 1;
-    }
-
-    *c = 0;
-    return 0;
-}
-
-
-char saveKey() {
-    char c = get_keyboard_output();
-    c = characterFilter(c);
-
-    if (inputBuffer.contador < BUFFER_SIZE) {
-        inputBuffer.buffer[inputBuffer.nextToWrite] = c;
-        inputBuffer.nextToWrite = (inputBuffer.nextToWrite + 1) % BUFFER_SIZE;
-        inputBuffer.contador++;
-    } else {
-        // Buffer lleno: sobrescribimos el más viejo (nextToRead)
-        inputBuffer.buffer[inputBuffer.nextToWrite] = c;
-        inputBuffer.nextToWrite = (inputBuffer.nextToWrite + 1) % BUFFER_SIZE;
-        inputBuffer.nextToRead = (inputBuffer.nextToRead + 1) % BUFFER_SIZE; 
-    }
-
-    return c;
-}
 // Polls the keyboard until enter is pressed or reached length specified
 int read(int fd, char * buff, int length) {
     
@@ -66,7 +28,11 @@ int read(int fd, char * buff, int length) {
         case 1:
             char current;
             while (count<length) {
-                current =pollKeyboard();
+
+                while(!canRead());  // Wait until there is a key to read
+
+                getNextKey(&current);   // Get key from keyboard buffer
+
                 if (current == '\n') { // Enter
                     buff[count++] = '\n';
                     void nextLine();
@@ -88,6 +54,7 @@ int read(int fd, char * buff, int length) {
                 drawChar(current, COLOR_WHITE);
                 drawScreen();
                 }
+
             }
         break;
     }

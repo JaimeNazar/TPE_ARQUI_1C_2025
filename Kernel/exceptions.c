@@ -11,6 +11,10 @@
 #define SPECIAL_REGISTERS_COUNT 5 
 #define MSG_LENGTH 8
 
+#define HEX_BASE 16
+#define HEX_64_TEMPLATE "0x0000000000000000"
+#define HEX_64_TEMPLATE_LENGHT 18
+
 const char * generalRegisterString[] = {                               //todos con len = 8
 	"RAX:    ", "RBX:    ", "RCX:    ", "RDX:    ",
 	"RBP:    ", "RDI:    ", "RSI:    ",
@@ -33,23 +37,16 @@ static void printError(char * str) {
 
 // TODO: End up using the getChar method from sycallDispatcher
 static void printHex(uint64_t value) {
-	// TODO: Move it to a define
-	char hexNumber[8];	// Template for the hex representation of a 64 bit value
+	char* template = HEX_64_TEMPLATE;	// Template for the hex representation of a 64 bit value
 
-	int count = 0; // Count how many hex characters the current number contains
-
-	do
-	{
-		uint32_t remainder = value % 16;
-		hexNumber[count++] = (remainder < 10) ? remainder + '0' : remainder + 'A' - 10;	// TODO: add additional validations
+	// Fill in template with actual hex values
+	for (int i = HEX_64_TEMPLATE_LENGHT - 1; i >= 0; i--) {
+		value /= HEX_BASE;
+		uint32_t remainder = value % HEX_BASE;
+		template[i] = (remainder < 10) ? remainder + '0' : remainder + 'A' - 10;
 	}
-	while (value /= 16);
 
-	// TODO:check if there is a better way
-	for (int i = 0; i < 8 - count; i++)
-		write(1, "0", 1);	// TODO: fix this
-
-	write(1, hexNumber, count);
+	write(1, template, HEX_64_TEMPLATE_LENGHT);
 }
 
 /* Prints a map, in this case, used the registers mapped to their values 

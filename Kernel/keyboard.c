@@ -1,17 +1,5 @@
 
 #include <keyboard.h>
-#define KEYS 58
-#define BUFFER_SIZE 1000
-#define ESC 0x01
-#define ENTER 28
-#define BACKSPACE 14
-#define TAB 15	
-#define L_SHIFT_PRESS 0x2A
-#define L_SHIFT_RELEASE 0xAA
-#define R_SHIFT_PRESS 0x36
-#define R_SHIFT_RELEASE 0xB6
-#define CAPS_LOCK_PRESS 0x3A
-#define MAX_PRESS_KEY 0x70
 
 // Scancode to ASCII for US keyboard layout
 char kbd_US [128] =
@@ -110,24 +98,24 @@ static unsigned char keyValues[KEYS][2] = {
 	{' ', ' '},
 };
 
-static char buffer[BUFFER_SIZE] = {0};//Buffer ciclico de teclado
+typedef struct{
+    int elemCount;
+    char buffer[BUFFER_SIZE];
+    char nextToWrite; // Siguiente posicion a escribir
+    char nextToRead; // Siguiente posicion a leer
+
+} CycleBuffer;
+
+static CycleBuffer inputBuffer;
+
 static int nextToWrite = 0; //Siguiente posicion a escribir
 static int nextToRead = 0; //Siguiente posicion a leer
 static int countToRead = 0; //Cantidad de caracteres a leer
-int altKey = 0; // determina cuando se utiliza shift y capslock
-int shift = 0;
-int capsLock = 0;
+static int altKey = 0; // determina cuando se utiliza shift y capslock
+static int shift = 0;
+static int capsLock = 0;
 
-uint8_t pollKeyboard() {
-    while(!(get_keyboard_status() & 0x01));
-
-    uint8_t scancode = get_keyboard_output();
-    scancode = characterFilter(scancode);
-	return scancode;
-
-}
-
-char characterFilter(char key) {
+static char characterFilter(char key) {
     // Primero, actualizamos el estado de los modificadores y descartamos el evento
     if(key == L_SHIFT_PRESS || key == R_SHIFT_PRESS) {
         shift = !shift; 
@@ -154,6 +142,46 @@ char characterFilter(char key) {
         
     return keyValues[key][altKey];
 }
+
 char canRead() {
-  return countToRead > 0;
+  return inputBuffer.elemCount > 0;
+}
+
+uint8_t pollKeyboard() {
+    while(!(get_keyboard_status() & 0x01));
+
+    uint8_t scancode = get_keyboard_output();
+    scancode = characterFilter(scancode);
+	return scancode;
+
+}
+
+char getNextKey(char* c) {
+    if (inputBuffer.elemCount > 0) {
+        *c = inputBuffer.buffer[inputBuffer.nextToRead];
+        inputBuffer.nextToRead = (inputBuffer.nextToRead + 1) % BUFFER_SIZE;
+        inputBuffer.elemCount--;
+        return 1;
+    }
+
+    *c = 0;
+    return 0;
+}
+
+char saveKey() {
+    char c = get_keyboard_output();
+    c = characterFilter(c);
+
+    if (inputBuffer.elemCount < BUFFER_SIZE) {
+        inputBuffer.buffer[inputBuffer.nextToWrite] = c;
+        inputBuffer.nextToWrite = (inputBuffer.nextToWrite + 1) % BUFFER_SIZE;
+        inputBuffer.elemCount++;
+    } else {
+        // Buffer lleno: sobrescribimos el más viejo (nextToRead)
+        inputBuffer.buffer[inputBuffer.nextToWrite] = c;
+        inputBuffer.nextToWrite = (inputBuffer.nextToWrite + 1) % BUFFER_SIZE;
+        inputBuffer.nextToRead = (inputBuffer.nextToRead + 1) % BUFFER_SIZE; 
+    }
+
+    return c;
 }
