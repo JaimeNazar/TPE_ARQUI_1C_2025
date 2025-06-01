@@ -9,13 +9,13 @@
 #define M 0xFF00FF
 #define P 0x800080
 #define GRAY 0x808080
-#define DARK_GRAY 0x404040
+#define DG 0x404040
 #define LIGHT_GRAY 0xC0C0C0
 #define BLUE 0x0000FF
 #define ORANGE 0xFFA500
 #define PURPLE 0x800080
 #define AQUA 0x00FFFF
-#define WHITE 0xFFFFFF
+#define W 0xFFFFFF
 
 
 
@@ -72,6 +72,14 @@ void play(void) {
 }
 
 void Pongis(void) {
-    sysConfigBitmap(AutoL[0], 0xFFFF00, 21);
-    sysDrawBitmap(50, 50, 4);
+    sysConfigBitmap(4, Y, 21);
+    sysDrawBitmap(50, 50, AutoD[0]);
+    sysConfigBitmap(4, R, 21);
+    sysDrawBitmap(50, 50, AutoD[1]);
+    sysConfigBitmap(4, W, 21);
+    sysDrawBitmap(50, 50, AutoD[2]);
+    sysConfigBitmap(4, DG, 21);
+    sysDrawBitmap(50, 50, AutoD[3]);
+    
+    sysDraw();
 }

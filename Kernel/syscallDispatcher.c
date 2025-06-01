@@ -124,15 +124,14 @@ uint64_t syscallDispatcher(uint64_t rax, ...) {
         case ID_DRAWBITMAP: 
             uint64_t x = va_arg(args, uint64_t);
             uint64_t y = va_arg(args, uint64_t);
-            int bitmapPixelSize = va_arg(args, int);
-            drawBitMap( x, y,bitmapPixelSize);
+            uint32_t *bitmap = va_arg(args, uint32_t*);
+            drawBitMap( x, y,bitmap);
             break;
         case ID_CONFIGBITMAP:
-            uint32_t *bitmap = va_arg(args, uint32_t*);
+            int bitmapPixelSize = va_arg(args, int);
             uint32_t hexColor = va_arg(args, uint32_t);
             int width = va_arg(args, int);
-            int height = va_arg(args, int);
-            ConfigBitmap(&bitmap, hexColor, width);
+            ConfigBitmap(bitmapPixelSize, hexColor, width);
             break;
         default:
             // Manejar  

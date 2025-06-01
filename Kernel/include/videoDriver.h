@@ -19,8 +19,8 @@ void drawSquare(uint64_t x, uint64_t y, uint64_t size, uint32_t hexColor);
 void drawScreen();
 void clearBuffer();
 void drawChar(char c, uint32_t hexColor);
-void drawBitMap(uint64_t x, uint64_t y,int size);
-void ConfigBitmap(uint32_t *bitmap,uint32_t hexColor,int width);
+void drawBitMap(uint64_t x, uint64_t y,uint32_t *bitmap);
+void ConfigBitmap(int size,uint32_t hexColor,int width);
 // Text utils
 void printText(const char * str, int length, uint32_t hexColor);
 void videoSetFontsize(uint8_t size);
