@@ -1,5 +1,7 @@
 #include <shellUtils.h>
 
+#define MAX_ARGS 16
+
 //Add as necessary
 static char *commandList[] = {
     "help",     
@@ -21,6 +23,16 @@ char *commandListDescription[] = {
     " - Displays the number of ticks elapsed since system start"
 };
 
+
+static const int argumentsPerCommand[] = {
+    0, // help
+    0, // clear
+    1, // sleep
+    0, // game
+    1, // time
+    1, // beep
+    0  // ticks
+};
 
 
 
@@ -45,17 +57,30 @@ int idHandler(char* command, int length) {
 }
 void commandHandler(char* command, int length) {
     
-    int commandID = idHandler(command, length);
+    char *arguments[MAX_ARGS];
+    int cant = commandToArguments(command, length, arguments);
 
-    switch (commandID) {
+    int test = cant;
+
+    int commandID = idHandler(arguments[0], strlen(arguments[0]));
+
+    if ( commandID != -1 && argumentsPerCommand[commandID] != cant - 1 ) {      //primero me fijo si dado el comando, la cantidad de argumentos es correcta
+        errorByArguments(arguments[0], argumentsPerCommand[commandID]);
+    }
+    else {
+        switch (commandID) {
         case HELP: 
             helpCommand();
             break;
         case CLEAR: 
             sysClear();
             break;
-        case SLEEP: 
-            sleepCommand();
+        case SLEEP:                                 //ALGO ASI DEBERIAN DE ESTAR IMPLEMENTADAS SI LE QUERES PASAR UN NUMERO
+            int arg = strToInt(arguments[1]);
+            if (arg < 0){
+                errorInvalidArgument(arguments[1]);
+            }
+            else{sleepCommand();}                  
             break;
         case GAME:
            gameCommand();
@@ -72,19 +97,18 @@ void commandHandler(char* command, int length) {
         default:
             error();
             break;
+        }
     }
-    
+    return;
 }
+
 char **getCommandList(){
     return commandList;
 }
-//case sensitive
 
 char **getCommandListDescription() {
     return commandListDescription;
 }
-
-
 
 
 

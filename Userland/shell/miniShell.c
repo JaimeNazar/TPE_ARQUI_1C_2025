@@ -54,7 +54,8 @@ void clearCommand() {
 
 
 void sleepCommand() {
-	sysSleep(10); // Sleep for 1 second
+	sysWrite(1, "\nGame command not implemented yet\n", 34);
+	// sysSleep(10); // Sleep for 1 second
 }
 
 void gameCommand() {
@@ -85,9 +86,22 @@ void error() {
 	sysWrite(1, " \ntype 'help' for a list of commands\n", 37);
 }
 
+void errorByArguments(char* command, int cant){
+	sysWrite(1, "\nInvalid number of arguments for command: ", 42);
+        sysWrite(1, command, strlen(command));
+        sysWrite(1, "\n", 1);
+        sysWrite(1, "Expected ", 9);
+        char buffer[10];  // espacio suficiente para el número
+    	intToStr(cant, buffer);
+   		sysWrite(1, buffer, strlen(buffer));
+        sysWrite(1, "\n", 1);
+}
 
-
-
+void errorInvalidArgument(char* argument) {
+	sysWrite(1, "\nInvalid argument: ", 19);
+	sysWrite(1, argument, strlen(argument));
+	sysWrite(1, "\n", 1);
+}
 
 
 

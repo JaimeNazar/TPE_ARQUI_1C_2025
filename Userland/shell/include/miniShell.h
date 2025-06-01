@@ -17,4 +17,6 @@ void timeCommand();
 void beepCommand();
 void ticksCommand();
 void error();
+void errorByArguments(char* command, int cant);
+void errorInvalidArgument(char* argument);
 #endif

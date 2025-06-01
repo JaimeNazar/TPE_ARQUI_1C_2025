@@ -12,6 +12,7 @@ extern uint64_t syscall_wizard(uint64_t rax, uint64_t rdi, uint64_t rsi, uint64_
 int strcmp(char* str1, char* str2, int length1, int length2);
 int strlen(char* str);
 void intToStr(int value, char *str);
+int strToInt(const char *str);
 
 void printf(char* ftm, ...);
 char * stoi(int value);

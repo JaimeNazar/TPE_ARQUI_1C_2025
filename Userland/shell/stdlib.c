@@ -5,6 +5,10 @@
 
 #define NO_ARG 0x0
 
+
+#define MAX_CMD_LEN 128
+#define MAX_ARGS 16
+
 // Syscalls IDs
 #define ID_WRITE 0x0
 #define ID_READ 0x1
@@ -114,6 +118,61 @@ void intToStr(int value, char *str) {
         str[j] = str[k];
         str[k] = tmp;
     }
+}
+
+
+
+int commandToArguments(char *command, int length, char *arguments[MAX_ARGS]) {
+    static char buffer[MAX_CMD_LEN];
+    int argCount = 0;
+    int i = 0, j = 0;
+
+    // Eliminar \n o \r al final
+    if (length > 0 && (command[length - 1] == '\n' || command[length - 1] == '\r')) {
+        command[--length] = '\0';
+    }
+
+    // Saltar espacios iniciales
+    while (i < length && command[i] == ' ')
+        i++;
+
+    while (i < length && argCount < MAX_ARGS - 1) {
+        // Guardar puntero al argumento actual
+        arguments[argCount] = &buffer[j];
+
+        // Copiar caracteres hasta próximo espacio
+        while (i < length && command[i] != ' ') {
+            buffer[j++] = command[i++];
+        }
+
+        buffer[j++] = '\0'; // fin del argumento
+        argCount++;
+
+        // Saltar espacios entre argumentos
+        while (i < length && command[i] == ' ')
+            i++;}
+
+
+        arguments[argCount] = 0; // terminador estilo argv
+
+        return argCount; // devolver cantidad de argumentos encontrados
+}
+
+
+int strToInt(const char *str) {
+    int result = 0;
+    int i = 0;
+
+    // Convertir dígitos
+    while (str[i] >= '0' && str[i] <= '9') {
+        result = result * 10 + (str[i] - '0');
+        i++;
+    }
+    if (str[i] < '0' || str[i] > '9') {
+        // Si no es un dígito, retornar -1
+        return -1;
+    }
+    return result;
 }
 
 
