@@ -77,7 +77,7 @@ void commandHandler(char* command, int length) {
             break;
         case SLEEP:                                 //ALGO ASI DEBERIAN DE ESTAR IMPLEMENTADAS SI LE QUERES PASAR UN NUMERO
             int arg = strToInt(arguments[1]);
-            if (arg < 0){
+            if (arg == -1){
                 errorInvalidArgument(arguments[1]);
             }
             else{sleepCommand();}                  

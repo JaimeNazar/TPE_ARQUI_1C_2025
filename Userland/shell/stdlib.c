@@ -169,6 +169,9 @@ int strToInt(const char *str) {
         i++;
     }
     if (str[i] < '0' || str[i] > '9') {
+        if(str[i] == '\0' || str[i] == '\n' || str[i] == '\r') {
+             return result;
+        }
         // Si no es un dígito, retornar -1
         return -1;
     }
