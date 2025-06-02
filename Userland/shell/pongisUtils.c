@@ -1,7 +1,9 @@
 
 #include <pongisUtils.h>
 
-
+float fabsf(float x) {
+    return (x < 0.0f) ? -x : x;
+}
 void sincosf(float angle, float *s, float *c) {
     // Normaliza el ángulo entre -PI y PI
     while (angle > PI) {
@@ -14,8 +16,10 @@ void sincosf(float angle, float *s, float *c) {
     float angle2 = angle * angle;
     // Aproximación del seno (serie de Taylor hasta el término de x^7)
     *s = angle - (angle * angle2) / 6.0f + (angle * angle2 * angle2) / 120.0f - (angle * angle2 * angle2 * angle2) / 5040.0f;
+    
     // Aproximación del coseno (serie de Taylor hasta el término de x^6)
     *c = 1 - angle2 / 2.0f + (angle2 * angle2) / 24.0f - (angle2 * angle2 * angle2) / 720.0f;
+    
 }
 void arctan(double x, int terms, float *angle) {
     if (x > 1.0) {
@@ -47,13 +51,13 @@ void Finish(){
 
 }
 void checkColissions(body*b1,body *pelota,body *hoyo){
-    if(b1->x-b1->x_offset < 10|| b1->x+b1->x_offset > 1910) 
+    if(b1->x-b1->x_offset < 0|| b1->x+b1->x_offset > 1000) 
         b1->vel_x = -b1->vel_x;
-    if(b1->y-b1->y_offset < 10|| b1->y+b1->y_offset > 1070)
+    if(b1->y-b1->y_offset < 10|| b1->y+b1->y_offset > 700)
         b1->vel_y = -b1->vel_y; 
-    if(pelota->x-pelota->x_offset < 10|| pelota->x+pelota->x_offset > 1910)
+    if(pelota->x-pelota->x_offset < 0|| pelota->x+pelota->x_offset > 1800)
         pelota->vel_x = -pelota->vel_x;
-    if(pelota->y-pelota->y_offset < 10|| pelota->y+pelota->y_offset > 1070)
+    if(pelota->y-pelota->y_offset < 0|| pelota->y+pelota->y_offset > 700)
         pelota->vel_y = -pelota->vel_y;
     
     if(pelota->x-pelota->x_offset < b1->x+b1->x_offset || pelota->x+pelota->x_offset > b1->x-b1->x_offset){

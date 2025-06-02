@@ -6,13 +6,10 @@
 typedef struct {
     uint64_t x;
     uint64_t y;
-    uint64_t acceleration_x;
-    uint64_t acceleration_y;
-    uint64_t vel_x;
-    uint64_t vel_y;
-    float angle;
+    float vel_x;
+    float vel_y;
+    int rotation;
     uint64_t max_speed;
-    uint64_t max_acceleration;
     int x_offset;
     int y_offset;
 } body;
@@ -23,5 +20,6 @@ void applyForces(body *b, float angle, float magnitud);
 void checkColissions(body *b1, body *pelota, body *hoyo);
 void Finish();
 void drawBall();
+float fabsf(float x);
 
 #endif
