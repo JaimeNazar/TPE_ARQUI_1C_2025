@@ -2,6 +2,7 @@
 #define PONGIS_UTILS_H
 
 #include <stdint.h>
+#define PI 3.1415926f
 typedef struct {
     uint64_t x;
     uint64_t y;

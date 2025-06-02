@@ -1,6 +1,7 @@
 #include <stdint.h>
 #include <pongis.h>
-
+#define MAXVEL 15
+#define MAXACC 5
 #define B 0x000000
 #define G 0x00FF00
 #define R 0xFF0000
@@ -13,7 +14,6 @@
 #define LIGHT_GRAY 0xC0C0C0
 #define BLUE 0x0000FF
 #define ORANGE 0xFFA500
-#define PURPLE 0x800080
 #define AQUA 0x00FFFF
 #define W 0xFFFFFF
 
@@ -52,27 +52,99 @@ uint32_t pelota[][15] = {
     {0x0000,0x0000,0x0038,0x007C,0x007C,0x007C,0x0038,0x0000,0x0000,0x0000,0x0000,0x0000,0x0000,0x0000,0x0000}
 };
 
-body p1 = {0, 0, 0, 0, 0, 0, 0, 0, 0, 21, 21};
-body p2 = {0, 0, 0, 0, 0, 0, 0, 0, 0, 21, 21};
-body ball = {0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 15};
+body p1 = {50,50, 0, 0, 0, 0, PI/2, 0, 0, 10, 10};
+body p2 = {2000, 2000, 0, 0, 0, 0, 0, 0, 0, 10, 10};
+body ball = {0,0, 0, 0, 0, 0, 0, 0, 0, 7, 7};
 
-void drawBall(void) {
-    // implementación...
+void drawBall(uint64_t x,uint64_t y) {
+    sysConfigBitmap(2, R, 15);
+    sysDrawBitmap(x,y,pelota[0]);
+    sysConfigBitmap(2, W, 15);
+    sysDrawBitmap(x,y,pelota[1]);
+}
+void drawPlayer(uint64_t x,uint64_t y,uint32_t bitmap[][21],int player){
+    if(player == 1){
+        sysConfigBitmap(4, Y, 21);
+        sysDrawBitmap(x,y,bitmap[0]);
+        sysConfigBitmap(4, R, 21);
+        sysDrawBitmap(x,y,bitmap[1]);
+        sysConfigBitmap(4, W, 21);
+        sysDrawBitmap(x,y,bitmap[2]);
+        sysConfigBitmap(4, DG, 21);
+        sysDrawBitmap(x,y,bitmap[3]);
+    }
+    else{
+        sysConfigBitmap(4, P, 21);
+        sysDrawBitmap(x,y,bitmap[0]);
+        sysConfigBitmap(4, B, 21);
+        sysDrawBitmap(x,y,bitmap[1]);
+        sysConfigBitmap(4, W, 21);
+        sysDrawBitmap(x,y,bitmap[2]);
+        sysConfigBitmap(4, DG, 21);
+        sysDrawBitmap(x,y,bitmap[3]);
+    }
 }
 
 void play(void) {
+    sysClear();
     char c = sysKey();
-
-    //printf("Char %d \n",  sysKey());
-    if(c == 'w') {
-        sysWrite(1,"A",1);
+    switch(c){
+            case 'w':
+            p1.acceleration_y=p1.acceleration_y-2;
+        break;
+            case 's':
+            p1.acceleration_y =p1.acceleration_y+2;
+        break;
+            case 'a':
+            p1.acceleration_x =p1.acceleration_x-2;
+        break;
+            case 'd':
+            p1.acceleration_x =p1.acceleration_x+2;
+        break;
     }
+    
+    if(p1.acceleration_y!=0) (p1.acceleration_y>0)?(p1.acceleration_y=p1.acceleration_y)-1:(p1.acceleration_y=p1.acceleration_y+1);
+    p1.vel_x = p1.vel_x + p1.acceleration_x;
+    p1.vel_y = p1.vel_y + p1.acceleration_y;
+    p1.x = p1.x + p1.vel_x;
+    p1.y = p1.y + p1.vel_y;
+    if(p1.acceleration_x>MAXACC) p1.acceleration_x = MAXACC;
+    if(p1.acceleration_y>MAXACC) p1.acceleration_y = MAXACC;
+    if(p1.vel_x>MAXVEL) p1.vel_x = MAXVEL;
+    if(p1.vel_y>MAXVEL) ball.vel_y = MAXVEL;
+    drawPlayer(p1.x-p1.x_offset,p1.y-p1.y_offset,AutoU,1);
     sysDraw();
 }
 
 void Pongis(void) {
-    
+    sysClear();
+    drawPlayer(p1.x-p1.x_offset,p1.y-p1.y_offset,AutoU,1);
+    drawBall(ball.x,ball.y);
+    sysDraw();
+    int lastTime = sysTimeTicks();
+	int deltaTime = 0;
     while(1){
-        play();
+        if (deltaTime>0) {
+
+            play();
+
+	        lastTime = sysTimeTicks();
+            
+		}
+
+		deltaTime = sysTimeTicks() - lastTime;
     }
 }
+//typedef struct {
+   // uint64_t x;
+    //uint64_t y;
+    //uint64_t acceleration_x;
+    //uint64_t acceleration_y;
+    //uint64_t vel_x;
+    //uint64_t vel_y;
+    //float angle;
+    //uint64_t max_speed;
+    //uint64_t max_acceleration;
+    //int x_offset;
+    //int y_offset;
+//} body;

@@ -1,4 +1,4 @@
-#define PI 3.1415926f
+
 #include <pongisUtils.h>
 
 

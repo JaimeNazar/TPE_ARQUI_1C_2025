@@ -5,7 +5,7 @@
 #include <pongisUtils.h>
 
 
-void drawBall(void);
+void drawBall(uint64_t x,uint64_t y);
 void play(void);
 void Pongis(void);
 
