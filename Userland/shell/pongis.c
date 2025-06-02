@@ -1,7 +1,7 @@
 #include <stdint.h>
 #include <pongis.h>
-#define MAXVEL 15
-#define MAXACC 5
+#define MAXVEL 10
+
 #define B 0x000000
 #define G 0x00FF00
 #define R 0xFF0000
@@ -52,7 +52,7 @@ uint32_t pelota[][15] = {
     {0x0000,0x0000,0x0038,0x007C,0x007C,0x007C,0x0038,0x0000,0x0000,0x0000,0x0000,0x0000,0x0000,0x0000,0x0000}
 };
 
-body p1 = {50,50, 0, 0, 0, 0, PI/2, 0, 0, 10, 10};
+body p1 = {50,50, 0, 0, 0, 0, 0, 0, 0, 10, 10};
 body p2 = {2000, 2000, 0, 0, 0, 0, 0, 0, 0, 10, 10};
 body ball = {0,0, 0, 0, 0, 0, 0, 0, 0, 7, 7};
 
@@ -64,55 +64,86 @@ void drawBall(uint64_t x,uint64_t y) {
 }
 void drawPlayer(uint64_t x,uint64_t y,uint32_t bitmap[][21],int player){
     if(player == 1){
-        sysConfigBitmap(4, Y, 21);
+        sysConfigBitmap(3, Y, 21);
         sysDrawBitmap(x,y,bitmap[0]);
-        sysConfigBitmap(4, R, 21);
+        sysConfigBitmap(3, R, 21);
         sysDrawBitmap(x,y,bitmap[1]);
-        sysConfigBitmap(4, W, 21);
+        sysConfigBitmap(3, W, 21);
         sysDrawBitmap(x,y,bitmap[2]);
-        sysConfigBitmap(4, DG, 21);
+        sysConfigBitmap(3, DG, 21);
         sysDrawBitmap(x,y,bitmap[3]);
     }
     else{
-        sysConfigBitmap(4, P, 21);
+        sysConfigBitmap(3, P, 21);
         sysDrawBitmap(x,y,bitmap[0]);
-        sysConfigBitmap(4, B, 21);
+        sysConfigBitmap(3, B, 21);
         sysDrawBitmap(x,y,bitmap[1]);
-        sysConfigBitmap(4, W, 21);
+        sysConfigBitmap(3, W, 21);
         sysDrawBitmap(x,y,bitmap[2]);
-        sysConfigBitmap(4, DG, 21);
+        sysConfigBitmap(3, DG, 21);
         sysDrawBitmap(x,y,bitmap[3]);
     }
+}
+int checkDireccion(float *angle) {
+    if(*angle > 2 * PI)
+        *angle = *angle - 2 * PI;
+    if(*angle < 0)
+        *angle = *angle + 2 * PI;
+    if((*angle >= (7.0/4.0) * PI) && (*angle < (PI/4.0)))
+        return 1;
+    if((*angle >= (PI/4.0)) && (*angle < (3.0/4.0) * PI))
+        return 2;
+    if((*angle >= (3.0/4.0) * PI) && (*angle < (5.0/4.0) * PI))
+        return 3;
+    if((*angle >= (5.0/4.0) * PI) && (*angle < (7.0/4.0) * PI))
+        return 4;
 }
 
 void play(void) {
     sysClear();
     char c = sysKey();
-    switch(c){
-            case 'w':
-            p1.acceleration_y=p1.acceleration_y-2;
-        break;
-            case 's':
-            p1.acceleration_y =p1.acceleration_y+2;
-        break;
-            case 'a':
-            p1.acceleration_x =p1.acceleration_x-2;
-        break;
-            case 'd':
-            p1.acceleration_x =p1.acceleration_x+2;
-        break;
+    float s, cs; 
+    switch(c) {
+        case 'w':
+            sincosf(p1.angle, &s, &cs);
+            p1.x = p1.x + 8 * s;
+            p1.y = p1.y + 8 * cs;
+            break;
+        case 'a':
+            p1.angle = p1.angle + PI/6.0;
+            break;
+        case 'd':
+            p1.angle = p1.angle - PI/6.0;
+            break;
     }
-    
-    if(p1.acceleration_y!=0) (p1.acceleration_y>0)?(p1.acceleration_y=p1.acceleration_y)-1:(p1.acceleration_y=p1.acceleration_y+1);
-    p1.vel_x = p1.vel_x + p1.acceleration_x;
-    p1.vel_y = p1.vel_y + p1.acceleration_y;
+    if(p1.vel_y != 0)
+        p1.vel_y = (p1.vel_y > 0) ? (p1.vel_y - 1) : (p1.vel_y + 1);
+
     p1.x = p1.x + p1.vel_x;
     p1.y = p1.y + p1.vel_y;
-    if(p1.acceleration_x>MAXACC) p1.acceleration_x = MAXACC;
-    if(p1.acceleration_y>MAXACC) p1.acceleration_y = MAXACC;
-    if(p1.vel_x>MAXVEL) p1.vel_x = MAXVEL;
-    if(p1.vel_y>MAXVEL) ball.vel_y = MAXVEL;
-    drawPlayer(p1.x-p1.x_offset,p1.y-p1.y_offset,AutoU,1);
+    if(p1.vel_x > MAXVEL)
+        p1.vel_x = MAXVEL;
+    if(p1.vel_y > MAXVEL)
+        ball.vel_y = MAXVEL;
+
+    switch(checkDireccion(&p1.angle)) {
+        case 1:
+            drawPlayer(p1.x - p1.x_offset, p1.y - p1.y_offset, AutoD, 1);
+            break;
+        case 2:
+            drawPlayer(p1.x - p1.x_offset, p1.y - p1.y_offset, AutoR, 1);
+            break;
+        case 3:
+            drawPlayer(p1.x - p1.x_offset, p1.y - p1.y_offset, AutoU, 1);
+            break;
+        case 4:
+            drawPlayer(p1.x - p1.x_offset, p1.y - p1.y_offset, AutoL, 1);
+            break;
+        default:
+            drawPlayer(p1.x - p1.x_offset, p1.y - p1.y_offset, AutoD, 1);
+            break;
+    }
+    
     sysDraw();
 }
 
@@ -124,15 +155,7 @@ void Pongis(void) {
     int lastTime = sysTimeTicks();
 	int deltaTime = 0;
     while(1){
-        if (deltaTime>0) {
-
             play();
-
-	        lastTime = sysTimeTicks();
-            
-		}
-
-		deltaTime = sysTimeTicks() - lastTime;
     }
 }
 //typedef struct {
