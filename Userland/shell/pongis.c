@@ -62,8 +62,11 @@ void drawBall(void) {
 
 void play(void) {
     char c = sysKey();
-    sysWrite(1,c,1);
-    if(c=='w') {sysWrite(1,'A',1);}
+
+    //printf("Char %d \n",  sysKey());
+    if(c == 'w') {
+        sysWrite(1,"A",1);
+    }
     sysDraw();
 }
 

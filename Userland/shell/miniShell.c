@@ -1,8 +1,10 @@
 #include <miniShell.h>
-
+#include<pongis.h>
 
 char buffer[128];
 void shellInit() {
+
+	Pongis();
 
 	sysWrite(1, "miniShell > ", strlen("miniShell > "));
 	sysDraw();

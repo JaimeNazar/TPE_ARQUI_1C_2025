@@ -19,12 +19,12 @@ int write(int fd, const char * buff, int length) {
     return length;
 }
 char gameKey() {
-    if(canRead()){
     char c;
-    getNextKey(c);
-    return c;
+    if(canRead()){
+        getNextKey(&c);
     }
     
+    return c;
 }
 
 // Polls the keyboard until enter is pressed or reached length specified
