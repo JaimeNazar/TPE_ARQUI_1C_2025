@@ -34,6 +34,8 @@ void shellInit() {
 void shellUpdate() {
     
     int realLen = sysRead(1, buffer, 128);
+
+	sysWrite(1, "\n", 1);	// Move one line down
 	sysDraw();
 
     commandHandler(buffer, realLen);
@@ -70,7 +72,7 @@ void gameCommand() {
 }
 
 void timeCommand() {
-	sysWrite(1, "\nTime command not implemented yet\n", 34);
+	printf("Current time: %d : %d : %d\n", getHours(), getMinutes(), getSeconds());
 }
 
 //no me anda

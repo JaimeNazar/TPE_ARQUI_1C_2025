@@ -1,31 +1,5 @@
 #include<stdlib.h>
 
-// TODO: move constants to header
-#define STDOUT 0x1
-#define STDIN 0x1
-
-#define NO_ARG 0x0
-
-#define BASE_TEN 10
-
-#define MAX_CMD_LEN 128
-#define MAX_ARGS 16
-
-// Syscalls IDs
-#define ID_WRITE 0
-#define ID_READ 1
-#define ID_CLEARBUFFER 2
-#define ID_DRAWSCREEN 3
-#define ID_TIMETICKS 4
-#define ID_SLEEP 5
-#define ID_TIME 6
-#define ID_GETKEY 8
-#define ID_BEEP 7
-#define ID_DRAWBITMAP 9
-#define ID_CONFIGBITMAP 10
-#define ID_DUMPREGS 11
-#define ID_FONT_SIZE 12
-
 // ------ UTILS ------
 
 int strlen(char* str) {
@@ -263,6 +237,20 @@ void printf(char* ftm, ...) {
     va_end(args);
 }
 
+// ------ TIME ------
+
+int getSeconds() {
+    return sysTime(TIME_SECONDS);
+}
+
+int getMinutes() {
+    return sysTime(TIME_MINUTES);
+}
+
+int getHours() {
+    return sysTime(TIME_HOURS);
+}
+
 // ------ SYSCALLS ------
 
 uint64_t sysWrite(int fd, char * buff, int length) {
@@ -285,9 +273,10 @@ void sysDraw() {
     return syscall_wizard(ID_DRAWSCREEN, NO_ARG, NO_ARG, NO_ARG);
 }
 
-void sysTime(int code) {
-    return syscall_wizard(ID_TIME, code, NO_ARG, NO_ARG);
+uint64_t sysTime(int arg) {
+    return syscall_wizard(ID_TIME, arg, NO_ARG, NO_ARG);
 }
+
 char sysKey() {
     return (char)syscall_wizard(ID_GETKEY,NO_ARG, NO_ARG, NO_ARG);
 }
