@@ -121,7 +121,9 @@ void commandHandler(char* command, int length) {
             break;
         case FONT_SIZE:
             int size = strToInt(arguments[1]);
-            fontCommand(size);
+            if (size == -1){
+                errorInvalidArgument(arguments[1]);
+            } else {fontCommand(size);}
             break;
         default:
             error();
