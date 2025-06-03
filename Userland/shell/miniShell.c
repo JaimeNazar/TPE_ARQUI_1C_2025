@@ -101,8 +101,6 @@ void registersCommand(){
 	sysRegisters(1);
 }
 
-#define MIN_FONT_SIZE 9
-
 void fontCommand(int size) {
 
 	if (size < MIN_FONT_SIZE) {

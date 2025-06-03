@@ -80,6 +80,9 @@ void drawPlayer(uint64_t x,uint64_t y,uint32_t bitmap[][21],int player){
 
 void play(void) {
     clearGame();
+
+    printf("x: %d y: %d", p1.x, p1.y);
+
     char c = sysKey();
     float s, cs; 
     switch(c) {

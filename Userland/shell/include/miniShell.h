@@ -8,6 +8,9 @@
 #define SHELL_PROMPT "miniShell > "
 #define MAX_ARGS 16
 
+#define MIN_FONT_SIZE 8
+
+
 void shellInit();
 void shellUpdate();
 void helpCommand();
