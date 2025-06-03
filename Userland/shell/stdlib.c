@@ -21,7 +21,6 @@ int strcmp(char* str1, char* str2, int length1, int lenght2) {
     }
 }
 
-
 void intToStr(int value, char *str) {
     int i = 0;
     int isNegative = 0;
@@ -90,6 +89,53 @@ int strToInt(const char *str) {
     return result;
 }
 
+void floatToStr(float value, char *str, int decimals) {
+
+    // Integer part, truncate and reuse function
+    intToStr((int)value, str);
+
+    int i = strlen(str);    // Start at the end of string
+    
+    // Add dot
+    str[i++] = '.';
+
+    float decPart = value - (int)value; // Truncate and subtract it
+
+    // Do decimal part
+    for (int j = 0; j < decimals; j++) {
+        decPart *= BASE_TEN;
+
+        str[i++] = (int)decPart + '0'; 
+    }
+
+    // Null terminated
+    str[i] = '\0';
+}
+
+float strToFloat(const char *str) {
+
+    // Get Integer part
+    float result = (float)strToInt(str);
+
+    // Get the decimal part starting index
+    int i = 0;
+    while (str[i++] != '.');
+
+    int decimals = 0; // Decimal counter
+    int decimalPart = 0;
+
+    while (str[i] >= '0' && str[i] <= '9') {
+        decimals++;
+        decimalPart += decimals * (str[i] - '0');
+
+        i++;
+    }
+
+    result += (float)decimalPart / (decimals*BASE_TEN);
+    
+    return result;
+}
+
 
 int commandToArguments(char *command, int length, char *arguments[MAX_ARGS]) {
     static char buffer[MAX_CMD_LEN];
@@ -149,7 +195,9 @@ void scanf(char* ftm, ...) {
     for (int i = 0; ftm[i] != '\0'; i++) {
 
         if (ftm[i] == '%') {
-        
+            char parseBuffer[MAX_CMD_LEN];  // For parsing operations
+            int parseIndex = 0;
+
             i++;
             char next = ftm[i];
 
@@ -167,23 +215,44 @@ void scanf(char* ftm, ...) {
                     toRead[toReadIdx] = '\0';
 
                     break;
-                case 'd':
+                case 'f':
+                    parseIndex = 0;
+                    int dot = 0;    // Keeps track of the dot
 
-                    char aux[MAX_CMD_LEN];
-                    int auxIndex = 0;
-
-                    // Only read numbers or a minus symbol at the start
-                    while((auxIndex == 0 && buffer[index] == '-') 
+                    // Only read numbers or a minus symbol at the start and one dot
+                    while((parseIndex == 0 && buffer[index] == '-') || (!dot && buffer[index] == '.')
                         || (buffer[index] >= '0' && buffer[index] <= '9' && index < MAX_CMD_LEN)) {
-                        aux[auxIndex++] = buffer[index++];
+
+                        if (buffer[index] == '.')
+                            dot = 1;
+
+                        parseBuffer[parseIndex++] = buffer[index++];
                     }
 
                     // Null terminated
-                    aux[auxIndex] = '\0';
+                    parseBuffer[parseIndex] = '\0';
+
+                    float *toReadFloat = va_arg(args, float*);
+
+                    *toReadFloat = strToFloat(parseBuffer); // Parse to int
+
+                    break;
+
+                case 'd':
+                    parseIndex = 0;
+
+                    // Only read numbers or a minus symbol at the start
+                    while((parseIndex == 0 && buffer[index] == '-') 
+                        || (buffer[index] >= '0' && buffer[index] <= '9' && index < MAX_CMD_LEN)) {
+                        parseBuffer[parseIndex++] = buffer[index++];
+                    }
+
+                    // Null terminated
+                    parseBuffer[parseIndex] = '\0';
 
                     int *toReadInt = va_arg(args, int*);
 
-                    *toReadInt = strToInt(aux); // Parse to int
+                    *toReadInt = strToInt(parseBuffer); // Parse to int
 
                     break;
 
@@ -212,16 +281,19 @@ void printf(char* ftm, ...) {
     for (int i = 0; ftm[i] != '\0'; i++) {
 
         if (ftm[i] == '%') {
+            char buffer[MAX_CMD_LEN];   // For parsing operations
         
             char next = ftm[i+1];
-
             char *toAppend;
             switch(next){
                 case 's':
                     toAppend = va_arg(args, char*);
                     break;
+                case 'f':   // TODO: Allow user to selec amonut of decimals
+                    floatToStr(va_arg(args, int), buffer, 4); // Parse to float
+                    toAppend = buffer;
+                    break;
                 case 'd':
-                    char buffer[MAX_CMD_LEN]; // It will be never be greater than this
                     intToStr(va_arg(args, int), buffer); // Parse to string
                     toAppend = buffer;
                     break;
