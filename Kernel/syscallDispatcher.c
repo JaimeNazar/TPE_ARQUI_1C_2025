@@ -75,7 +75,7 @@ static uint64_t time(uint8_t code) {
 
     uint8_t number = rtc(code);
 
-    int upperBits = number & 0xF0;
+    int upperBits = (number & 0xF0) >> 4;
     int lowerBits = number & 0x0F;
 
     return upperBits * 10 + lowerBits;
