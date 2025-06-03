@@ -4,12 +4,6 @@
 char buffer[128];
 void shellInit() {
 
-	int a = 0;
-	char buf[12];
-	scanf("%d %s", &a, buf);
-	printf("\nRecieved number: %d and %s\n", a, buf);
-	//Pongis();
-	
     sysWrite(1, "miniShell > ", strlen("miniShell > "));
     
     sysDraw();
@@ -33,19 +27,22 @@ void shellInit() {
     
 void shellUpdate() {
     
-    int realLen = sysRead(1, buffer, 128);
+    int realLen = sysRead(1, buffer, 128);	//Reads 128 caracter
 
 	sysWrite(1, "\n", 1);	// Move one line down
 	sysDraw();
 
-    commandHandler(buffer, realLen);
+    commandHandler(buffer, realLen);	//Checks if it's a command and executes it
     
     sysWrite(1, "miniShell > ", strlen("miniShell > "));
     
     sysDraw();
 }
 
-//Commands
+
+
+// ------ COMMANDS ------
+
 void helpCommand() {
 	char **commandList = getCommandList();
 	char **commandListDescription = getCommandListDescription();
@@ -74,7 +71,6 @@ void timeCommand() {
 	printf("Current time: %d : %d : %d\n", getHours(), getMinutes(), getSeconds());
 }
 
-//no me anda
 void beepCommand(int frequency, int duration) {
 	sysBeep(frequency, duration);
 	sysWrite(1, "\n", 1);
@@ -86,8 +82,6 @@ void ticksCommand() {
 
 
 void echoCommand(char* arguments[MAX_ARGS], int cant) {
-
-	sysWrite(1, "\n", 1);
 	for (int i = 1; i < cant; i++) {
 		sysWrite(1, arguments[i], strlen(arguments[i]));
 		sysWrite(1, " ", 1); 
@@ -102,9 +96,9 @@ void registersCommand(){
 }
 
 void fontCommand(int size) {
-
+	//Font size must be greater than or equal to MIN_FONT_SIZE (9)
 	if (size < MIN_FONT_SIZE) {
-		printf("\n Invalid font size, must be grater than %d \n", MIN_FONT_SIZE);
+		printf("\n Invalid font size, must be grater than %d \n", MIN_FONT_SIZE);	
 		return ;
 	}
 	sysClear();

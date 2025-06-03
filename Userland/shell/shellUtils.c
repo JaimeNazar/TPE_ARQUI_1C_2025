@@ -1,8 +1,5 @@
 #include <shellUtils.h>
 
-#define MAX_ARGS 16
-
-//Add as necessary
 static char *commandList[] = {
     "help",
     "clear",
@@ -41,23 +38,20 @@ static const int argumentsPerCommand[] = {
     0, // echo, special case
     0, // registers
     1  // font size
-
 };
 
 
-
 typedef enum{
-HELP = 0,
-CLEAR,
-SLEEP,
-GAME,
-TIME,
-BEEP,
-TICKS,
-ECHO,
-REGISTERS,
-FONT_SIZE
-//COMPLETAR
+    HELP = 0,
+    CLEAR,
+    SLEEP,
+    GAME,
+    TIME,
+    BEEP,
+    TICKS,
+    ECHO,
+    REGISTERS,
+    FONT_SIZE
 };
 
 int idHandler(char* command, int length) {
@@ -68,19 +62,24 @@ int idHandler(char* command, int length) {
     }
     return -1; // error
 }
+
 void commandHandler(char* command, int length) {
     
     char *arguments[MAX_ARGS];
-    int cant = commandToArguments(command, length, arguments);
 
-    int test = cant;
+    //Separates the command into arguments
+    int cant = commandToArguments(command, length, arguments);      
 
-    int commandID = idHandler(arguments[0], strlen(arguments[0]));
+    //Get the command id
+    int commandID = idHandler(arguments[0], strlen(arguments[0]));  
 
-    if ( commandID != -1 && commandID != ECHO && argumentsPerCommand[commandID] != cant - 1 ) {      //primero me fijo si dado el comando, la cantidad de argumentos es correcta
+
+    //If it's a command id, checks for the right argument quantity
+    if ( commandID != -1 && commandID != ECHO && argumentsPerCommand[commandID] != cant - 1 ) {      
         errorByArguments(arguments[0], argumentsPerCommand[commandID]);
     }
-    else {
+    else {                          
+        //Given the commandID, executes the correct command/error
         switch (commandID) {
         case HELP: 
             helpCommand();
@@ -90,7 +89,7 @@ void commandHandler(char* command, int length) {
             break;
         case SLEEP: 
             int arg = strToInt(arguments[1]);
-            if (arg == -1){
+            if (arg <= -1){
                 errorInvalidArgument(arguments[1]);
             }
             else{sleepCommand(arg);}                  
@@ -104,9 +103,9 @@ void commandHandler(char* command, int length) {
         case BEEP: 
             int arg1 = strToInt(arguments[1]);
             int arg2 = strToInt(arguments[2]);
-            if (arg1 == -1){
+            if (arg1 <= -1){
                 errorInvalidArgument(arguments[1]);
-            } else if (arg2 == -1){
+            } else if (arg2 <= -1){
                 errorInvalidArgument(arguments[2]);
             } else{beepCommand(arg1,arg2);}
             break;
@@ -121,7 +120,7 @@ void commandHandler(char* command, int length) {
             break;
         case FONT_SIZE:
             int size = strToInt(arguments[1]);
-            if (size == -1){
+            if (size <= -1){
                 errorInvalidArgument(arguments[1]);
             } else {fontCommand(size);}
             break;
@@ -133,6 +132,8 @@ void commandHandler(char* command, int length) {
     return;
 }
 
+
+//used by the help command
 char **getCommandList(){
     return commandList;
 }

@@ -9,37 +9,42 @@ int strlen(char* str) {
 }
 
 int strcmp(char* str1, char* str2, int length1, int lenght2) {
-    if(length1 != lenght2) {                                    //helps with cases like clearrrr or helppp
+    //Helps with cases like clearrrr or helppp
+    if(length1 != lenght2) {                                    
         return length1 - lenght2;
     }
+
     int i = 0;
-    while (str1[i] != '\0' && str2[i] != '\0') {
+    //Compares each caracter
+    while (str1[i] != '\0' && str2[i] != '\0') {                
         if (str1[i] != str2[i]) {
             return str1[i] - str2[i];
         }
         i++;
     }
+
+    return 0;   //Both strings are equal
 }
 
 void intToStr(int value, char *str) {
     int i = 0;
     int isNegative = 0;
-
-    // Manejo del 0
-    if (value == 0) {
+    
+    //If value equals 0, return '0'
+    if (value == 0) {  
         str[i++] = '0';
         str[i] = '\0';
         return;
     }
 
-    // Si es negativo
-    if (value < 0) {
+    //If the value is negative we will have to add an '-' later
+    if (value < 0) {        
         isNegative = 1;
         value = -value;
     }
 
-    // Convertir los dígitos al revés
-    while (value != 0) {
+    //Converts the number to a string from the back to the front
+    while (value != 0) {        
         int digit = value % BASE_TEN;
         str[i++] = digit + '0';
         value /= BASE_TEN;
@@ -50,8 +55,8 @@ void intToStr(int value, char *str) {
 
     str[i] = '\0';
 
-    // Invertir el string, salteandose el null terminated
-    for (int j = 0, k = i - 1; j < k; j++, k--) {
+    //Rotates the string using a tmp to the correct order
+    for (int j = 0, k = i - 1; j < k; j++, k--) {       
         char tmp = str[j];
         str[j] = str[k];
         str[k] = tmp;
@@ -62,29 +67,28 @@ int strToInt(const char *str) {
     int result = 0;
     int i = 0;
 
-    int sign = 1;   // Positive
+    int sign = 1;  
 
-    // Verify that its negative
+    // Verify if its negative
     if (str[i] == '-') {
-        sign = -1;  // Negative
+        sign = -1;
         i++; // Skip neg symbol
     }
 
-    // Convert digits, stop if next character isnt a digit
+    // Convert digits, stop if next character isn't a digit
     while (str[i] >= '0' && str[i] <= '9') {
         result = result * BASE_TEN + (str[i] - '0');
-        
         i++;
     }
 
     result *= sign;
 
     if (str[i] < '0' || str[i] > '9') {
-        if(str[i] == '\0' || str[i] == '\n' || str[i] == '\r') {
+        if(str[i] == '\0' || str[i] == '\n') {
              return result;
         }
-        // Si no es un dígito, retornar -1
-        return -1;
+        
+        return -1;  //If it's not a digit return 1
     }
     return result;
 }
@@ -94,7 +98,8 @@ void floatToStr(float value, char *str, int decimals) {
     // Integer part, truncate and reuse function
     intToStr((int)value, str);
 
-    int i = strlen(str);    // Start at the end of string
+    // Start at the end of string
+    int i = strlen(str);    
     
     // Add dot
     str[i++] = '.';
@@ -142,38 +147,31 @@ int commandToArguments(char *command, int length, char *arguments[MAX_ARGS]) {
     int argCount = 0;
     int i = 0, j = 0;
 
-    // Eliminar \n
+    //Eliminate '\n' if needed
     if (length > 0 && (command[length - 1] == '\n')) {
         command[--length] = '\0';
     }
 
-    // Saltar espacios iniciales
-    while (i < length && command[i] == ' ')
-        i++;
-
     while (i < length && argCount < MAX_ARGS - 1) {
-        // Guardar puntero al argumento actual
+        // Saves the pointer of the current argument
         arguments[argCount] = &buffer[j];
 
-        // Copiar caracteres hasta próximo espacio
+        // Copy characters until the next space
         while (i < length && command[i] != ' ') {
             buffer[j++] = command[i++];
         }
 
-        buffer[j++] = '\0'; // fin del argumento
+        buffer[j++] = '\0'; // End of argument
         argCount++;
 
-        // Saltar espacios entre argumentos
+        // Skips all the spaces until the next argument
         while (i < length && command[i] == ' '){
-        i++;
+            i++;
         }
             
-        
         }
 
-
-
-        return argCount; // devolver cantidad de argumentos encontrados
+        return argCount;    //Returns argument quantity
 }
 
 
