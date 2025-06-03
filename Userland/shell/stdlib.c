@@ -5,6 +5,7 @@
 
 #define NO_ARG 0x0
 
+#define BASE_TEN 10
 
 #define MAX_CMD_LEN 128
 #define MAX_ARGS 16
@@ -24,47 +25,8 @@
 #define ID_DUMPREGS 11
 #define ID_FONT_SIZE 12
 
-
-// ------ AUXILIARY ------
-
-// From naiveConsole implementation
-static uint32_t uintToBase(uint64_t value, char * bufferBase, uint32_t base)
-{
-	char *p = bufferBase;
-	char *p1, *p2;
-	uint32_t digits = 0;
-
-	//Calculate characters for each digit
-	do
-	{
-		uint32_t remainder = value % base;
-		*p++ = (remainder < 10) ? remainder + '0' : remainder + 'A' - 10;
-		digits++;
-	}
-	while (value /= base);
-
-	// Terminate string in bufferBase.
-	*p = 0;
-
-	//Reverse string in bufferBase.
-	p1 = bufferBase;
-	p2 = p - 1;
-	while (p1 < p2)
-	{
-		char tmp = *p1;
-		*p1 = *p2;
-		*p2 = tmp;
-		p1++;
-		p2--;
-	}
-
-	return digits;
-}
-
-
 // ------ UTILS ------
 
-// TODO: make them all static?
 int strlen(char* str) {
 	int count = 0;
 	while (str[count++] != 0);
@@ -104,9 +66,9 @@ void intToStr(int value, char *str) {
 
     // Convertir los dígitos al revés
     while (value != 0) {
-        int digit = value % 10;
+        int digit = value % BASE_TEN;
         str[i++] = digit + '0';
-        value /= 10;
+        value /= BASE_TEN;
     }
 
     if (isNegative)
@@ -167,7 +129,7 @@ int strToInt(const char *str) {
 
     // Convertir dígitos
     while (str[i] >= '0' && str[i] <= '9') {
-        result = result * 10 + (str[i] - '0');
+        result = result * BASE_TEN + (str[i] - '0');
         i++;
     }
     if (str[i] < '0' || str[i] > '9') {
@@ -200,7 +162,9 @@ void printf(char* ftm, ...) {
                     toAppend = va_arg(args, char*);
                     break;
                 case 'd':
-                    toAppend = stoi(va_arg(args, int));// Parse to string
+                    char buffer[MAX_CMD_LEN]; // It will be never be greater than this
+                    intToStr(va_arg(args, int), buffer); // Parse to string
+                    toAppend = buffer;
                     break;
 
                 default:
@@ -216,13 +180,6 @@ void printf(char* ftm, ...) {
 
     // End
     va_end(args);
-}
-
-#define BASE_TEN 10
-
-char * stoi(int value) {
-    uintToBase(value, bufferBase, BASE_TEN);
-    return bufferBase;
 }
 
 // ------ SYSCALLS ------

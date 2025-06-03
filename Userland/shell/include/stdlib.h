@@ -15,6 +15,7 @@ void intToStr(int value, char *str);
 int strToInt(const char *str);
 
 void printf(char* ftm, ...);
+void scanf(char* ftm, ...);
 char * stoi(int value);
 
 // Syscalls
