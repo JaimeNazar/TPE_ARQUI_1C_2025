@@ -16,7 +16,6 @@ int strToInt(const char *str);
 
 void printf(char* ftm, ...);
 void scanf(char* ftm, ...);
-char * stoi(int value);
 
 // Syscalls
 uint64_t sysWrite(int fd, char * buff, int length);

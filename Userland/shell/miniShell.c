@@ -4,6 +4,10 @@
 char buffer[128];
 void shellInit() {
 
+	int a = 0;
+	char buf[12];
+	scanf("%d %s", &a, buf);
+	printf("\nRecieved number: %d and %s\n", a, buf);
 	//Pongis();
 	
     sysWrite(1, "miniShell > ", strlen("miniShell > "));

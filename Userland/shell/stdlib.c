@@ -2,6 +2,7 @@
 
 // TODO: move constants to header
 #define STDOUT 0x1
+#define STDIN 0x1
 
 #define NO_ARG 0x0
 
@@ -76,7 +77,7 @@ void intToStr(int value, char *str) {
 
     str[i] = '\0';
 
-    // Invertir el string
+    // Invertir el string, salteandose el null terminated
     for (int j = 0, k = i - 1; j < k; j++, k--) {
         char tmp = str[j];
         str[j] = str[k];
@@ -127,11 +128,23 @@ int strToInt(const char *str) {
     int result = 0;
     int i = 0;
 
-    // Convertir dígitos
+    int sign = 1;   // Positive
+
+    // Verify that its negative
+    if (str[i] == '-') {
+        sign = -1;  // Negative
+        i++; // Skip neg symbol
+    }
+
+    // Convert digits, stop if next character isnt a digit
     while (str[i] >= '0' && str[i] <= '9') {
         result = result * BASE_TEN + (str[i] - '0');
+        
         i++;
     }
+
+    result *= sign;
+
     if (str[i] < '0' || str[i] > '9') {
         if(str[i] == '\0' || str[i] == '\n' || str[i] == '\r') {
              return result;
@@ -141,7 +154,75 @@ int strToInt(const char *str) {
     }
     return result;
 }
+/* Recieves null terminated string, parse it and read specified args */
+void scanf(char* ftm, ...) {
 
+    // Variable arguments list
+    va_list args;
+    va_start(args,  ftm);
+
+    // Get user input
+    char buffer[MAX_CMD_LEN];
+    sysRead(STDIN, buffer, MAX_CMD_LEN);
+
+    int index = 0;  // Index for traversing the user input
+
+    // Process input based on format
+    for (int i = 0; ftm[i] != '\0'; i++) {
+
+        if (ftm[i] == '%') {
+        
+            i++;
+            char next = ftm[i];
+
+            switch(next){
+                case 's':
+                    char *toRead = va_arg(args, char*);
+                    int toReadIdx = 0;
+
+                    // Read until whitespace or end of input
+                    while(buffer[index] != ' ' && buffer[index] != '\n' && index < MAX_CMD_LEN) {
+                        toRead[toReadIdx++] = buffer[index++];
+                    }
+
+                    // Null terminated
+                    toRead[toReadIdx] = '\0';
+
+                    break;
+                case 'd':
+
+                    char aux[MAX_CMD_LEN];
+                    int auxIndex = 0;
+
+                    // Only read numbers or a minus symbol at the start
+                    while((auxIndex == 0 && buffer[index] == '-') 
+                        || (buffer[index] >= '0' && buffer[index] <= '9' && index < MAX_CMD_LEN)) {
+                        aux[auxIndex++] = buffer[index++];
+                    }
+
+                    // Null terminated
+                    aux[auxIndex] = '\0';
+
+                    int *toReadInt = va_arg(args, int*);
+
+                    *toReadInt = strToInt(aux); // Parse to int
+
+                    break;
+
+                default:
+                    break;
+            }
+
+        } else {
+            // If pattern its not whats expected, return
+            if (buffer[index++] != ftm[i])
+                return ;
+        }
+    }
+
+    // End
+    va_end(args);
+}
 
 /* Recieves null terminated string, parse it and print it */
 void printf(char* ftm, ...) {
