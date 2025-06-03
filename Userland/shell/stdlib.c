@@ -59,45 +59,6 @@ void intToStr(int value, char *str) {
     }
 }
 
-
-
-int commandToArguments(char *command, int length, char *arguments[MAX_ARGS]) {
-    static char buffer[MAX_CMD_LEN];
-    int argCount = 0;
-    int i = 0, j = 0;
-
-    // Eliminar \n o \r al final
-    if (length > 0 && (command[length - 1] == '\n' || command[length - 1] == '\r')) {
-        command[--length] = '\0';
-    }
-
-    // Saltar espacios iniciales
-    while (i < length && command[i] == ' ')
-        i++;
-
-    while (i < length && argCount < MAX_ARGS - 1) {
-        // Guardar puntero al argumento actual
-        arguments[argCount] = &buffer[j];
-
-        // Copiar caracteres hasta próximo espacio
-        while (i < length && command[i] != ' ') {
-            buffer[j++] = command[i++];
-        }
-
-        buffer[j++] = '\0'; // fin del argumento
-        argCount++;
-
-        // Saltar espacios entre argumentos
-        while (i < length && command[i] == ' ')
-            i++;}
-
-
-        arguments[argCount] = 0; // terminador estilo argv
-
-        return argCount; // devolver cantidad de argumentos encontrados
-}
-
-
 int strToInt(const char *str) {
     int result = 0;
     int i = 0;
@@ -128,6 +89,49 @@ int strToInt(const char *str) {
     }
     return result;
 }
+
+
+int commandToArguments(char *command, int length, char *arguments[MAX_ARGS]) {
+    static char buffer[MAX_CMD_LEN];
+    int argCount = 0;
+    int i = 0, j = 0;
+
+    // Eliminar \n
+    if (length > 0 && (command[length - 1] == '\n')) {
+        command[--length] = '\0';
+    }
+
+    // Saltar espacios iniciales
+    while (i < length && command[i] == ' ')
+        i++;
+
+    while (i < length && argCount < MAX_ARGS - 1) {
+        // Guardar puntero al argumento actual
+        arguments[argCount] = &buffer[j];
+
+        // Copiar caracteres hasta próximo espacio
+        while (i < length && command[i] != ' ') {
+            buffer[j++] = command[i++];
+        }
+
+        buffer[j++] = '\0'; // fin del argumento
+        argCount++;
+
+        // Saltar espacios entre argumentos
+        while (i < length && command[i] == ' '){
+        i++;
+        }
+            
+        
+        }
+
+
+
+        return argCount; // devolver cantidad de argumentos encontrados
+}
+
+
+
 /* Recieves null terminated string, parse it and read specified args */
 void scanf(char* ftm, ...) {
 

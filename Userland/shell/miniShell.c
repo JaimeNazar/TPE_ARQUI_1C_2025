@@ -63,8 +63,7 @@ void clearCommand() {
 
 
 void sleepCommand(int duration) {
-	sysSleep(duration); // Sleep for 1 second
-	sysWrite(1, "\n", 1);
+	sysSleep(duration);
 }
 
 void gameCommand() {
@@ -82,12 +81,7 @@ void beepCommand(int frequency, int duration) {
 }
 
 void ticksCommand() {
-	uint64_t ticks = sysTimeTicks();
-	char buffer[32];
-	intToStr(ticks, buffer);
-	sysWrite(1, "\nTicks: ", strlen("\nTicks: "));
-	sysWrite(1, buffer, strlen(buffer));
-	sysWrite(1, "\n", 1);
+	printf("Ticks: %d\n",sysTimeTicks());
 }
 
 
@@ -125,19 +119,13 @@ void error() {
 }
 
 void errorByArguments(char* command, int cant){
-	sysWrite(1, "\nInvalid number of arguments for command: ", 42);
-        sysWrite(1, command, strlen(command));
-        sysWrite(1, "\n", 1);
-        sysWrite(1, "Expected ", 9);
-        char buffer[10];  // espacio suficiente para el número
-    	intToStr(cant, buffer);
-   		sysWrite(1, buffer, strlen(buffer));
-        sysWrite(1, "\n", 1);
+
+	printf( "\nInvalid number of arguments for command: %s", command);
+	printf("\n Expected: %d\n", cant);
 }
 
 void errorInvalidArgument(char* argument) {
-	sysWrite(1, "\nInvalid argument: ", 19);
-	sysWrite(1, argument, strlen(argument));
+	printf("\nInvalid argument: %s\n", argument);
 	sysWrite(1, "\n", 1);
 }
 
