@@ -21,6 +21,19 @@ void sincosf(float angle, float *s, float *c) {
     *c = 1 - angle2 / 2.0f + (angle2 * angle2) / 24.0f - (angle2 * angle2 * angle2) / 720.0f;
     
 }
+float sqrtf(float number) {
+    if (number <= 0.0f) return 0.0f;
+
+    union {
+        float f;
+        int i;
+    } conv;
+
+    conv.f = number;
+    conv.i = (1 << 29) + (conv.i >> 1) - (1 << 22);  // ajuste mágico
+    return conv.f;
+}
+
 void arctan(double x, int terms, float *angle) {
     if (x > 1.0) {
         float aux;
@@ -50,6 +63,12 @@ void arctan(double x, int terms, float *angle) {
 void Finish(){
 
 }
+void applyForces(body *b, float angle, float magnitude) {
+    float s, c;
+    sincosf(angle, &s, &c);
+    b->vel_x += magnitude * c;
+    b->vel_y += -magnitude * s;
+}
 void checkColissions(body*b1,body *pelota,body *hoyo){
     if(b1->x-b1->x_offset < 0|| b1->x+b1->x_offset > 1000) 
         b1->vel_x = -b1->vel_x;
@@ -60,13 +79,17 @@ void checkColissions(body*b1,body *pelota,body *hoyo){
     if(pelota->y-pelota->y_offset < 0|| pelota->y+pelota->y_offset > 700)
         pelota->vel_y = -pelota->vel_y;
     
-    if(pelota->x-pelota->x_offset < b1->x+b1->x_offset || pelota->x+pelota->x_offset > b1->x-b1->x_offset){
-        if(pelota->y-pelota->y_offset < b1->y+b1->y_offset || pelota->y+pelota->y_offset > b1->y-b1->y_offset){
-            float angle;
-            arctan((pelota->y - b1->y) / (pelota->x - b1->x), 10,&angle);
-            applyForces(pelota, angle, pelota->vel_x * 1.2f); // Reduce speed by half on collision
-        }
-    }
+float dx = pelota->x - b1->x;
+float dy = pelota->y - b1->y;
+float distancia = sqrtf(dx * dx + dy * dy);
+float suma_radios = pelota->x_offset + b1->x_offset;
+
+if (distancia <= suma_radios) {
+    // Colisión detectada
+    float angle;
+    arctan(dy / dx, 10, &angle);
+    applyForces(pelota, angle, b1->vel_x * 1.2f);
+}
     if(pelota->x-pelota->x_offset < hoyo->x+hoyo->x_offset || pelota->x+pelota->x_offset > hoyo->x-hoyo->x_offset){
         if(pelota->y-pelota->y_offset < hoyo->y+hoyo->y_offset || pelota->y+pelota->y_offset > hoyo->y-hoyo->y_offset){
             Finish();
@@ -74,11 +97,5 @@ void checkColissions(body*b1,body *pelota,body *hoyo){
     }
     
 }
-void applyForces(body *b,float angle,float magnitud){
-    float sin;
-    float cos;
-    sincosf(angle,&sin,&cos);
-    b->vel_x = cos * magnitud;
-    b->vel_y = sin * magnitud;
-}
+
 

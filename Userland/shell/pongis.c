@@ -60,13 +60,13 @@ uint32_t pelota[][15] = {
 
 body p1 = {50,50, 0, 0, 0, 10, 10, 10};
 body p2 = {2000, 2000, 0, 0, 0, 0, 10, 10};
-body ball = {0,0, 0, 0, 0, 0, 7, 7};
+body ball = {200,200, 0, 0, 0, 0, 7, 7};
 
-void drawBall(uint64_t x,uint64_t y) {
+void drawBall() {
     sysConfigBitmap(2, R, 15);
-    sysDrawBitmap(x,y,pelota[0]);
+    sysDrawBitmap(ball.x,ball.y,pelota[0]);
     sysConfigBitmap(2, W, 15);
-    sysDrawBitmap(x,y,pelota[1]);
+    sysDrawBitmap(ball.x,ball.y,pelota[1]);
 }
 void drawPlayer(uint64_t x,uint64_t y,uint32_t bitmap[][21],int player){
     if(player == 1){
@@ -105,20 +105,28 @@ void play(void) {
     float drag = 0.9f; 
     p1.vel_x *= drag;
     p1.vel_y *= drag;
+    ball.vel_x *= drag;
+    ball.vel_y *= drag;
+
 
 // Si es suficientemente bajo, ponelo en 0
     if (fabsf(p1.vel_x) < 0.5f) p1.vel_x = 0;
     if (fabsf(p1.vel_y) < 0.5f) p1.vel_y = 0;
+    if (fabsf(ball.vel_x) < 0.5f) ball.vel_x = 0;
+    if (fabsf(ball.vel_y) < 0.5f) ball.vel_y = 0;
     
     
     p1.x += p1.vel_x;
     p1.y += p1.vel_y;
+    ball.x += ball.vel_x;
+    ball.y += ball.vel_y*-1;
     
     // Dibuja la nave usando el sprite correspondiente:
     sysConfigBitmap(3, BLUE, 21);
     sysDrawBitmap(p1.x, p1.y, nave[p1.rotation * 2]);
     sysConfigBitmap(3, R, 21);
     sysDrawBitmap(p1.x, p1.y, nave[p1.rotation * 2 + 1]);
+    drawBall();
     sysDraw();
 }
 
