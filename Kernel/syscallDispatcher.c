@@ -144,6 +144,10 @@ uint64_t syscallDispatcher(uint64_t rax, ...) {
             int fdDump = va_arg(args, int);
             interruptsDumpRegisters(fdDump);
             break;
+        case ID_FONT_SIZE:
+            int fontSize = va_arg(args, int);
+            videoSetFontsize(fontSize);
+            break;
         default:
             // Manejar  
             break;

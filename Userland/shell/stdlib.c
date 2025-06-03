@@ -10,18 +10,19 @@
 #define MAX_ARGS 16
 
 // Syscalls IDs
-#define ID_WRITE 0x0
-#define ID_READ 0x1
-#define ID_CLEARBUFFER 0x2
-#define ID_DRAWSCREEN 0x3
-#define ID_TIMETICKS 0x4
-#define ID_SLEEP 0x5
-#define ID_TIME 0x6
-#define ID_GETKEY 0x8
-#define ID_BEEP 0x7
-#define ID_DRAWBITMAP 0x9
-#define ID_CONFIGBITMAP 0xA
-#define ID_DUMPREGS 0xB
+#define ID_WRITE 0
+#define ID_READ 1
+#define ID_CLEARBUFFER 2
+#define ID_DRAWSCREEN 3
+#define ID_TIMETICKS 4
+#define ID_SLEEP 5
+#define ID_TIME 6
+#define ID_GETKEY 8
+#define ID_BEEP 7
+#define ID_DRAWBITMAP 9
+#define ID_CONFIGBITMAP 10
+#define ID_DUMPREGS 11
+#define ID_FONT_SIZE 12
 
 
 // ------ AUXILIARY ------
@@ -269,4 +270,8 @@ void sysConfigBitmap(int bitmapSize,uint32_t hexColor,int width){
 
 void sysRegisters(int fd) {
     return syscall_wizard(ID_DUMPREGS, fd, NO_ARG, NO_ARG);
+}
+
+void sysFontSize(int size) {
+    return syscall_wizard(ID_FONT_SIZE, size, NO_ARG, NO_ARG);
 }

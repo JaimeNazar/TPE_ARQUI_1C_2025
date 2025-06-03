@@ -4,7 +4,7 @@
 
 //Add as necessary
 static char *commandList[] = {
-    "help",     
+    "help",
     "clear",
     "sleep",
     "game",
@@ -12,7 +12,8 @@ static char *commandList[] = {
     "beep",
     "ticks",
     "echo",
-    "registers"
+    "registers",
+    "font-size"
 };
 
 char *commandListDescription[] = {
@@ -24,7 +25,8 @@ char *commandListDescription[] = {
     " - Makes a beep sound for a specified frecuency and time",
     " - Displays the number of ticks elapsed since system start",
     " - Echoes the input back to the user",
-    " - Shows the current values of each register"
+    " - Shows the current values of each register",
+    " - Changes system font size"
 };
 
 
@@ -37,7 +39,8 @@ static const int argumentsPerCommand[] = {
     2, // beep
     0, // ticks
     0, // echo, special case
-    0  // registers
+    0, // registers
+    1  // font size
 
 };
 
@@ -52,7 +55,8 @@ TIME,
 BEEP,
 TICKS,
 ECHO,
-REGISTERS
+REGISTERS,
+FONT_SIZE
 //COMPLETAR
 };
 
@@ -114,6 +118,10 @@ void commandHandler(char* command, int length) {
             break;
         case REGISTERS: 
             registersCommand();
+            break;
+        case FONT_SIZE:
+            int size = strToInt(arguments[1]);
+            fontCommand(size);
             break;
         default:
             error();

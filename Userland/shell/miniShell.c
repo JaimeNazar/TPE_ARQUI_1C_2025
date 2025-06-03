@@ -4,12 +4,12 @@
 char buffer[128];
 void shellInit() {
 
-	Pongis();
-
-	sysWrite(1, "miniShell > ", strlen("miniShell > "));
-	sysDraw();
+	//Pongis();
 	
-	sysDraw();
+    sysWrite(1, "miniShell > ", strlen("miniShell > "));
+    
+    sysDraw();
+
 	int lastTime = sysTimeTicks();
 	int deltaTime = 0;
 	
@@ -99,6 +99,18 @@ void echoCommand(char* arguments[MAX_ARGS], int cant) {
 void registersCommand(){
 	sysWrite(1, "\n", 1);
 	sysRegisters(1);
+}
+
+#define MIN_FONT_SIZE 9
+
+void fontCommand(int size) {
+
+	if (size < MIN_FONT_SIZE) {
+		printf("\n Invalid font size, must be grater than %d \n", MIN_FONT_SIZE);
+		return ;
+	}
+	sysClear();
+	sysFontSize(size);
 }
 
 void error() {

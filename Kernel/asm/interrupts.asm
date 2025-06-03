@@ -159,11 +159,15 @@ _irq05Handler:
 	irqHandlerMaster 5
 
 _syscallHandler:
+
+	;call save_special_registers	; Save current state of registers memory, which reside in stack base
+
 	push rbx
 	push rcx
 	push rdx
 	push rbp
 
+	;call save_registers	; Exception handler will use it later
 	mov rcx, rdx
 	mov rdx, rsi
 	mov rsi, rdi

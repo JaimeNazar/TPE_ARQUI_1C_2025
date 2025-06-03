@@ -19,6 +19,7 @@ void timeCommand();
 void beepCommand(int frequency, int duration);
 void ticksCommand();
 void echoCommand(char* arguments[MAX_ARGS], int cant);
+void fontCommand(int size);
 void error();
 void errorByArguments(char* command, int cant);
 void errorInvalidArgument(char* argument);
