@@ -16,7 +16,7 @@ void shellUpdate();
 void helpCommand();
 void clearCommand();
 void sleepCommand(int duration);
-void gameCommand();
+void gameCommand(int players);
 void timeCommand();
 void beepCommand(int frequency, int duration);
 void ticksCommand();

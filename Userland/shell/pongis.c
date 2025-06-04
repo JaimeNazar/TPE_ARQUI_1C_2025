@@ -180,7 +180,7 @@ void play(void) {
     sysDraw();
 }
 
-void Pongis(int playerCount) {
+void pongis(int playerCount) {
     sysClear();
     sysConfigBitmap(50, DG, 21);
     sysDrawBitmap(0, 0, nave[16]);

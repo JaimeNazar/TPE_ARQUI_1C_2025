@@ -31,7 +31,7 @@ static const int argumentsPerCommand[] = {
     0, // help
     0, // clear
     1, // sleep
-    0, // game
+    1, // game
     0, // time
     2, // beep
     0, // ticks
@@ -89,13 +89,17 @@ void commandHandler(char* command, int length) {
             break;
         case SLEEP: 
             int arg = strToInt(arguments[1]);
-            if (arg <= -1){
+            if (arg <= MIN_FONT_SIZE){
                 errorInvalidArgument(arguments[1]);
             }
             else{sleepCommand(arg);}                  
             break;
         case GAME:
-           gameCommand();
+            int players = strToInt(arguments[1]);
+            if (players != 1 && players != 2){
+                errorInvalidArgument(arguments[1]);
+            }
+            gameCommand(players);
             break;
         case TIME: 
             timeCommand();

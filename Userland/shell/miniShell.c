@@ -63,8 +63,8 @@ void sleepCommand(int duration) {
 	sysSleep(duration);
 }
 
-void gameCommand() {
-	Pongis();
+void gameCommand(int players) {
+	pongis(players);
 }
 
 void timeCommand() {
@@ -103,11 +103,6 @@ void registersCommand(){
 }
 
 void fontCommand(int size) {
-	//Font size must be greater than or equal to MIN_FONT_SIZE (9)
-	if (size < MIN_FONT_SIZE) {
-		printf("\n Invalid font size, must be grater than %d \n", MIN_FONT_SIZE);	
-		return ;
-	}
 	sysClear();
 	sysFontSize(size);
 }
