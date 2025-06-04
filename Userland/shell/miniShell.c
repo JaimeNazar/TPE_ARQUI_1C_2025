@@ -64,11 +64,18 @@ void sleepCommand(int duration) {
 }
 
 void gameCommand() {
-	sysWrite(1, "\nGame command not implemented yet\n", 34);
+	Pongis();
 }
 
 void timeCommand() {
-	printf("Current time: %d : %d : %d\n", getHours(), getMinutes(), getSeconds());
+	int hours = getHours();
+
+	if (hours == 0 || hours == 1 || hours == 2){
+		hours += 24;
+	}
+	hours -= 3; //UTC to GMT
+
+	printf("Current time: %d : %d : %d\n", hours, getMinutes(), getSeconds());
 }
 
 void beepCommand(int frequency, int duration) {
