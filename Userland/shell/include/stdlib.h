@@ -15,19 +15,21 @@
 #define MAX_ARGS 16
 
 // Syscalls IDs
-#define ID_WRITE 0
-#define ID_READ 1
-#define ID_CLEARBUFFER 2
-#define ID_DRAWSCREEN 3
-#define ID_TIMETICKS 4
-#define ID_SLEEP 5
-#define ID_TIME 6
-#define ID_GETKEY 8
-#define ID_BEEP 7
-#define ID_DRAWBITMAP 9
-#define ID_CONFIGBITMAP 10
-#define ID_DUMPREGS 11
-#define ID_FONT_SIZE 12
+typedef enum{
+    ID_WRITE=0,
+    ID_READ,
+    ID_CLEARBUFFER,
+    ID_DRAWSCREEN,
+    ID_TIMETICKS,
+    ID_SLEEP,
+    ID_TIME,
+    ID_GETKEY,
+    ID_BEEP,
+    ID_DRAWBITMAP,
+    ID_CONFIGBITMAP,
+    ID_DUMPREGS,
+    ID_FONT_SIZE
+};
 
 #define TIME_SECONDS 0
 #define TIME_MINUTES 2

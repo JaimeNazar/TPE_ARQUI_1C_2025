@@ -340,11 +340,11 @@ uint64_t sysTimeTicks(){
 }
 
 void sysClear() {
-    return syscall_wizard(ID_CLEARBUFFER, NO_ARG, NO_ARG, NO_ARG);
+    syscall_wizard(ID_CLEARBUFFER, NO_ARG, NO_ARG, NO_ARG);
 }
 
 void sysDraw() {
-    return syscall_wizard(ID_DRAWSCREEN, NO_ARG, NO_ARG, NO_ARG);
+    syscall_wizard(ID_DRAWSCREEN, NO_ARG, NO_ARG, NO_ARG);
 }
 
 uint64_t sysTime(int arg) {
@@ -356,11 +356,11 @@ char sysKey() {
 }
 
 void sysSleep(int duration) {
-    return syscall_wizard(ID_SLEEP, duration, NO_ARG, NO_ARG);
+    syscall_wizard(ID_SLEEP, duration, NO_ARG, NO_ARG);
 }
 
 void sysBeep(int freq, int duration) {
-    return syscall_wizard(ID_BEEP, freq, duration, NO_ARG);
+    syscall_wizard(ID_BEEP, freq, duration, NO_ARG);
 }
 void sysDrawBitmap(uint64_t x, uint64_t y,uint32_t *bitmap) {
     syscall_wizard(ID_DRAWBITMAP, x, y, bitmap);
@@ -370,9 +370,9 @@ void sysConfigBitmap(int bitmapSize,uint32_t hexColor,int width){
 }
 
 void sysRegisters(int fd) {
-    return syscall_wizard(ID_DUMPREGS, fd, NO_ARG, NO_ARG);
+    syscall_wizard(ID_DUMPREGS, fd, NO_ARG, NO_ARG);
 }
 
 void sysFontSize(int size) {
-    return syscall_wizard(ID_FONT_SIZE, size, NO_ARG, NO_ARG);
+    syscall_wizard(ID_FONT_SIZE, size, NO_ARG, NO_ARG);
 }

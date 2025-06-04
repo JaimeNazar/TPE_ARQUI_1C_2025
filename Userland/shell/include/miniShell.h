@@ -9,7 +9,7 @@
 #define MAX_ARGS 16
 
 #define MIN_FONT_SIZE 8
-
+#define UTC_OFFSET -3
 
 void shellInit();
 void shellUpdate();

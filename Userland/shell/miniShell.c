@@ -73,9 +73,9 @@ void timeCommand() {
 	if (hours == 0 || hours == 1 || hours == 2){
 		hours += 24;
 	}
-	hours -= 3; //UTC to GMT
+	hours += UTC_OFFSET;
 
-	printf("Current time: %d : %d : %d\n", hours, getMinutes(), getSeconds());
+	printf("Current time: %d:%d:%d\n", hours, getMinutes(), getSeconds());
 }
 
 void beepCommand(int frequency, int duration) {
