@@ -7,6 +7,6 @@
 
 void drawBall();
 void play(void);
-void Pongis(void);
+void Pongis(int playerCount);
 
 #endif // PONGIS_H

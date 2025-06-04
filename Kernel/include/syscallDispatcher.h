@@ -21,6 +21,7 @@
 #define ID_DUMP_REGS 11
 #define ID_FONT_SIZE 12
 
+
 #define COLOR_WHITE 0xFFFFFFFF
 #define COLOR_AMBER 0x00FFBF00
 
@@ -29,5 +30,6 @@ int read(int fd, char * buff, int length);
 uint64_t syscallDispatcher(uint64_t rax, ...);
 char saveKey();
 char getNextKey(char* c);
+void videoSetFontsize(uint8_t size);
 
 #endif
