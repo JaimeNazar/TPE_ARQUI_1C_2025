@@ -3,7 +3,7 @@
 
 #include <shellUtils.h>
 #include <stdlib.h>
-#include <pongis.h>
+#include "../pongis/include/pongis.h"
 
 #define SHELL_PROMPT "miniShell > "
 #define MAX_ARGS 16
