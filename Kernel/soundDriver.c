@@ -21,7 +21,6 @@ void soundStop() {
     outb(0x61, tmp & 0xFC);
 }
 
-
 static void wait (uint32_t count) {
     uint32_t end = ticks_elapsed() + count;
     while (ticks_elapsed()  < end);
