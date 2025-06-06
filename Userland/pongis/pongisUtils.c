@@ -66,41 +66,38 @@ void Finish(){
 
 
 }
-void checkColissions(body*b1,body *pelota,body *hoyo){
+void checkColissions(body*b1,body *pelota){
     if(b1->x-OFFSET< 0|| b1->x+OFFSET > 1000) 
         b1->vel_x = -b1->vel_x;
-    if(b1->y-OFFSET < 10|| b1->y+OFFSET > 700)
+    if(b1->y-OFFSET < 50|| b1->y+OFFSET > 700)
         b1->vel_y = -b1->vel_y; 
     if(pelota->x-OFFSET < 0|| pelota->x+OFFSET > 1000)
         pelota->vel_x = -pelota->vel_x;
-    if(pelota->y-OFFSET < 0|| pelota->y+OFFSET > 700)
+    if(pelota->y-OFFSET < 50|| pelota->y+OFFSET > 700)
         pelota->vel_y = -pelota->vel_y;
     
-float dx = pelota->x - b1->x;
-float dy = pelota->y - b1->y;
-float distancia = sqrtf(dx * dx + dy * dy);
-float suma_radios = OFFSET*2;
+float dx =  b1->x - pelota->x;
+float dy = b1->y - pelota->y;
+printf("x: %f, y: %f, x2:%f , y2:%f\n", b1->x, b1->y,dx,dy);
+float distancia = sqrtf(dx + dy);
+float suma_radios = OFFSET*10;
 
 if (distancia <= suma_radios) {
     // Colisión detectada
     float angle;
-    arctan(dy / dx, 10, &angle);
+    
     applyForces(pelota, angle, b1->vel_x * 1.2f);
 }
 dx = pelota->x - hole_x;
 dy = pelota->y - hole_y;
 distancia = sqrtf(dx * dx + dy * dy);
-suma_radios = OFFSET*2;
+suma_radios = OFFSET*7;
     if(distancia <= suma_radios){
         Finish();        
     }
     
 }
 void applyForces(body *b,float angle,float magnitud){
-    float sin;
-    float cos;
-    sincosf(angle,&sin,&cos);
-    b->vel_x = cos * magnitud;
-    b->vel_y = sin * magnitud;
+    sysWrite(1, "Applying forces\n", 16);
 }
 

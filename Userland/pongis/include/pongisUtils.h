@@ -19,7 +19,7 @@ extern int flag;
 void sincosf(float angle, float *s, float *c);
 void arctan(double x, int terms, float *angle);
 void applyForces(body *b, float angle, float magnitud);
-void checkColissions(body *b1, body *pelota, body *hoyo);
+void checkColissions(body *b1, body *pelota);
 void Finish();
 void drawBall();
 float fabsf(float x);

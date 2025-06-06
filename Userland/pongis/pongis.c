@@ -107,7 +107,7 @@ void drawPlayfield(){
 void play(void) {
     clearGame();
 
-    printf("x: %d y: %d", p1.x, p1.y);
+    
 
     char c = sysKey();
     float s, cs; 
@@ -143,7 +143,7 @@ void play(void) {
         default:
             break;
     }
-    checkColissions(&p1,&ball,&p2);
+    checkColissions(&p1,&ball);
     
     float drag = 0.9f; 
     p1.vel_x *= drag;
@@ -177,18 +177,15 @@ void play(void) {
     drawPlayer(1);
     drawBall();
     drawHole();
+    
     sysDraw();
+
 }
 
 void pongis(int playerCount) {
     sysClear();
     sysConfigBitmap(50, DG, 21);
     sysDrawBitmap(0, 0, nave[16]);
-    sysFontSize(21);
-    sysWrite(1,"PRESS 1 FOR SOLO PLAYER PRESS 2 FOR VERSUS\n",strlen("PRESS 1 FOR SOLO PLAYER PRESS 2 FOR VERSUS\n"));
-    sysWrite(1,"PLAYER 1:A and D to rotate, W to move HYPERSPEED\n",strlen("PLAYER 1:A and D to rotate, W to move HYPERSPEED\n"));
-    sysWrite(1,"PLAYER 2:I and L to rotate, J to move HYPERSPEED\n",strlen("PLAYER 2:I and L to rotate, J to move HYPERSPEED\n"));
-    sysSleep(1000);
     if(playerCount==2){
         player2Exists = 1;
     }
@@ -203,8 +200,8 @@ void pongis(int playerCount) {
             p1.y = 500;
             p2.x = 400;
             p2.y = 500;
-            ball.x = 700;
-            ball.y = 700;
+            ball.x = 600;
+            ball.y = 600;
             break;
         case 1:
             hole_x = 800;
@@ -213,8 +210,8 @@ void pongis(int playerCount) {
             p1.y = 500;
             p2.x = 400;
             p2.y = 500;
-            ball.x = 100;
-            ball.y = 700;
+            ball.x = 200;
+            ball.y = 600;
             break;
         case 2:
             hole_x = 200;
@@ -223,8 +220,8 @@ void pongis(int playerCount) {
             p1.y = 500;
             p2.x = 400;
             p2.y = 500;
-            ball.x = 700;
-            ball.y = 100;
+            ball.x = 600;
+            ball.y = 200;
             break;
         case 3:
             hole_x = 800;
@@ -233,8 +230,8 @@ void pongis(int playerCount) {
             p1.y = 500;
             p2.x = 400;
             p2.y = 500;
-            ball.x = 100;
-            ball.y = 100;
+            ball.x = 200;
+            ball.y = 200;
             break;
     }
     while(1){
@@ -242,19 +239,12 @@ void pongis(int playerCount) {
     }
 }
 clearGame(){
-   
     sysConfigBitmap(3, B, 21);
+    sysDrawBitmap(p1.x-OFFSET,p1.y-OFFSET,nave[16]);
+    if(player2Exists){
+        sysDrawBitmap(p2.x-OFFSET,p2.y-OFFSET,nave[16]);
+    }
     sysDrawBitmap(ball.x-OFFSET,ball.y-OFFSET,nave[16]);
-    sysConfigBitmap(3, B, 21);
-    sysDrawBitmap(ball.x-OFFSET,ball.y-OFFSET,nave[16]);
-    
-        sysConfigBitmap(3, B, 21);
-        sysDrawBitmap(ball.x-OFFSET,ball.y-OFFSET,nave[16]);
-    
-    sysConfigBitmap(3, B, 21);
-    sysDrawBitmap(ball.x-OFFSET,ball.y-OFFSET,nave[16]);
-    
-    
 }
 //typedef struct {
    // uint64_t x;
