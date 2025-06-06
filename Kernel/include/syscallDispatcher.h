@@ -21,7 +21,8 @@ typedef enum{
     ID_DRAWBITMAP,
     ID_CONFIGBITMAP,
     ID_DUMP_REGS,
-    ID_FONT_SIZE
+    ID_FONT_SIZE,
+    ID_DRAWTEXT
 };
 
 #define COLOR_WHITE 0xFFFFFFFF

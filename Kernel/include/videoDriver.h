@@ -13,17 +13,21 @@
 
 
 void videoInitialize();
-void putPixel(uint32_t hexColor, uint64_t x, uint64_t y);
+void videoPutPixel(uint32_t hexColor, uint64_t x, uint64_t y);
 
-void drawSquare(uint64_t x, uint64_t y, uint64_t size, uint32_t hexColor);
-void drawScreen();
-void clearBuffer();
-void drawChar(char c, uint32_t hexColor);
-void drawBitMap(uint64_t x, uint64_t y,uint32_t *bitmap);
-void ConfigBitmap(int size,uint32_t hexColor,int width);
+void videoDrawSquare(uint64_t x, uint64_t y, uint64_t size, uint32_t hexColor);
+void videoDrawScreen();
+void videoClearBuffer();
+void videoDrawTextAt(const char * str, int length, uint64_t x, uint64_t y, uint32_t hexColor);
+
+// Bitmap utils
+void videoDrawBitMap(uint64_t x, uint64_t y,uint32_t *bitmap);
+void videoConfigBitmap(int size,uint32_t hexColor,int width);
+
 // Text utils
-void printText(const char * str, int length, uint32_t hexColor);
+void videoDrawChar(char c, uint32_t hexColor);
+void videoPrintText(const char * str, int length, uint32_t hexColor);
 void videoSetFontsize(uint8_t size);
-void nextLine();
-int canErase();
+void videoNextLine();
+int videoCanErase();
 #endif

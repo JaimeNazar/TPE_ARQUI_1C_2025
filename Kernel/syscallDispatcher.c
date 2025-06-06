@@ -8,17 +8,17 @@
 int write(int fd, const char * buff, int length) {
     switch (fd) {
         case 1:
-            printText(buff, length, COLOR_WHITE);
+            videoPrintText(buff, length, COLOR_WHITE);
             break;
 
         case 2:
-            printText(buff, length, COLOR_AMBER);
+            videoPrintText(buff, length, COLOR_AMBER);
             break;
     };
 
     return length;
 }
-char gameKey() {
+char getKey() {
     char c;
     if(canRead()){
         getNextKey(&c);
@@ -43,24 +43,24 @@ int read(int fd, char * buff, int length) {
 
                 if (current == '\n') { // Enter
                     buff[count++] = '\n';
-                    void nextLine();
+                    void videoNextLine();
                     break; // Stop reading on Enter
                 } 
                 
-                if(current == '\b'&&canErase()) { // Backspace
+                if(current == '\b'&&videoCanErase()) { // Backspace
                     if (count > 0) {
                         count--;
                         
-                        drawChar('\b', COLOR_WHITE); 
-                        drawScreen();
+                        videoDrawChar('\b', COLOR_WHITE); 
+                        videoDrawScreen();
                         continue;
                     }
                     
                 }
                 if(current!= 0){
                     buff[count++] = current;
-                drawChar(current, COLOR_WHITE);
-                drawScreen();
+                videoDrawChar(current, COLOR_WHITE);
+                videoDrawScreen();
                 }
 
             }
@@ -81,10 +81,10 @@ static uint64_t time(uint8_t code) {
     return upperBits * 10 + lowerBits;
 }
 
+// FIX: Org id numbers
 uint64_t syscallDispatcher(uint64_t rax, ...) {
     va_list args;
     va_start(args, rax);  
-
 
     // Re-enable interrupts
     _sti();
@@ -98,6 +98,7 @@ uint64_t syscallDispatcher(uint64_t rax, ...) {
 
             ret_val = write(fdWrite, buffWrite, lengthWrite);
             break;
+
         case ID_READ:
             int fd = va_arg(args, int);
             char* buff = va_arg(args, char*);
@@ -105,49 +106,77 @@ uint64_t syscallDispatcher(uint64_t rax, ...) {
             
             ret_val = read(fd, buff, length);
             break;
+
         case ID_CLEARBUFFER:
-            clearBuffer();
+            videoClearBuffer();
             break;
+
         case ID_DRAWSCREEN:
-            drawScreen();
+            videoDrawScreen();
             break;
+
         case ID_TIMETICKS:
             ret_val = ticks_elapsed();
             break;
+
         case ID_SLEEP:
             sleep(va_arg(args, int));
             break;
+
         case ID_TIME:
             ret_val = time(va_arg(args, int));
             break;
+
         case ID_BEEP:
             int freq = va_arg(args, int);
             int duration = va_arg(args, int);
+
             bell(freq, duration);
             break;
+
         case ID_GETKEY:
-            ret_val = gameKey();
+            ret_val = getKey();
             break;
+
         case ID_DRAWBITMAP: 
             uint64_t x = va_arg(args, uint64_t);
             uint64_t y = va_arg(args, uint64_t);
             uint32_t *bitmap = va_arg(args, uint32_t*);
-            drawBitMap( x, y,bitmap);
+
+            videoDrawBitMap( x, y,bitmap);
             break;
+
         case ID_CONFIGBITMAP:
             int bitmapPixelSize = va_arg(args, int);
             uint32_t hexColor = va_arg(args, uint32_t);
             int width = va_arg(args, int);
-            ConfigBitmap(bitmapPixelSize, hexColor, width);
+            videoConfigBitmap(bitmapPixelSize, hexColor, width);
+
             break;
+
         case ID_DUMP_REGS:
             int fdDump = va_arg(args, int);
             interruptsDumpRegisters(fdDump);
+
             break;
+
         case ID_FONT_SIZE:
             int fontSize = va_arg(args, int);
             videoSetFontsize(fontSize);
+
             break;
+
+        case ID_DRAWTEXT:
+            const char * str = va_arg(args, const char *);
+            int lenght = va_arg(args, int);
+            uint64_t posX = va_arg(args, uint64_t);
+            uint64_t posY = va_arg(args, uint64_t);
+            uint32_t textColor = va_arg(args, uint32_t);
+
+            videoDrawTextAt(str, lenght, posX, posY, textColor);
+
+            break;
+
         default:
             // Manejar  
             break;
