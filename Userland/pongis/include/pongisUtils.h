@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #define PI 3.1415926f
 #define OFFSET 10
+#define FEELGOODCONSTANT 2.5
 typedef struct {
     uint64_t x;
     uint64_t y;
@@ -15,9 +16,8 @@ typedef struct {
 extern uint64_t hole_x;
 extern uint64_t hole_y;
 extern char end;
-extern int flag;
 void sincosf(float angle, float *s, float *c);
-void arctan(double x, int terms, float *angle);
+float arctan(float y, float x);
 void applyForces(body *b, float angle, float magnitud);
 void checkColissions(body *b1, body *pelota);
 void Finish();

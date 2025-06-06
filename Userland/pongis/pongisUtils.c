@@ -34,70 +34,80 @@ float sqrtf(float number) {
     return conv.f;
 }
 
-void arctan(double x, int terms, float *angle) {
-    if (x > 1.0) {
-        float aux;
-        arctan(1 / x, terms, &aux);
-        *angle = PI / 2 - aux;
-        return;
-    } else if (x < -1.0) {
-        float aux;
-        arctan(1 / x, terms, &aux);
-        *angle = -PI / 2 - aux;
-        return;
+float arctan(float y, float x) {
+    if (x == 0.0f) {
+        if (y > 0.0f)  return PI / 2;    //  +90°
+        if (y < 0.0f)  return -PI / 2;   //  -90°
+        return 0.0f;                    //  x=0, y=0 → arbitrario igual a 0
     }
+    // Constante de ajuste; 0.28 es un valor común para buena aproximación en [−π/2, +π/2]
+    const float A = 0.28f;
 
-    float result = 0.0;
-    float power = x;
-    int sign = 1;
+    float abs_y = fabsf(y);
+    float abs_x = fabsf(x);
+    float z = y / x;
+    float atan;
 
-    for (int n = 0; n < terms; n++) {
-        int denom = 2 * n + 1;
-        result += sign * (power / denom);
-        power *= x * x;
-        sign *= -1;
+    // Caso |z| < 1  → usamos aproximación directa
+    if (fabsf(z) < 1.0f) {
+        atan = z / (1.0f + A * z * z);
+        if (x < 0.0f) {
+            // x < 0, hay que desplazar π según signo de y
+            if (y < 0.0f)      atan -= PI;
+            else               atan += PI;
+        }
     }
-
-    *angle = result;
+    // Caso |z| ≥ 1  → hacemos reflect en π/2
+    else {
+        atan = (PI / 2) - (x / y) / (1.0f + A * (x / y) * (x / y));
+        if (y < 0.0f)     atan -= PI;
+    }
+    return atan;
 }
 void Finish(){
     end = 1;
-    sysClear();
+    
 
 
 }
 void checkColissions(body*b1,body *pelota){
-    if(b1->x-OFFSET< 0|| b1->x+OFFSET > 1000) 
-        b1->vel_x = -b1->vel_x;
-    if(b1->y-OFFSET < 50|| b1->y+OFFSET > 700)
-        b1->vel_y = -b1->vel_y; 
-    if(pelota->x-OFFSET < 0|| pelota->x+OFFSET > 1000)
-        pelota->vel_x = -pelota->vel_x;
-    if(pelota->y-OFFSET < 50|| pelota->y+OFFSET > 700)
-        pelota->vel_y = -pelota->vel_y;
+    if(b1->x-OFFSET< 10|| b1->x+OFFSET > 1000) 
+        b1->vel_x = -b1->vel_x * 1.5f; ;
+    if(b1->y-OFFSET < 80|| b1->y+OFFSET > 700)
+        b1->vel_y = -b1->vel_y * 1.5f; 
+    if(pelota->x-OFFSET < 10|| pelota->x+OFFSET > 1000)
+        pelota->vel_x = -pelota->vel_x * 1.5f;
+    if(pelota->y-OFFSET < 80|| pelota->y+OFFSET > 700)
+        pelota->vel_y = -pelota->vel_y * 1.5f;
     
-float dx =  b1->x - pelota->x;
-float dy = b1->y - pelota->y;
-printf("x: %f, y: %f, x2:%f , y2:%f\n", b1->x, b1->y,dx,dy);
-float distancia = sqrtf(dx + dy);
-float suma_radios = OFFSET*10;
+int dx =  b1->x - pelota->x;
+int dy = b1->y - pelota->y;
+float distancia = sqrtf((float)(dx*dx + dy*dy));
+
+
+float suma_radios = OFFSET* 2.0 * FEELGOODCONSTANT;
 
 if (distancia <= suma_radios) {
     // Colisión detectada
     float angle;
+    angle = arctan(dy,dx);
     
-    applyForces(pelota, angle, b1->vel_x * 1.2f);
+    float velocity = sqrtf(b1->vel_x * b1->vel_x + b1->vel_y * b1->vel_y);
+    applyForces(pelota, angle,  velocity * 1.4f);
 }
 dx = pelota->x - hole_x;
 dy = pelota->y - hole_y;
 distancia = sqrtf(dx * dx + dy * dy);
-suma_radios = OFFSET*7;
+suma_radios = OFFSET* 2.0 * FEELGOODCONSTANT;
     if(distancia <= suma_radios){
-        Finish();        
+        Finish();
     }
-    
+
 }
 void applyForces(body *b,float angle,float magnitud){
-    sysWrite(1, "Applying forces\n", 16);
+    float s, c;
+    sincosf(angle, &s, &c);
+    b->vel_x += magnitud * c * (-1.0f);
+    b->vel_y += magnitud * s;
 }
 

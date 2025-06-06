@@ -64,7 +64,6 @@ body ball = {200,200, 0, 0, 0};
 uint64_t hole_x = 0;
 uint64_t hole_y = 0;
 char end = 0;
-int flag = 0;
 
 void drawBall() {
     sysConfigBitmap(3, DG, 21);
@@ -112,6 +111,9 @@ void play(void) {
     char c = sysKey();
     float s, cs; 
     switch(c) {
+        case'\b':
+            end = 1;
+            break;
         case 'w':
             sincosf(angulos[p1.rotation], &s, &cs);
             // Calcula la aceleración en función del ángulo seleccionado en el ciclo
@@ -234,9 +236,18 @@ void pongis(int playerCount) {
             ball.y = 200;
             break;
     }
-    while(1){
+    while(!end){
         play();
     }
+    sysClear();
+    sysFontSize(21);
+    sysWrite(1,"\nGame Over!\n", 15);
+    sysFontSize(8);
+    sysDraw();
+    sysSleep(50);
+    sysClear();
+    sysDraw();
+    
 }
 clearGame(){
     sysConfigBitmap(3, B, 21);
