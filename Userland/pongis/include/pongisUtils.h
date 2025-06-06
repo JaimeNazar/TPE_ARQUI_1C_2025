@@ -13,6 +13,9 @@ typedef struct {
     float vel_y;
     int rotation;
     int hits;
+    uint8_t r_left; // For simulaneous keyboard input
+    uint8_t r_right;
+    uint8_t foward;
 } body;
 extern uint64_t hole_x;
 extern uint64_t hole_y;

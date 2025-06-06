@@ -57,9 +57,9 @@ uint32_t asteroide[][21]={
     {0x000000,0x00001C,0x01C03E,0x07F07F,0x07F03E,0x0FF81C,0x0FF800,0x0FF800,0x07F000,0x07F000,0x01C000,0x00001C,0x00003E,0x00007F,0x00007F,0x00007F,0x00027F,0x00077F,0x00023E,0x00001C,0x000000},
 };
 char player2Exists = 0;
-body p1 = {50,50, 0, 0, 0,0};
-body p2 = {100, 100, 0, 0, 0,0};
-body ball = {200,200, 0, 0, 0,0};
+body p1 = {50,50, 0, 0, 0,0, 0, 0, 0};
+body p2 = {100, 100, 0, 0, 0,0, 0, 0, 0};
+body ball = {200,200, 0, 0, 0,0, 0, 0, 0};
 uint64_t hole_x = 0;
 uint64_t hole_y = 0;
 char end = 0;
@@ -112,47 +112,78 @@ void drawPlayfield(){
     sysDrawBitmap(400, 60, nave[16]);
 }
 
+static uint8_t getKeyReleaseCode(uint8_t code) {
+    return code + KEYRELEASE;
+}
+
 // Process keyboard input
 static void keyboardInput() {
     uint8_t c;
 
     c = sysGetKeyEvent();
 
-    float s, cs; 
     switch(c) {
         case KEYPRESS_BACKSPACE:
             end = 1;
             break;
         case KEYPRESS_W:
-            sincosf(angulos[p1.rotation], &s, &cs);
-            // Calcula la aceleración en función del ángulo seleccionado en el ciclo
-            p1.vel_x += (int)(5 * cs);
-            p1.vel_y += (int)(5 * (-s));
+            p1.foward = 1;
             break;
         case KEYPRESS_A:
-            // Incrementa el índice de rotación cíclicamente (0 a 7)
-            p1.rotation = (p1.rotation + 1) % 8;
+            p1.r_left = 1;
             break;
         case KEYPRESS_D:
-            // Decrementa el índice de rotación cíclicamente (usando módulo 8)
-            p1.rotation = (p1.rotation + 7) % 8;
-            break;
-            case 'i':
-            sincosf(angulos[p2.rotation], &s, &cs);
-            // Calcula la aceleración en función del ángulo seleccionado en el ciclo
-            p2.vel_x += (int)(5 * cs);
-            p2.vel_y += (int)(5 * (-s));
+            p1.r_right = 1;
             break;
         case KEYPRESS_J:
-            // Incrementa el índice de rotación cíclicamente (0 a 7)
-            p2.rotation = (p2.rotation + 1) % 8;
+            p2.r_left = 1;
             break;
         case KEYPRESS_L:
-            // Decrementa el índice de rotación cíclicamente (usando módulo 8)
-            p2.rotation = (p2.rotation + 7) % 8;
+            p2.r_right = 1;
+            break;
+        case KEYPRESS_I:
+            p2.foward = 1;
+            break;
+        case KEYPRESS_W + KEYRELEASE:
+            p1.foward = 0;
+            break;
+        case KEYPRESS_A + KEYRELEASE:
+            p1.r_left = 0;
+            break;
+        case KEYPRESS_D + KEYRELEASE:
+            p1.r_right = 0;
+            break;
+        case KEYPRESS_J + KEYRELEASE:
+            p2.r_left = 0;
+            break;
+        case KEYPRESS_L + KEYRELEASE:
+            p2.r_right = 0;
+            break;
+        case KEYPRESS_I + KEYRELEASE:
+            p2.foward = 0;
             break;
         default:
             break;
+    }
+}
+
+static void updateMovements(body *b) {
+    float s, cs; 
+    if (b->r_left) {
+        // Incrementa el índice de rotación cíclicamente (0 a 7)
+        b->rotation = (b->rotation + 1) % 8;
+    } 
+
+    if (b->r_right) {
+        // Decrementa el índice de rotación cíclicamente (usando módulo 8)
+        b->rotation = (b->rotation + 7) % 8;
+    }
+
+    if (b->foward) {
+        sincosf(angulos[b->rotation], &s, &cs);
+        // Calcula la aceleración en función del ángulo seleccionado en el ciclo
+        b->vel_x += (int)(5 * cs);
+        b->vel_y += (int)(5 * (-s));
     }
 }
 
@@ -164,7 +195,14 @@ void play(void) {
 
     // Process keyboard input
     keyboardInput();
-    
+
+    // Check for actions based on key events
+
+    // Player 1
+    updateMovements(&p1);
+    updateMovements(&p2);
+
+    // Check colisions
     checkColissions();
     
     float drag = 0.9f; 
