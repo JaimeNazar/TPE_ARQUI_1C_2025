@@ -71,7 +71,8 @@ typedef struct{
 
 } CycleBuffer;
 
-static CycleBuffer inputBuffer;
+static CycleBuffer regularInputBuffer;
+static CycleBuffer noRepetitionInputBuffer;
 
 static int nextToWrite = 0; //Siguiente posicion a escribir
 static int nextToRead = 0; //Siguiente posicion a leer
@@ -109,7 +110,7 @@ static char characterFilter(char key) {
 }
 
 char keyboardCanRead() {
-  return inputBuffer.elemCount > 0;
+  return regularInputBuffer.elemCount > 0;
 }
 
 uint8_t keyboardPoll() {
@@ -122,10 +123,10 @@ uint8_t keyboardPoll() {
 }
 
 char keyboardGetNextKey(char* c) {
-    if (inputBuffer.elemCount > 0) {
-        *c = inputBuffer.buffer[inputBuffer.nextToRead];
-        inputBuffer.nextToRead = (inputBuffer.nextToRead + 1) % BUFFER_SIZE;
-        inputBuffer.elemCount--;
+    if (regularInputBuffer.elemCount > 0) {
+        *c = regularInputBuffer.buffer[regularInputBuffer.nextToRead];
+        regularInputBuffer.nextToRead = (regularInputBuffer.nextToRead + 1) % BUFFER_SIZE;
+        regularInputBuffer.elemCount--;
         return 1;
     }
 
@@ -137,16 +138,53 @@ char keyboardSaveKey() {
     char c = get_keyboard_output();
     c = characterFilter(c);
 
-    if (inputBuffer.elemCount < BUFFER_SIZE) {
-        inputBuffer.buffer[inputBuffer.nextToWrite] = c;
-        inputBuffer.nextToWrite = (inputBuffer.nextToWrite + 1) % BUFFER_SIZE;
-        inputBuffer.elemCount++;
+    if (regularInputBuffer.elemCount < BUFFER_SIZE) {
+        regularInputBuffer.buffer[regularInputBuffer.nextToWrite] = c;
+        regularInputBuffer.nextToWrite = (regularInputBuffer.nextToWrite + 1) % BUFFER_SIZE;
+        regularInputBuffer.elemCount++;
     } else {
         // Buffer lleno: sobrescribimos el más viejo (nextToRead)
-        inputBuffer.buffer[inputBuffer.nextToWrite] = c;
-        inputBuffer.nextToWrite = (inputBuffer.nextToWrite + 1) % BUFFER_SIZE;
-        inputBuffer.nextToRead = (inputBuffer.nextToRead + 1) % BUFFER_SIZE; 
+        regularInputBuffer.buffer[regularInputBuffer.nextToWrite] = c;
+        regularInputBuffer.nextToWrite = (regularInputBuffer.nextToWrite + 1) % BUFFER_SIZE;
+        regularInputBuffer.nextToRead = (regularInputBuffer.nextToRead + 1) % BUFFER_SIZE; 
     }
 
     return c;
 }
+char keyboardSaveKeyNoRep() {
+    char c = get_keyboard_output();
+    c = characterFilter(c);
+	char lastChar = 0;
+	if(noRepetitionInputBuffer.nextToWrite == 0){
+		lastChar = noRepetitionInputBuffer.buffer[BUFFER_SIZE - 1];
+	}
+	else{
+		lastChar = noRepetitionInputBuffer.buffer[noRepetitionInputBuffer.nextToWrite - 1];
+	}
+	if(c == lastChar) {
+		return 0; // No repetimos el último carácter
+	}
+    if (noRepetitionInputBuffer.elemCount < BUFFER_SIZE) {
+        noRepetitionInputBuffer.buffer[noRepetitionInputBuffer.nextToWrite] = c;
+        noRepetitionInputBuffer.nextToWrite = (noRepetitionInputBuffer.nextToWrite + 1) % BUFFER_SIZE;
+        noRepetitionInputBuffer.elemCount++;
+    } else {
+        // Buffer lleno: sobrescribimos el más viejo (nextToRead)
+        noRepetitionInputBuffer.buffer[noRepetitionInputBuffer.nextToWrite] = c;
+        noRepetitionInputBuffer.nextToWrite = (noRepetitionInputBuffer.nextToWrite + 1) % BUFFER_SIZE;
+        noRepetitionInputBuffer.nextToRead = (noRepetitionInputBuffer.nextToRead + 1) % BUFFER_SIZE; 
+    }
+
+    return c;
+}
+char getKeyEvent(){
+	if (noRepetitionInputBuffer.elemCount > 0) {
+        char c = noRepetitionInputBuffer.buffer[noRepetitionInputBuffer.nextToRead];
+        noRepetitionInputBuffer.nextToRead = (noRepetitionInputBuffer.nextToRead + 1) % BUFFER_SIZE;
+        noRepetitionInputBuffer.elemCount--;
+        return c;
+    }
+    return 0;
+}
+
+

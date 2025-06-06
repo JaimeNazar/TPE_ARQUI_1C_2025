@@ -29,7 +29,8 @@ typedef enum{
     ID_CONFIGBITMAP,
     ID_DUMPREGS,
     ID_FONT_SIZE,
-    ID_DRAWTEXT
+    ID_DRAWTEXT,
+    ID_GETKEYEVENT
 };
 
 #define TIME_SECONDS 0
@@ -67,5 +68,5 @@ char sysKey();
 void sysFontSize(int size);
 
 void sysDrawTextAt(const char * str, int length, uint64_t x, uint64_t y, uint32_t hexColor);
-
+char sysGetKeyEvent();
 #endif

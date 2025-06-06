@@ -22,7 +22,8 @@ typedef enum{
     ID_CONFIGBITMAP,
     ID_DUMP_REGS,
     ID_FONT_SIZE,
-    ID_DRAWTEXT
+    ID_DRAWTEXT,
+    ID_GETKEYEVENT
 };
 
 #define COLOR_WHITE 0xFFFFFFFF

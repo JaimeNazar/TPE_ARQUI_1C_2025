@@ -176,7 +176,8 @@ uint64_t syscallDispatcher(uint64_t rax, ...) {
             videoDrawTextAt(str, lenght, posX, posY, textColor);
 
             break;
-
+        case ID_GETKEYEVENT:
+            ret_val = getKeyEvent();
         default:
             // Manejar  
             break;

@@ -66,14 +66,16 @@ float arctan(float y, float x) {
 }
 void Finish(){
     end = 1;
-    
-
-
+    sysBeep(800,2);
+    sysBeep(700,3);
+    sysBeep(800,2);
+    sysBeep(700,3);
 }
 void hitball(body *b,body *ball){
     int dx =  b->x - ball->x;
 int dy = b->y - ball->y;
 float distancia = sqrtf((float)(dx*dx + dy*dy));
+
 
 
 float suma_radios = OFFSET* 2.0 * FEELGOODCONSTANT;
@@ -90,15 +92,23 @@ if (distancia <= suma_radios) {
 }
 }
 void checkColissions(){
-    if(p1.x-OFFSET< 10|| p1.x+OFFSET > 1000) 
-        p1.vel_x = -p1.vel_x * 1.5f; ;
-    if(p1.y-OFFSET < 80|| p1.y+OFFSET > 700)
+    if(p1.x-OFFSET< 10|| p1.x+OFFSET > 1000){
+        sysBeep(800,2);
+        p1.vel_x = -p1.vel_x * 1.5f;
+    } 
+    if(p1.y-OFFSET < 80|| p1.y+OFFSET > 700){
+        sysBeep(800,2);
         p1.vel_y = -p1.vel_y * 1.5f; 
-    if(ball.x-OFFSET < 10|| ball.x+OFFSET > 1000)
+    }
+    if(ball.x-OFFSET < 10|| ball.x+OFFSET > 1000){
+        sysBeep(800,2);
         ball.vel_x = -ball.vel_x * 1.5f;
-    if(ball.y-OFFSET < 80|| ball.y+OFFSET > 700)
+    }
+        
+    if(ball.y-OFFSET < 80|| ball.y+OFFSET > 700){
+        sysBeep(800,2);
         ball.vel_y = -ball.vel_y * 1.5f;
-    
+    }
 hitball(&p1, &ball);
 if(player2Exists){
     if(p2.x-OFFSET< 10|| p2.x+OFFSET > 1000) 

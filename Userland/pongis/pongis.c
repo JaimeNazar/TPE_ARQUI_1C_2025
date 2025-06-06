@@ -117,9 +117,12 @@ void play(void) {
     clearGame();
     drawPlayfield();
     drawHits(10, 10, 8);
-    
-
-    char c = sysKey();
+    char c;
+    if(player2Exists){
+        c = sysGetKeyEvent();
+    }else{
+        c = sysKey();
+    }
     float s, cs; 
     switch(c) {
         case'\b':
