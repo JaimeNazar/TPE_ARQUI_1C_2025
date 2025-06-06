@@ -173,6 +173,9 @@ _syscallHandler:
 	push rdx
 	push rbp
 
+	; Move arguments to the x86_64 ABI standard for passing parameters
+	mov r9, r8
+	mov r8, rcx
 	mov rcx, rdx
 	mov rdx, rsi
 	mov rsi, rdi
