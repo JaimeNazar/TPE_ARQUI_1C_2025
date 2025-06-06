@@ -1,6 +1,8 @@
 
 #include <pongisUtils.h>
 
+static lastHit = 0;
+
 float fabsf(float x) {
     return (x < 0.0f) ? -x : x;
 }
@@ -87,7 +89,13 @@ if (distancia <= suma_radios) {
     
     float velocity = sqrtf(b->vel_x * b->vel_x + b->vel_y * b->vel_y);
     applyForces(ball, angle,  velocity * 1.4f);
-    b->hits++;
+    
+    int timeElapsed = sysTimeTicks();
+    if(timeElapsed - lastHit > 25){
+        lastHit = timeElapsed;
+        b->hits++;}
+    
+    
 
 }
 }
