@@ -112,33 +112,28 @@ void drawPlayfield(){
     sysDrawBitmap(400, 60, nave[16]);
 }
 
+// Process keyboard input
+static void keyboardInput() {
+    uint8_t c;
 
-void play(void) {
-    clearGame();
-    drawPlayfield();
-    drawHits(10, 10, 8);
-    char c;
-    if(player2Exists){
-        c = sysGetKeyEvent();
-    }else{
-        c = sysKey();
-    }
+    c = sysGetKeyEvent();
+
     float s, cs; 
     switch(c) {
-        case'\b':
+        case KEYPRESS_BACKSPACE:
             end = 1;
             break;
-        case 'w':
+        case KEYPRESS_W:
             sincosf(angulos[p1.rotation], &s, &cs);
             // Calcula la aceleración en función del ángulo seleccionado en el ciclo
             p1.vel_x += (int)(5 * cs);
             p1.vel_y += (int)(5 * (-s));
             break;
-        case 'a':
+        case KEYPRESS_A:
             // Incrementa el índice de rotación cíclicamente (0 a 7)
             p1.rotation = (p1.rotation + 1) % 8;
             break;
-        case 'd':
+        case KEYPRESS_D:
             // Decrementa el índice de rotación cíclicamente (usando módulo 8)
             p1.rotation = (p1.rotation + 7) % 8;
             break;
@@ -148,17 +143,28 @@ void play(void) {
             p2.vel_x += (int)(5 * cs);
             p2.vel_y += (int)(5 * (-s));
             break;
-        case 'j':
+        case KEYPRESS_J:
             // Incrementa el índice de rotación cíclicamente (0 a 7)
             p2.rotation = (p2.rotation + 1) % 8;
             break;
-        case 'l':
+        case KEYPRESS_L:
             // Decrementa el índice de rotación cíclicamente (usando módulo 8)
             p2.rotation = (p2.rotation + 7) % 8;
             break;
         default:
             break;
     }
+}
+
+void play(void) {
+
+    clearGame();
+    drawPlayfield();
+    drawHits(10, 10, 8);
+
+    // Process keyboard input
+    keyboardInput();
+    
     checkColissions();
     
     float drag = 0.9f; 

@@ -68,5 +68,5 @@ char sysKey();
 void sysFontSize(int size);
 
 void sysDrawTextAt(const char * str, int length, uint64_t x, uint64_t y, uint32_t hexColor);
-char sysGetKeyEvent();
+uint8_t sysGetKeyEvent();
 #endif
