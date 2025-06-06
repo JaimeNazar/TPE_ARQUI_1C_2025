@@ -23,7 +23,7 @@ char *commandListDescription[] = {
     " - Displays the number of ticks elapsed since system start",
     " - Echoes the input back to the user",
     " - Shows the current values of each register",
-    " - Changes system font size"
+    " - Changes system font size, size must be greater than or equal 8"
 };
 
 
@@ -124,7 +124,7 @@ void commandHandler(char* command, int length) {
             break;
         case FONT_SIZE:
             int size = strToInt(arguments[1]);
-            if (size <= -1){
+            if (size <= MIN_FONT_SIZE){
                 errorInvalidArgument(arguments[1]);
             } else {fontCommand(size);}
             break;
