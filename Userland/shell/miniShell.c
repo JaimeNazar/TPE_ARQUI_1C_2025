@@ -31,8 +31,6 @@ void shellUpdate() {
 	sysWrite(1, "\n", 1);	// Move one line down
 	sysDraw();
 
-	printf(" read length: %d\n", realLen);
-	
     commandHandler(buffer, realLen);	//Checks if it's a command and executes it
 
     sysWrite(1, "miniShell > ", strlen("miniShell > "));
