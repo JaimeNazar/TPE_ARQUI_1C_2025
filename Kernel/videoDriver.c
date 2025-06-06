@@ -42,7 +42,6 @@ typedef struct vbe_mode_info_structure * VBEInfoPtr;
 
 VBEInfoPtr VBE_mode_info = (VBEInfoPtr) 0x0000000000005C00;
 
-
 // Each index represents the ascii code of the letter
 unsigned char font_bitmap[][16] = {
     { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  },       //0x00, 
@@ -175,22 +174,29 @@ unsigned char font_bitmap[][16] = {
     { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,  },       //0x7F, delete
 };
 
-static int font_size = DEFAULT_FONT_SIZE;
-static int charsPerWidth;
-static int charsPerHeight;
 
 static uint32_t buffer[MAX_HEIGHT][MAX_WIDTH];
 
+// --- Text variables ---
+static int font_size = DEFAULT_FONT_SIZE;
+static int charsPerWidth;
+static int charsPerHeight;
 // Represents the char grid positions when working with printing strings
 static int currentCharX = 0;    // Top-left corner
 static int currentCharY = 0;
 
+// --- Bitmap variables --- 
+static int bitmapPixelSize;
+static uint32_t hc = 0xFFFFFF; 
+static int w = 0;
+
+/* Gets basic screen information */
 void videoInitialize() {
     charsPerWidth = VBE_mode_info->width / font_size;
     charsPerHeight = VBE_mode_info->height / (font_size * 2);  // Characters are double the width in height
 }
 
-void putPixel(uint32_t hexColor, uint64_t x, uint64_t y) {
+void videoPutPixel(uint32_t hexColor, uint64_t x, uint64_t y) {
 
     if (x >= VBE_mode_info->width || y >= VBE_mode_info->height)
         return;
@@ -204,7 +210,7 @@ void putPixel(uint32_t hexColor, uint64_t x, uint64_t y) {
 }
 
 /* Draws a square, the top-left corner has the position specified */
-void drawSquare(uint64_t x, uint64_t y, uint64_t size, uint32_t hexColor) { // TODO: Check if there is a faster approach
+void videoDrawSquare(uint64_t x, uint64_t y, uint64_t size, uint32_t hexColor) { // TODO: Check if there is a faster approach
 
     // Ignore any drawing request outsize buffer limits
     if (x + size >= MAX_WIDTH || y + size >= MAX_HEIGHT || x < 0 || y < 0){
@@ -219,7 +225,8 @@ void drawSquare(uint64_t x, uint64_t y, uint64_t size, uint32_t hexColor) { // T
 	}
 }
 
-void drawCharAt(char c, uint64_t x, uint64_t y, uint32_t hexColor) {
+/* Draws char at provided coordinates(top-left corner of char) */
+void videoDrawCharAt(char c, uint64_t x, uint64_t y, uint32_t hexColor) {
 
 	unsigned char* index = font_bitmap[c];    // get letter bitmap starting index
 	char pixel = 0; // Current pixel
@@ -232,13 +239,20 @@ void drawCharAt(char c, uint64_t x, uint64_t y, uint32_t hexColor) {
 			pixel = index[i];
 
 			if (pixel >> (CHAR_BITMAP_WIDTH-j) & 0x01)  // If there should be a "pixel" from bitmap drawn
-				drawSquare(x + j*bitmapPixelSize, y + i*bitmapPixelSize, bitmapPixelSize, hexColor);
+				videoDrawSquare(x + j*bitmapPixelSize, y + i*bitmapPixelSize, bitmapPixelSize, hexColor);
 		}
 	}
 
 }
 
-void clearBuffer() {
+/* Draws text starting at provided coordinates(top-left corner of text) */
+void videoDrawTextAt(const char * str, int length, uint64_t x, uint64_t y, uint32_t hexColor) {
+	for (int i = 0; i < length; i++) {
+        videoDrawCharAt(str[i], x, y, hexColor);
+	}
+}
+
+void videoClearBuffer() {
     for (int i = 0; i < VBE_mode_info->height; i++) {
 		for (int j = 0; j < VBE_mode_info->width; j++) {
             //putPixel(0, j, i);
@@ -249,31 +263,30 @@ void clearBuffer() {
     currentCharX = currentCharY = 0;
 }
 
-void drawScreen() {
+void videoDrawScreen() {
     for (int i = 0; i < VBE_mode_info->height; i++) {
 		for (int j = 0; j < VBE_mode_info->width; j++) {
-            putPixel(buffer[i][j], j, i);
+            videoPutPixel(buffer[i][j], j, i);
 		}
 	}
 
 }
-int bitmapPixelSize;
-uint32_t hc = 0xFFFFFF; 
-int w = 0;
 
-void ConfigBitmap(int bps,uint32_t hexColor,int width){
+// ------ BITMAP UTILS ------
+
+void videoConfigBitmap(int bps,uint32_t hexColor,int width){
     bitmapPixelSize = bps;   
     hc = hexColor; // Hex color to draw the bitmap
     w = (width <= 0) ? 1 : width;
 }
-void drawBitMap( uint64_t x, uint64_t y,uint32_t *bitmap) {
+void videoDrawBitMap( uint64_t x, uint64_t y,uint32_t *bitmap) {
 
     for (int i = 0; i < w; i++) {
         uint32_t row = bitmap[i];  // Cada fila de bits
         for (int j = 0; j < w; j++) {
             // Verificamos si el bit en la posición j está encendido
             if ((row >> (w - 1 - j)) & 1) {
-                drawSquare(x + j * bitmapPixelSize, y + i * bitmapPixelSize, bitmapPixelSize, hc);
+                videoDrawSquare(x + j * bitmapPixelSize, y + i * bitmapPixelSize, bitmapPixelSize, hc);
             }
         }
     }
@@ -299,7 +312,7 @@ static void scroll() {
     currentCharX = 0;
 }
 
-void nextLine() {
+void videoNextLine() {
     currentCharX = 0;
     currentCharY++;
 }
@@ -311,7 +324,7 @@ void videoSetFontsize(uint8_t size) {
     charsPerHeight = VBE_mode_info->height / (font_size * 2);
 }
 
-void drawChar(char c, uint32_t hexColor) {    
+void videoDrawChar(char c, uint32_t hexColor) {    
 
     // Check if bottom of screen was reached
     if (currentCharY >= charsPerHeight-1)
@@ -319,24 +332,24 @@ void drawChar(char c, uint32_t hexColor) {
 
     // New line if reached end
     if (currentCharX >= charsPerWidth) {
-        void nextLine();
+        void videoNextLine();
     }
     
     if(c=='\b') {
-        if(!canErase()) {
+        if(!videoCanErase()) {
             return; // Cannot erase, do nothing
         }
         if(currentCharX<=0){
             if(currentCharY>0) {
                 currentCharY--;
                 currentCharX = charsPerWidth - 1;
-                drawCharAt(' ', currentCharX * font_size, currentCharY * font_size * 2, hexColor);
+                videoDrawCharAt(' ', currentCharX * font_size, currentCharY * font_size * 2, hexColor);
             } else {
                 return; // No more characters to delete
             }
         } else {
             currentCharX--;
-            drawCharAt(0x7F, currentCharX * font_size, currentCharY * font_size * 2, 0x000000);
+            videoDrawCharAt(0x7F, currentCharX * font_size, currentCharY * font_size * 2, 0x000000);
         }
         return;
     }
@@ -347,67 +360,22 @@ void drawChar(char c, uint32_t hexColor) {
         currentCharX += 4; // Move to next tab position
         return;
     }
-    drawCharAt(c, currentCharX * font_size, currentCharY * font_size * 2, hexColor);
+    videoDrawCharAt(c, currentCharX * font_size, currentCharY * font_size * 2, hexColor);
     currentCharX++;
 }
 
 /* Prints a string continiously on screen using a grid */
-void printText(const char * str, int length, uint32_t hexColor) {
+void videoPrintText(const char * str, int length, uint32_t hexColor) {
 	for (int i = 0; i < length; i++) {
         if (str[i] == '\n') {
             currentCharX = 0;
             currentCharY++;
         } else {
-            drawChar(str[i], hexColor);
+            videoDrawChar(str[i], hexColor);
         }
 	}
 }
 
-// TODO: Clean up
-static char bufferBase[64] = { '0' };
-
-// From naiveConsole
-static uint32_t uintToBase(uint64_t value, char * bufferBase, uint32_t base)
-{
-	char *p = bufferBase;
-	char *p1, *p2;
-	uint32_t digits = 0;
-
-	//Calculate characters for each digit
-	do
-	{
-		uint32_t remainder = value % base;
-		*p++ = (remainder < 10) ? remainder + '0' : remainder + 'A' - 10;
-		digits++;
-	}
-	while (value /= base);
-
-	// Terminate string in bufferBase.
-	*p = 0;
-
-	//Reverse string in bufferBase.
-	p1 = bufferBase;
-	p2 = p - 1;
-	while (p1 < p2)
-	{
-		char tmp = *p1;
-		*p1 = *p2;
-		*p2 = tmp;
-		p1++;
-		p2--;
-	}
-
-	return digits;
-}
-
-void drawDec(uint64_t value, uint32_t hexColor) {
-	int i;
-
-    uintToBase(value, bufferBase, 10);
-
-	for (i = 0; bufferBase[i] != 0; i++)
-		drawChar(bufferBase[i], hexColor);
-}
-int canErase(){
+int videoCanErase(){
     return currentCharX > 12;//strlen("miniShell > ")
 }

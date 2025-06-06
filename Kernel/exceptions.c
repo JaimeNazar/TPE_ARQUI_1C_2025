@@ -40,7 +40,7 @@ void exceptionDispatcher(int exception) {
 	else if (exception == UNDEF_OP_CODE_EXCEPTION_ID)
 		undefinedOpCode();
 	
-	drawScreen();
+	videoDrawScreen();
 
 	// Re-enable interrupts
 	_sti();
