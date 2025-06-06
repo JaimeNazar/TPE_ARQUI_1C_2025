@@ -112,10 +112,6 @@ void drawPlayfield(){
     sysDrawBitmap(400, 60, nave[16]);
 }
 
-static uint8_t getKeyReleaseCode(uint8_t code) {
-    return code + KEYRELEASE;
-}
-
 // Process keyboard input
 static void keyboardInput() {
     uint8_t c;
