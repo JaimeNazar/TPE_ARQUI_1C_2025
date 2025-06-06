@@ -144,22 +144,22 @@ static void keyboardInput() {
         case KEYPRESS_I:
             p2.foward = 1;
             break;
-        case KEYPRESS_W + KEYRELEASE:
+        case BREAK_KEY(KEYPRESS_W):
             p1.foward = 0;
             break;
-        case KEYPRESS_A + KEYRELEASE:
+        case BREAK_KEY(KEYPRESS_A):
             p1.r_left = 0;
             break;
-        case KEYPRESS_D + KEYRELEASE:
+        case BREAK_KEY(KEYPRESS_D):
             p1.r_right = 0;
             break;
-        case KEYPRESS_J + KEYRELEASE:
+        case BREAK_KEY(KEYPRESS_J):
             p2.r_left = 0;
             break;
-        case KEYPRESS_L + KEYRELEASE:
+        case BREAK_KEY(KEYPRESS_L):
             p2.r_right = 0;
             break;
-        case KEYPRESS_I + KEYRELEASE:
+        case BREAK_KEY(KEYPRESS_I):
             p2.foward = 0;
             break;
         default:

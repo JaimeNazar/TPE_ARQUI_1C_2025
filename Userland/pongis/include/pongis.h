@@ -20,6 +20,8 @@
 
 #define KEYPRESS_BACKSPACE 0x0E
 
+#define BREAK_KEY(c)  ((c) + KEYRELEASE)
+
 void drawBall();
 void play(void);
 void pongis(int playerCount);
