@@ -160,14 +160,19 @@ _irq05Handler:
 
 _syscallHandler:
 
-	;call save_special_registers	; Save current state of registers memory, which reside in stack base
+	cmp rax, id_regdump	; Check if the syscall needs the registers saved
+	jne .continue
+
+	call save_special_registers	; Save current state of registers memory, which reside in stack base
+	call save_registers	; Exception handler will use it later
+
+.continue:
 
 	push rbx
 	push rcx
 	push rdx
 	push rbp
 
-	;call save_registers	; Exception handler will use it later
 	mov rcx, rdx
 	mov rdx, rsi
 	mov rsi, rdi
@@ -197,6 +202,7 @@ haltcpu:
 
 section .rodata
 	userland equ 0a00000h
+	id_regdump equ 11
 
 SECTION .bss
 	aux resq 1

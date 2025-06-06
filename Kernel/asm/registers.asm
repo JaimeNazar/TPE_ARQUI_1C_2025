@@ -233,7 +233,7 @@ save_registers:
 ; ------ SPECIAL REGISTERS ------
 ; These must only be called during an interrupt
 
-	; Returns special registers vector
+; Returns special registers vector
 get_special_registers:
 	push rbp
     mov rbp, rsp
@@ -249,20 +249,24 @@ save_special_registers:
 	push rbp
     mov rbp, rsp
 
-	mov rax, [rbp+8*2]	; Start with offset due to return address and rbp also being on the stack
+	push rax
+
+	mov rax, [rbp+8*3]	; Start with offset due to return address, rax and rbp also being on the stack
 	mov [spec_regs], rax 	; rip
 
-	mov rax, [rbp+8*3]
+	mov rax, [rbp+8*4]
 	mov [spec_regs+8], rax	; cs
 
-	mov rax, [rbp+8*4]
+	mov rax, [rbp+8*5]
 	mov [spec_regs+8*2], rax	; rflags
 
-	mov rax, [rbp+8*5]
+	mov rax, [rbp+8*6]
 	mov [spec_regs+8*3], rax	; last rsp
 
-	mov rax, [rbp+8*6]
+	mov rax, [rbp+8*7]
 	mov [spec_regs+8*4], rax ; ss
+
+	pop rax
 
 	mov rsp, rbp
     pop rbp	
