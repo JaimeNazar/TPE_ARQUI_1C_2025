@@ -31,7 +31,7 @@ static void printHex(uint64_t value, int fd) {
 		template[i] = (remainder < 10) ? remainder + '0' : remainder + 'A' - 10;
 	}
 
-	write(fd, template, HEX_64_TEMPLATE_LENGHT);
+	syscallWrite(fd, template, HEX_64_TEMPLATE_LENGHT);
 }
 
 /* Prints a map, in this case, used the registers mapped to their values 
@@ -39,21 +39,21 @@ static void printHex(uint64_t value, int fd) {
  */
 static void printMap(const char** keys, uint64_t* values, int lenght, int fd)  {
 	for (int i = 0 ; i < lenght; i++) {
-		write(fd, keys[i], MSG_LENGTH);
+		syscallWrite(fd, keys[i], MSG_LENGTH);
 		printHex(values[i], fd);
-		write(fd, "\n", 1);
+		syscallWrite(fd, "\n", 1);
 	}
 }
 
 void interruptsDumpRegisters(int fd){
     char *general = "General Registers: \n";
-	write(fd, general, strlen(general));
+	syscallWrite(fd, general, strlen(general));
 
 	// Print general purpose registers
 	printMap(generalRegisterString, get_registers(), GENERAL_REGISTERS_COUNT, fd);
 
 	char *special = "Special Registers: \n";
-	write(fd, special, strlen(special));
+	syscallWrite(fd, special, strlen(special));
 
 	// Print special registers
 	printMap(specialRegisterString, get_special_registers(), SPECIAL_REGISTERS_COUNT, fd);

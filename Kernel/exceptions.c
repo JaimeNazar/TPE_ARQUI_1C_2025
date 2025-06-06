@@ -8,14 +8,14 @@ static int strlen(char* str) {
 
 // Outputs text into the STDERR file descriptor
 static void printError(char * str) {
-	write(STDERR, str, strlen(str));
+	syscallWrite(STDERR, str, strlen(str));
 }
 
 static void exceptionMsg(const char* msg) {
 	
 	printError("Excepcion: ");
 	printError(msg);
-	write(STDERR, "\n", 1);
+	syscallWrite(STDERR, "\n", 1);
 
 	interruptsDumpRegisters(STDERR);
 
@@ -48,8 +48,8 @@ void exceptionDispatcher(int exception) {
 	// Wait for user to press enter before resuming execution
 	char c = 0;
 	while (c != '\n') {
-		while(!canRead());
-		getNextKey(&c);
+		while(!keyboardCanRead());
+		keyboardGetNextKey(&c);
 	}
 }
 

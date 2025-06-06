@@ -143,11 +143,11 @@ static char characterFilter(char key) {
     return keyValues[key][altKey];
 }
 
-char canRead() {
+char keyboardCanRead() {
   return inputBuffer.elemCount > 0;
 }
 
-uint8_t pollKeyboard() {
+uint8_t keyboardPoll() {
     while(!(get_keyboard_status() & 0x01));
 
     uint8_t scancode = get_keyboard_output();
@@ -156,7 +156,7 @@ uint8_t pollKeyboard() {
 
 }
 
-char getNextKey(char* c) {
+char keyboardGetNextKey(char* c) {
     if (inputBuffer.elemCount > 0) {
         *c = inputBuffer.buffer[inputBuffer.nextToRead];
         inputBuffer.nextToRead = (inputBuffer.nextToRead + 1) % BUFFER_SIZE;
@@ -168,7 +168,7 @@ char getNextKey(char* c) {
     return 0;
 }
 
-char saveKey() {
+char keyboardSaveKey() {
     char c = get_keyboard_output();
     c = characterFilter(c);
 

@@ -23,10 +23,9 @@
 extern uint8_t get_keyboard_status();
 extern char get_keyboard_output();
 
-uint8_t pollKeyboard();
-void keyPress();
+uint8_t keyboardPoll();
 
-char canRead();
-char getNextKey(char* c);
-char saveKey();
+char keyboardCanRead();
+char keyboardGetNextKey(char* c);
+char keyboardSaveKey();
 #endif

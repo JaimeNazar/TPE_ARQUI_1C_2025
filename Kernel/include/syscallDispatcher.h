@@ -28,11 +28,8 @@ typedef enum{
 #define COLOR_WHITE 0xFFFFFFFF
 #define COLOR_AMBER 0x00FFBF00
 
-int write(int fd, const char * buff, int length);
-int read(int fd, char * buff, int length);
+int syscallWrite(int fd, const char * buff, int length);
+int syscallRead(int fd, char * buff, int length);
 uint64_t syscallDispatcher(uint64_t rax, ...);
-char saveKey();
-char getNextKey(char* c);
-void videoSetFontsize(uint8_t size);
 
 #endif

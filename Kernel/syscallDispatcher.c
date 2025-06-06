@@ -4,8 +4,17 @@
 #include <interrupts.h>
 #include <keyboard.h>
 
+static char getKey() {
+    char c;
+    if(keyboardCanRead()){
+        keyboardGetNextKey(&c);
+    }
+    
+    return c;
+}
+
 // Output style depends on file descriptor
-int write(int fd, const char * buff, int length) {
+int syscallWrite(int fd, const char * buff, int length) {
     switch (fd) {
         case 1:
             videoPrintText(buff, length, COLOR_WHITE);
@@ -18,17 +27,8 @@ int write(int fd, const char * buff, int length) {
 
     return length;
 }
-char getKey() {
-    char c;
-    if(canRead()){
-        getNextKey(&c);
-    }
-    
-    return c;
-}
-
 // Polls the keyboard until enter is pressed or reached length specified
-int read(int fd, char * buff, int length) {
+int syscallRead(int fd, char * buff, int length) {
     
     int count = 0;
 
@@ -37,9 +37,9 @@ int read(int fd, char * buff, int length) {
             char current;
             while (count<length) {
 
-                while(!canRead());  // Wait until there is a key to read
+                while(!keyboardCanRead());  // Wait until there is a key to read
 
-                getNextKey(&current);   // Get key from keyboard buffer
+                keyboardGetNextKey(&current);   // Get key from keyboard buffer
 
                 if (current == '\n') { // Enter
                     buff[count++] = '\n';
@@ -96,7 +96,7 @@ uint64_t syscallDispatcher(uint64_t rax, ...) {
             const char* buffWrite = va_arg(args, const char*);
             int lengthWrite = va_arg(args, int);
 
-            ret_val = write(fdWrite, buffWrite, lengthWrite);
+            ret_val = syscallWrite(fdWrite, buffWrite, lengthWrite);
             break;
 
         case ID_READ:
@@ -104,7 +104,7 @@ uint64_t syscallDispatcher(uint64_t rax, ...) {
             char* buff = va_arg(args, char*);
             int length = va_arg(args, int);
             
-            ret_val = read(fd, buff, length);
+            ret_val = syscallRead(fd, buff, length);
             break;
 
         case ID_CLEARBUFFER:
