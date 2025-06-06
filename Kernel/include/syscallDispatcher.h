@@ -17,7 +17,7 @@ typedef enum{
     ID_SLEEP,
     ID_TIME,
     ID_BEEP,
-    ID_GETKEY,
+    ID_GETCHAR,
     ID_DRAWBITMAP,
     ID_CONFIGBITMAP,
     ID_DUMP_REGS,

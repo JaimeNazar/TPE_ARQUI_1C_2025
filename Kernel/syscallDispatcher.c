@@ -4,15 +4,6 @@
 #include <interrupts.h>
 #include <keyboard.h>
 
-static char getKey() {
-    char c;
-    if(keyboardCanRead()){
-        keyboardGetNextKey(&c);
-    }
-    
-    return c;
-}
-
 // Output style depends on file descriptor
 int syscallWrite(int fd, const char * buff, int length) {
     switch (fd) {
@@ -27,6 +18,7 @@ int syscallWrite(int fd, const char * buff, int length) {
 
     return length;
 }
+
 // Polls the keyboard until enter is pressed or reached length specified
 int syscallRead(int fd, char * buff, int length) {
     
@@ -37,9 +29,7 @@ int syscallRead(int fd, char * buff, int length) {
             char current;
             while (count<length) {
 
-                while(!keyboardCanRead());  // Wait until there is a key to read
-
-                keyboardGetNextKey(&current);   // Get key from keyboard buffer
+                current = keyboardGetChar();   // Get char from keyboard buffer
 
                 if (current == '\n') { // Enter
                     buff[count++] = '\n';
@@ -63,9 +53,6 @@ int syscallRead(int fd, char * buff, int length) {
             }
         break;
     }
-
-    syscallWrite(1, "---", 3);
-    syscallWrite(1, buff, count);
 
     return count;
 
@@ -134,8 +121,8 @@ uint64_t syscallDispatcher(uint64_t rax, ...) {
             bell(freq, duration);
             break;
 
-        case ID_GETKEY:
-            ret_val = getKey();
+        case ID_GETCHAR:
+            ret_val = keyboardGetChar();
             break;
 
         case ID_DRAWBITMAP: 
@@ -177,7 +164,7 @@ uint64_t syscallDispatcher(uint64_t rax, ...) {
 
             break;
         case ID_GETKEYEVENT:
-            ret_val = getKeyEvent();
+            ret_val = keyboardGetKeyEvent();
         default:
             // Manejar  
             break;

@@ -46,10 +46,11 @@ void exceptionDispatcher(int exception) {
 	_sti();
 
 	// Wait for user to press enter before resuming execution
-	char c = 0;
+	char c = keyboardGetChar();
 	while (c != '\n') {
-		while(!keyboardCanRead());
-		keyboardGetNextKey(&c);
+		c = keyboardGetChar();
 	}
+
+	// Go back to kernel
 }
 
