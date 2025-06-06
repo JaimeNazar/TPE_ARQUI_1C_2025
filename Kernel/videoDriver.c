@@ -248,7 +248,7 @@ void videoDrawCharAt(char c, uint64_t x, uint64_t y, uint32_t hexColor) {
 /* Draws text starting at provided coordinates(top-left corner of text) */
 void videoDrawTextAt(const char * str, int length, uint64_t x, uint64_t y, uint32_t hexColor) {
 	for (int i = 0; i < length; i++) {
-        videoDrawCharAt(str[i], x, y, hexColor);
+        videoDrawCharAt(str[i], x+i*font_size, y, hexColor);
 	}
 }
 

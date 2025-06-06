@@ -70,18 +70,9 @@ void Finish(){
 
 
 }
-void checkColissions(body*b1,body *pelota){
-    if(b1->x-OFFSET< 10|| b1->x+OFFSET > 1000) 
-        b1->vel_x = -b1->vel_x * 1.5f; ;
-    if(b1->y-OFFSET < 80|| b1->y+OFFSET > 700)
-        b1->vel_y = -b1->vel_y * 1.5f; 
-    if(pelota->x-OFFSET < 10|| pelota->x+OFFSET > 1000)
-        pelota->vel_x = -pelota->vel_x * 1.5f;
-    if(pelota->y-OFFSET < 80|| pelota->y+OFFSET > 700)
-        pelota->vel_y = -pelota->vel_y * 1.5f;
-    
-int dx =  b1->x - pelota->x;
-int dy = b1->y - pelota->y;
+void hitball(body *b,body *ball){
+    int dx =  b->x - ball->x;
+int dy = b->y - ball->y;
 float distancia = sqrtf((float)(dx*dx + dy*dy));
 
 
@@ -92,13 +83,48 @@ if (distancia <= suma_radios) {
     float angle;
     angle = arctan(dy,dx);
     
-    float velocity = sqrtf(b1->vel_x * b1->vel_x + b1->vel_y * b1->vel_y);
-    applyForces(pelota, angle,  velocity * 1.4f);
+    float velocity = sqrtf(b->vel_x * b->vel_x + b->vel_y * b->vel_y);
+    applyForces(ball, angle,  velocity * 1.4f);
+    b->hits++;
+
 }
-dx = pelota->x - hole_x;
-dy = pelota->y - hole_y;
-distancia = sqrtf(dx * dx + dy * dy);
-suma_radios = OFFSET* 2.0 * FEELGOODCONSTANT;
+}
+void checkColissions(){
+    if(p1.x-OFFSET< 10|| p1.x+OFFSET > 1000) 
+        p1.vel_x = -p1.vel_x * 1.5f; ;
+    if(p1.y-OFFSET < 80|| p1.y+OFFSET > 700)
+        p1.vel_y = -p1.vel_y * 1.5f; 
+    if(ball.x-OFFSET < 10|| ball.x+OFFSET > 1000)
+        ball.vel_x = -ball.vel_x * 1.5f;
+    if(ball.y-OFFSET < 80|| ball.y+OFFSET > 700)
+        ball.vel_y = -ball.vel_y * 1.5f;
+    
+hitball(&p1, &ball);
+if(player2Exists){
+    if(p2.x-OFFSET< 10|| p2.x+OFFSET > 1000) 
+        p2.vel_x = -p2.vel_x * 1.5f; ;
+    if(p2.y-OFFSET < 80|| p2.y+OFFSET > 700)
+        p2.vel_y = -p2.vel_y * 1.5f; 
+    hitball(&p2, &ball);
+    int dx = p2.x - p1.x;
+    int dy = p2.y - p1.y;
+    float distancia = sqrtf((float)(dx*dx + dy*dy));
+    float suma_radios = OFFSET* 2.0 * FEELGOODCONSTANT;
+    if (distancia <= suma_radios) {
+        float aux = p2.vel_x;
+        p2.vel_x = p1.vel_x;
+        p1.vel_x = aux;
+        aux = p2.vel_y;
+        p2.vel_y = p1.vel_y;
+        p1.vel_y = aux;
+    }
+}
+
+
+int dx = ball.x - hole_x;
+int dy = ball.y - hole_y;
+float distancia = sqrtf(dx * dx + dy * dy);
+float suma_radios = OFFSET* 2.0 * FEELGOODCONSTANT;
     if(distancia <= suma_radios){
         Finish();
     }

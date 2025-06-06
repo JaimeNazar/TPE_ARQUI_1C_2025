@@ -57,14 +57,24 @@ uint32_t asteroide[][21]={
     {0x000000,0x00001C,0x01C03E,0x07F07F,0x07F03E,0x0FF81C,0x0FF800,0x0FF800,0x07F000,0x07F000,0x01C000,0x00001C,0x00003E,0x00007F,0x00007F,0x00007F,0x00027F,0x00077F,0x00023E,0x00001C,0x000000},
 };
 char player2Exists = 0;
-
-body p1 = {50,50, 0, 0, 0};
-body p2 = {100, 100, 0, 0, 0};
-body ball = {200,200, 0, 0, 0};
+body p1 = {50,50, 0, 0, 0,0};
+body p2 = {100, 100, 0, 0, 0,0};
+body ball = {200,200, 0, 0, 0,0};
 uint64_t hole_x = 0;
 uint64_t hole_y = 0;
 char end = 0;
+void drawHits(uint64_t x,uint64_t y,int fontsize){
+    char * aux;
+    if(player2Exists){
+        sysDrawTextAt("Player 2: ", 10, x, y+fontsize*2, G);
+        intToStr(p2.hits, aux);
+        sysDrawTextAt(aux, strlen(aux), x+fontsize * 10, y+fontsize*2, G);
+    }
+    sysDrawTextAt("Player 1:", 10, x, y, BLUE);
+    intToStr(p1.hits, aux);
+    sysDrawTextAt(aux, strlen(aux), x+fontsize * 10, y, BLUE);
 
+}
 void drawBall() {
     sysConfigBitmap(3, DG, 21);
     sysDrawBitmap(ball.x-OFFSET,ball.y-OFFSET,asteroide[0]);
@@ -105,7 +115,8 @@ void drawPlayfield(){
 
 void play(void) {
     clearGame();
-
+    drawPlayfield();
+    drawHits(10, 10, 8);
     
 
     char c = sysKey();
@@ -145,7 +156,7 @@ void play(void) {
         default:
             break;
     }
-    checkColissions(&p1,&ball);
+    checkColissions();
     
     float drag = 0.9f; 
     p1.vel_x *= drag;
@@ -171,8 +182,8 @@ void play(void) {
     if(player2Exists){
     if (fabsf(p2.vel_x) < 0.5f) p2.vel_x = 0;
     if (fabsf(p2.vel_y) < 0.5f) p2.vel_y = 0;
-    p2.x += p1.vel_x;
-    p2.y += p1.vel_y;
+    p2.x += p2.vel_x;
+    p2.y += p2.vel_y;
     drawPlayer(2);
     }
     // Dibuja la nave usando el sprite correspondiente:
@@ -241,12 +252,15 @@ void pongis(int playerCount) {
     }
     sysClear();
     sysFontSize(21);
-    sysWrite(1,"\nGame Over!\n", 15);
+    sysDrawTextAt("Game Over", 9,400, 200,W);
+    drawHits(300, 300, 21);
     sysFontSize(8);
     sysDraw();
     sysSleep(50);
     sysClear();
     sysDraw();
+    end = 0;
+    player2Exists = 0;
     
 }
 clearGame(){
