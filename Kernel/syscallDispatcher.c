@@ -43,11 +43,9 @@ int syscallRead(int fd, char * buff, int length) {
 
                 if (current == '\n') { // Enter
                     buff[count++] = '\n';
-                    void videoNextLine();
+                    videoNextLine();
                     break; // Stop reading on Enter
-                } 
-                
-                if(current == '\b'&&videoCanErase()) { // Backspace
+                } else if(current == '\b' && videoCanErase()) { // Backspace
                     if (count > 0) {
                         count--;
                         
@@ -56,16 +54,18 @@ int syscallRead(int fd, char * buff, int length) {
                         continue;
                     }
                     
-                }
-                if(current!= 0){
+                }else if(current!= 0){
                     buff[count++] = current;
-                videoDrawChar(current, COLOR_WHITE);
-                videoDrawScreen();
+                    videoDrawChar(current, COLOR_WHITE);
+                    videoDrawScreen();
                 }
 
             }
         break;
     }
+
+    syscallWrite(1, "---", 3);
+    syscallWrite(1, buff, count);
 
     return count;
 
