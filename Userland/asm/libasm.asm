@@ -7,10 +7,13 @@ syscall_wizard:
 	push rbp
 	mov rbp, rsp
 
+    ; Move argmuents to match syscall calling standard
     mov rax, rdi
     mov rdi, rsi
     mov rsi, rdx
     mov rdx, rcx
+    mov rcx, r8
+    mov r8, r9
     int 80h     
 
 	mov rsp, rbp

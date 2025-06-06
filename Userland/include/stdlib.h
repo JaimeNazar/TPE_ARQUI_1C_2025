@@ -7,7 +7,7 @@
 #define STDOUT 0x1
 #define STDIN 0x1
 
-#define NO_ARG 0x0
+#define NO_ARG 0x0 
 
 #define BASE_TEN 10
 
@@ -28,14 +28,15 @@ typedef enum{
     ID_DRAWBITMAP,
     ID_CONFIGBITMAP,
     ID_DUMPREGS,
-    ID_FONT_SIZE
+    ID_FONT_SIZE,
+    ID_DRAWTEXT
 };
 
 #define TIME_SECONDS 0
 #define TIME_MINUTES 2
 #define TIME_HOURS 4
 
-extern uint64_t syscall_wizard(uint64_t rax, uint64_t rdi, uint64_t rsi, uint64_t rdx);
+extern uint64_t syscall_wizard(uint64_t rax, uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t r8, uint64_t r9);
 
 // Utils
 int strcmp(char* str1, char* str2, int length1, int length2);
@@ -64,5 +65,7 @@ void sysDrawBitmap(uint64_t x, uint64_t y,uint32_t *bitmap);
 void sysRegisters(int fd);
 char sysKey();
 void sysFontSize(int size);
+
+void sysDrawTextAt(const char * str, int length, uint64_t x, uint64_t y, uint32_t hexColor);
 
 #endif

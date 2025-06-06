@@ -328,51 +328,55 @@ int getHours() {
 // ------ SYSCALLS ------
 
 uint64_t sysWrite(int fd, char * buff, int length) {
-    return syscall_wizard(0, fd, buff, length);
+    return syscall_wizard(0, fd, buff, length, NO_ARG, NO_ARG);
 }
 
 uint64_t sysRead(int fd, char * buff, int length) {
-    return syscall_wizard(ID_READ, fd, buff, length);
+    return syscall_wizard(ID_READ, fd, buff, length, NO_ARG, NO_ARG);
 }
 
 uint64_t sysTimeTicks(){
-    return syscall_wizard(ID_TIMETICKS, NO_ARG, NO_ARG, NO_ARG);
+    return syscall_wizard(ID_TIMETICKS, NO_ARG, NO_ARG, NO_ARG, NO_ARG, NO_ARG);
 }
 
 void sysClear() {
-    syscall_wizard(ID_CLEARBUFFER, NO_ARG, NO_ARG, NO_ARG);
+    syscall_wizard(ID_CLEARBUFFER, NO_ARG, NO_ARG, NO_ARG, NO_ARG, NO_ARG);
 }
 
 void sysDraw() {
-    syscall_wizard(ID_DRAWSCREEN, NO_ARG, NO_ARG, NO_ARG);
+    syscall_wizard(ID_DRAWSCREEN, NO_ARG, NO_ARG, NO_ARG, NO_ARG, NO_ARG);
 }
 
 uint64_t sysTime(int arg) {
-    return syscall_wizard(ID_TIME, arg, NO_ARG, NO_ARG);
+    return syscall_wizard(ID_TIME, arg, NO_ARG, NO_ARG, NO_ARG, NO_ARG);
 }
 
 char sysKey() {
-    return (char)syscall_wizard(ID_GETKEY,NO_ARG, NO_ARG, NO_ARG);
+    return (char)syscall_wizard(ID_GETKEY,NO_ARG, NO_ARG, NO_ARG, NO_ARG, NO_ARG);
 }
 
 void sysSleep(int duration) {
-    syscall_wizard(ID_SLEEP, duration, NO_ARG, NO_ARG);
+    syscall_wizard(ID_SLEEP, duration, NO_ARG, NO_ARG, NO_ARG, NO_ARG);
 }
 
 void sysBeep(int freq, int duration) {
-    syscall_wizard(ID_BEEP, freq, duration, NO_ARG);
+    syscall_wizard(ID_BEEP, freq, duration, NO_ARG, NO_ARG, NO_ARG);
 }
 void sysDrawBitmap(uint64_t x, uint64_t y,uint32_t *bitmap) {
-    syscall_wizard(ID_DRAWBITMAP, x, y, bitmap);
+    syscall_wizard(ID_DRAWBITMAP, x, y, bitmap, NO_ARG, NO_ARG);
 }
 void sysConfigBitmap(int bitmapSize,uint32_t hexColor,int width){
-    syscall_wizard(ID_CONFIGBITMAP, bitmapSize, hexColor, width);
+    syscall_wizard(ID_CONFIGBITMAP, bitmapSize, hexColor, width, NO_ARG, NO_ARG);
 }
 
 void sysRegisters(int fd) {
-    syscall_wizard(ID_DUMPREGS, fd, NO_ARG, NO_ARG);
+    syscall_wizard(ID_DUMPREGS, fd, NO_ARG, NO_ARG, NO_ARG, NO_ARG);
 }
 
 void sysFontSize(int size) {
-    syscall_wizard(ID_FONT_SIZE, size, NO_ARG, NO_ARG);
+    syscall_wizard(ID_FONT_SIZE, size, NO_ARG, NO_ARG, NO_ARG, NO_ARG);
+}
+
+void sysDrawTextAt(const char * str, int length, uint64_t x, uint64_t y, uint32_t hexColor) {
+    syscall_wizard(ID_DRAWTEXT, str, length, x, y, hexColor);
 }
