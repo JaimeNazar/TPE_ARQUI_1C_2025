@@ -89,7 +89,7 @@ void commandHandler(char* command, int length) {
             break;
         case SLEEP: 
             int arg = strToInt(arguments[1]);
-            if (arg <= MIN_FONT_SIZE){
+            if (arg <= -1){
                 errorInvalidArgument(arguments[1]);
             }
             else{sleepCommand(arg);}                  
