@@ -25,6 +25,8 @@ syscall_register_dump:
 	push rbp
 	mov rbp, rsp
 
+    mov rax, 1234h
+
     push rax    ; Save rax
 
     mov rax, id_reg_dump

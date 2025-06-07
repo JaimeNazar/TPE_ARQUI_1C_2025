@@ -247,19 +247,19 @@ save_special_registers:
 
 	push rax
 
-	mov rax, [rbp+8*4]	; Start with offset due to return address, rax and rbp also being on the stack
+	mov rax, [rbp+8*2]	; Start with offset pushed values
 	mov [spec_regs], rax 	; rip
 
-	mov rax, [rbp+8*5]
+	mov rax, [rbp+8*3]
 	mov [spec_regs+8], rax	; cs
 
-	mov rax, [rbp+8*6]
+	mov rax, [rbp+8*4]
 	mov [spec_regs+8*2], rax	; rflags
 
-	mov rax, [rbp+8*7]
+	mov rax, [rbp+8*5]
 	mov [spec_regs+8*3], rax	; last rsp
 
-	mov rax, [rbp+8*8]
+	mov rax, [rbp+8*6]
 	mov [spec_regs+8*4], rax ; ss
 
 	pop rax

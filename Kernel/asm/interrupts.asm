@@ -172,15 +172,18 @@ _syscallHandler:
 	; Get RAX original value
 	push rax	; Save sycall id
 	push rbx	; Save aux registers
+	push rcx
 	call get_special_registers	; Get special registers array address
 	
 	mov rbx, [rax+8*3]	; Get user RSP address, where RAX was passed
+	mov rcx, [rbx]	; Read RAX value
 
 	; Now put it on the array containing the registers values
 	call get_registers	; Get registers array address
 
-	mov [rax], rbx ; RAX is the first element
+	mov [rax], rcx ; RAX is the first element
 
+	pop rcx	; Restore registers 
 	pop rbx	; Restore registers
 	pop rax
 
