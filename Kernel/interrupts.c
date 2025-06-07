@@ -26,9 +26,9 @@ static void printHex(uint64_t value, int fd) {
 
 	// Fill in template with actual hex values
 	for (int i = HEX_64_TEMPLATE_LENGHT - 1; i >= HEX_64_TEMPLATE_OFFSET; i--) {
-		value /= HEX_BASE;
 		uint32_t remainder = value % HEX_BASE;
 		template[i] = (remainder < 10) ? remainder + '0' : remainder + 'A' - 10;
+		value /= HEX_BASE;
 	}
 
 	syscallWrite(fd, template, HEX_64_TEMPLATE_LENGHT);

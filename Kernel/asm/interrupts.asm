@@ -27,6 +27,8 @@ EXTERN syscallDispatcher
 ; Registers utils
 EXTERN save_registers
 EXTERN save_special_registers
+EXTERN get_registers
+EXTERN get_special_registers
 
 SECTION .text
 
@@ -160,11 +162,27 @@ _irq05Handler:
 
 _syscallHandler:
 
-	cmp rax, id_regdump	; Check if the syscall needs the registers saved
+	cmp rax, id_reg_dump	; Check if the syscall needs the registers saved
 	jne .continue
 
-	call save_special_registers	; Save current state of registers memory, which reside in stack base
+	; --- RECOVER RAX ---
 	call save_registers	; Exception handler will use it later
+	call save_special_registers	; Save current state of registers memory, which reside in stack base
+	
+	; Get RAX original value
+	push rax	; Save sycall id
+	push rbx	; Save aux registers
+	call get_special_registers	; Get special registers array address
+	
+	mov rbx, [rax+8*3]	; Get user RSP address, where RAX was passed
+
+	; Now put it on the array containing the registers values
+	call get_registers	; Get registers array address
+
+	mov [rax], rbx ; RAX is the first element
+
+	pop rbx	; Restore registers
+	pop rax
 
 .continue:
 
@@ -205,7 +223,7 @@ haltcpu:
 
 section .rodata
 	userland equ 0a00000h
-	id_regdump equ 11
+	id_reg_dump equ 14
 
 SECTION .bss
 	aux resq 1

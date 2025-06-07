@@ -125,7 +125,7 @@ uint64_t syscallDispatcher(uint64_t rax, ...) {
             ret_val = keyboardGetChar();
             break;
 
-        case ID_DRAW_BIT_MAP: 
+        case ID_DRAW_BITMAP: 
             uint64_t x = va_arg(args, uint64_t);
             uint64_t y = va_arg(args, uint64_t);
             uint32_t *bitmap = va_arg(args, uint32_t*);
@@ -133,7 +133,7 @@ uint64_t syscallDispatcher(uint64_t rax, ...) {
             videoDrawBitMap( x, y,bitmap);
             break;
 
-        case ID_CONFIG_BIT_MAP:
+        case ID_CONFIG_BITMAP:
             int bitmapPixelSize = va_arg(args, int);
             uint32_t hexColor = va_arg(args, uint32_t);
             int width = va_arg(args, int);

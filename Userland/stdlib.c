@@ -336,7 +336,7 @@ uint64_t sysRead(int fd, char * buff, int length) {
 }
 
 uint64_t sysTimeTicks(){
-    return syscall_wizard(ID_TIMETICKS, NO_ARG, NO_ARG, NO_ARG, NO_ARG, NO_ARG);
+    return syscall_wizard(ID_TIME_TICKS, NO_ARG, NO_ARG, NO_ARG, NO_ARG, NO_ARG);
 }
 
 void sysClear() {
@@ -352,7 +352,7 @@ uint64_t sysTime(int arg) {
 }
 
 char sysGetChar() {
-    return (char)syscall_wizard(ID_GETCHAR,NO_ARG, NO_ARG, NO_ARG, NO_ARG, NO_ARG);
+    return (char)syscall_wizard(ID_GET_CHAR,NO_ARG, NO_ARG, NO_ARG, NO_ARG, NO_ARG);
 }
 
 void sysSleep(int duration) {
@@ -370,7 +370,7 @@ void sysConfigBitmap(int bitmapSize,uint32_t hexColor,int width){
 }
 
 void sysRegisters(int fd) {
-    syscall_wizard(ID_DUMP_REGS, fd, NO_ARG, NO_ARG, NO_ARG, NO_ARG);
+    syscall_register_dump();
 }
 
 void sysFontSize(int size) {

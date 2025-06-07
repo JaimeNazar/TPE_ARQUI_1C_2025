@@ -194,7 +194,7 @@ get_r15:
     ret
 
 
-; Returns general purpose registers
+; Returns general purpose registers array address
 get_registers:
 	push rbp
 	mov rbp, rsp
@@ -207,8 +207,6 @@ get_registers:
 
 ; Saves general registers current state
 save_registers:
-	push rbp
-    mov rbp, rsp
 
 	mov [regs], rax ; General Purpose Registers
 	mov [regs+8], rbx
@@ -226,8 +224,6 @@ save_registers:
 	mov [regs+8*13], r14
 	mov [regs+8*14], r15
 
-	mov rsp, rbp
-    pop rbp	
 	ret
 
 ; ------ SPECIAL REGISTERS ------
@@ -251,19 +247,19 @@ save_special_registers:
 
 	push rax
 
-	mov rax, [rbp+8*3]	; Start with offset due to return address, rax and rbp also being on the stack
+	mov rax, [rbp+8*4]	; Start with offset due to return address, rax and rbp also being on the stack
 	mov [spec_regs], rax 	; rip
 
-	mov rax, [rbp+8*4]
+	mov rax, [rbp+8*5]
 	mov [spec_regs+8], rax	; cs
 
-	mov rax, [rbp+8*5]
+	mov rax, [rbp+8*6]
 	mov [spec_regs+8*2], rax	; rflags
 
-	mov rax, [rbp+8*6]
+	mov rax, [rbp+8*7]
 	mov [spec_regs+8*3], rax	; last rsp
 
-	mov rax, [rbp+8*7]
+	mov rax, [rbp+8*8]
 	mov [spec_regs+8*4], rax ; ss
 
 	pop rax

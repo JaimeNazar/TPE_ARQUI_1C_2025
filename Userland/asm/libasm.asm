@@ -1,5 +1,5 @@
 GLOBAL syscall_wizard
-
+GLOBAL syscall_register_dump
 section .text
 
 ; uint64_t syscall_wizard(uint64_t rax, uint64_t rdi, uint64_t rsi, uint64_t rdx)
@@ -20,3 +20,21 @@ syscall_wizard:
 	pop rbp
 	ret
 
+; Special function to avoid modifying registers
+syscall_register_dump:
+	push rbp
+	mov rbp, rsp
+
+    push rax    ; Save rax
+
+    mov rax, id_reg_dump
+    int 80h;
+
+    pop rax
+
+	mov rsp, rbp
+	pop rbp
+    ret
+
+section .rodata
+    id_reg_dump equ 14

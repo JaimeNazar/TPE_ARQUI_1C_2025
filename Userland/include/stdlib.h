@@ -20,8 +20,8 @@ typedef enum{
     ID_READ,
     ID_CLEAR_BUFFER,
     ID_DRAW_SCREEN,
-    ID_DRAW_BIT_MAP,
-    ID_CONFIG_BIT_MAP,
+    ID_DRAW_BITMAP,
+    ID_CONFIG_BITMAP,
     ID_FONT_SIZE,
     ID_DRAW_TEXT,
     ID_TIME_TICKS,
@@ -38,6 +38,7 @@ typedef enum{
 #define TIME_HOURS 4
 
 extern uint64_t syscall_wizard(uint64_t rax, uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t r8, uint64_t r9);
+extern void syscall_register_dump();
 
 // Utils
 int strcmp(char* str1, char* str2, int length1, int length2);
