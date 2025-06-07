@@ -340,19 +340,19 @@ uint64_t sysTimeTicks(){
 }
 
 void sysClear() {
-    syscall_wizard(ID_CLEARBUFFER, NO_ARG, NO_ARG, NO_ARG, NO_ARG, NO_ARG);
+    syscall_wizard(ID_CLEAR_BUFFER, NO_ARG, NO_ARG, NO_ARG, NO_ARG, NO_ARG);
 }
 
 void sysDraw() {
-    syscall_wizard(ID_DRAWSCREEN, NO_ARG, NO_ARG, NO_ARG, NO_ARG, NO_ARG);
+    syscall_wizard(ID_DRAW_SCREEN, NO_ARG, NO_ARG, NO_ARG, NO_ARG, NO_ARG);
 }
 
 uint64_t sysTime(int arg) {
     return syscall_wizard(ID_TIME, arg, NO_ARG, NO_ARG, NO_ARG, NO_ARG);
 }
 
-char sysKey() {
-    return (char)syscall_wizard(ID_GETKEY,NO_ARG, NO_ARG, NO_ARG, NO_ARG, NO_ARG);
+char sysGetChar() {
+    return (char)syscall_wizard(ID_GETCHAR,NO_ARG, NO_ARG, NO_ARG, NO_ARG, NO_ARG);
 }
 
 void sysSleep(int duration) {
@@ -363,14 +363,14 @@ void sysBeep(int freq, int duration) {
     syscall_wizard(ID_BEEP, freq, duration, NO_ARG, NO_ARG, NO_ARG);
 }
 void sysDrawBitmap(uint64_t x, uint64_t y,uint32_t *bitmap) {
-    syscall_wizard(ID_DRAWBITMAP, x, y, bitmap, NO_ARG, NO_ARG);
+    syscall_wizard(ID_DRAW_BITMAP, x, y, bitmap, NO_ARG, NO_ARG);
 }
 void sysConfigBitmap(int bitmapSize,uint32_t hexColor,int width){
-    syscall_wizard(ID_CONFIGBITMAP, bitmapSize, hexColor, width, NO_ARG, NO_ARG);
+    syscall_wizard(ID_CONFIG_BITMAP, bitmapSize, hexColor, width, NO_ARG, NO_ARG);
 }
 
 void sysRegisters(int fd) {
-    syscall_wizard(ID_DUMPREGS, fd, NO_ARG, NO_ARG, NO_ARG, NO_ARG);
+    syscall_wizard(ID_DUMP_REGS, fd, NO_ARG, NO_ARG, NO_ARG, NO_ARG);
 }
 
 void sysFontSize(int size) {
@@ -378,8 +378,8 @@ void sysFontSize(int size) {
 }
 
 void sysDrawTextAt(const char * str, int length, uint64_t x, uint64_t y, uint32_t hexColor) {
-    syscall_wizard(ID_DRAWTEXT, str, length, x, y, hexColor);
+    syscall_wizard(ID_DRAW_TEXT, str, length, x, y, hexColor);
 }
 uint8_t sysGetKeyEvent() {
-    return syscall_wizard(ID_GETKEYEVENT, NO_ARG, NO_ARG, NO_ARG, NO_ARG, NO_ARG);
+    return syscall_wizard(ID_GET_KEY_EVENT, NO_ARG, NO_ARG, NO_ARG, NO_ARG, NO_ARG);
 }

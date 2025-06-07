@@ -18,19 +18,19 @@
 typedef enum{
     ID_WRITE=0,
     ID_READ,
-    ID_CLEARBUFFER,
-    ID_DRAWSCREEN,
-    ID_TIMETICKS,
+    ID_CLEAR_BUFFER,
+    ID_DRAW_SCREEN,
+    ID_DRAW_BIT_MAP,
+    ID_CONFIG_BIT_MAP,
+    ID_FONT_SIZE,
+    ID_DRAW_TEXT,
+    ID_TIME_TICKS,
     ID_SLEEP,
     ID_TIME,
     ID_BEEP,
-    ID_GETKEY,
-    ID_DRAWBITMAP,
-    ID_CONFIGBITMAP,
-    ID_DUMPREGS,
-    ID_FONT_SIZE,
-    ID_DRAWTEXT,
-    ID_GETKEYEVENT
+    ID_GET_CHAR,
+    ID_GET_KEY_EVENT,
+    ID_DUMP_REGS,
 };
 
 #define TIME_SECONDS 0
@@ -57,15 +57,15 @@ int getHours();
 // Syscalls
 uint64_t sysWrite(int fd, char * buff, int length);
 uint64_t sysRead(int fd, char * buff, int length);
-uint64_t sysTimeTicks();
 void sysClear();
 void sysDraw();
-uint64_t sysTime(int arg);
 void sysConfigBitmap(int bitmapSize,uint32_t hexColor,int width);
 void sysDrawBitmap(uint64_t x, uint64_t y,uint32_t *bitmap);
-void sysRegisters(int fd);
-char sysKey();
 void sysFontSize(int size);
+uint64_t sysTimeTicks();
+uint64_t sysTime(int arg);
+void sysRegisters(int fd);
+char sysGetChar();
 
 void sysDrawTextAt(const char * str, int length, uint64_t x, uint64_t y, uint32_t hexColor);
 uint8_t sysGetKeyEvent();

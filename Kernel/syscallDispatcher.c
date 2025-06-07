@@ -94,15 +94,15 @@ uint64_t syscallDispatcher(uint64_t rax, ...) {
             ret_val = syscallRead(fd, buff, length);
             break;
 
-        case ID_CLEARBUFFER:
+        case ID_CLEAR_BUFFER:
             videoClearBuffer();
             break;
 
-        case ID_DRAWSCREEN:
+        case ID_DRAW_SCREEN:
             videoDrawScreen();
             break;
 
-        case ID_TIMETICKS:
+        case ID_TIME_TICKS:
             ret_val = ticks_elapsed();
             break;
 
@@ -121,11 +121,11 @@ uint64_t syscallDispatcher(uint64_t rax, ...) {
             bell(freq, duration);
             break;
 
-        case ID_GETCHAR:
+        case ID_GET_CHAR:
             ret_val = keyboardGetChar();
             break;
 
-        case ID_DRAWBITMAP: 
+        case ID_DRAW_BIT_MAP: 
             uint64_t x = va_arg(args, uint64_t);
             uint64_t y = va_arg(args, uint64_t);
             uint32_t *bitmap = va_arg(args, uint32_t*);
@@ -133,7 +133,7 @@ uint64_t syscallDispatcher(uint64_t rax, ...) {
             videoDrawBitMap( x, y,bitmap);
             break;
 
-        case ID_CONFIGBITMAP:
+        case ID_CONFIG_BIT_MAP:
             int bitmapPixelSize = va_arg(args, int);
             uint32_t hexColor = va_arg(args, uint32_t);
             int width = va_arg(args, int);
@@ -153,7 +153,7 @@ uint64_t syscallDispatcher(uint64_t rax, ...) {
 
             break;
 
-        case ID_DRAWTEXT:
+        case ID_DRAW_TEXT:
             const char * str = va_arg(args, const char *);
             int lenght = va_arg(args, int);
             uint64_t posX = va_arg(args, uint64_t);
@@ -163,7 +163,7 @@ uint64_t syscallDispatcher(uint64_t rax, ...) {
             videoDrawTextAt(str, lenght, posX, posY, textColor);
 
             break;
-        case ID_GETKEYEVENT:
+        case ID_GET_KEY_EVENT:
             ret_val = keyboardGetKeyEvent();
         default:
             // Manejar  
