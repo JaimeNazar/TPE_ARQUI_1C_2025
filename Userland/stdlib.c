@@ -362,11 +362,21 @@ void sysSleep(int duration) {
 void sysBeep(int freq, int duration) {
     syscall_wizard(ID_BEEP, freq, duration, NO_ARG, NO_ARG, NO_ARG);
 }
+
 void sysDrawBitmap(uint64_t x, uint64_t y,uint32_t *bitmap) {
     syscall_wizard(ID_DRAW_BITMAP, x, y, bitmap, NO_ARG, NO_ARG);
 }
+
 void sysConfigBitmap(int bitmapSize,uint32_t hexColor,int width){
     syscall_wizard(ID_CONFIG_BITMAP, bitmapSize, hexColor, width, NO_ARG, NO_ARG);
+}
+
+uint64_t sysGetScreenWidth() {
+    return syscall_wizard(ID_VIDEO_WIDTH, NO_ARG, NO_ARG, NO_ARG, NO_ARG, NO_ARG);
+}
+
+uint64_t sysGetScreenHeight() {
+    return syscall_wizard(ID_VIDEO_HEIGHT, NO_ARG, NO_ARG, NO_ARG, NO_ARG, NO_ARG);
 }
 
 void sysRegisters(int fd) {

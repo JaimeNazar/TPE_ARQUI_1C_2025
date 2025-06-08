@@ -272,6 +272,15 @@ void videoDrawScreen() {
 
 }
 
+int videoGetWidth() {
+    return VBE_mode_info->width;
+}
+
+int videoGetHeight() {
+    return VBE_mode_info->height;
+}
+
+
 // ------ BITMAP UTILS ------
 
 void videoConfigBitmap(int bps,uint32_t hexColor,int width){

@@ -165,6 +165,14 @@ uint64_t syscallDispatcher(uint64_t rax, ...) {
             break;
         case ID_GET_KEY_EVENT:
             ret_val = keyboardGetKeyEvent();
+            break;
+        case ID_VIDEO_WIDTH:
+            ret_val = videoGetWidth();
+            break;
+        case ID_VIDEO_HEIGHT:
+            ret_val = videoGetHeight();
+            break;
+
         default:
             // Manejar  
             break;

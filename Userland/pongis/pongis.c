@@ -293,7 +293,7 @@ static void update() {
 void pongis(int playerCount) {
 
     // Set game font size
-   // sysFontSize(21);
+    sysFontSize(8);
     
     // Intialize variables
 
@@ -371,7 +371,6 @@ void pongis(int playerCount) {
 
     sysDrawTextAt("Game Over", 9,400, 200,W);
     drawHits(300, 300, 21);
-    sysFontSize(8);
     sysDraw();
 
     sysSleep(50);

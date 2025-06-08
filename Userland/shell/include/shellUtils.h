@@ -4,7 +4,6 @@
 #include <stdlib.h>
 #include <miniShell.h>
 
-
 #define COMMANDS 10
 #define MAX_ARGS 16
 

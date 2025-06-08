@@ -37,4 +37,4 @@ syscall_register_dump:
     ret
 
 section .rodata
-    id_reg_dump equ 14
+    id_reg_dump equ 16

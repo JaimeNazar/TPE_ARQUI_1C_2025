@@ -17,6 +17,8 @@ typedef enum{
     ID_CONFIG_BITMAP,
     ID_FONT_SIZE,
     ID_DRAW_TEXT,
+    ID_VIDEO_WIDTH,
+    ID_VIDEO_HEIGHT,
     ID_TIME_TICKS,
     ID_SLEEP,
     ID_TIME,

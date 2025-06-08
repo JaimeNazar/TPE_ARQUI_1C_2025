@@ -126,7 +126,10 @@ void commandHandler(char* command, int length) {
             int size = strToInt(arguments[1]);
             if (size <= MIN_FONT_SIZE){
                 errorInvalidArgument(arguments[1]);
-            } else {fontCommand(size);}
+            } else {
+                setFontSize(size); // Update font size 
+                fontCommand(size);
+            }
             break;
         default:
             error();

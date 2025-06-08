@@ -11,6 +11,8 @@
 #define MIN_FONT_SIZE 8
 #define UTC_OFFSET -3
 
+void setFontSize(int size);
+
 void shellInit();
 void shellUpdate();
 void helpCommand();

@@ -20,6 +20,9 @@ void videoDrawScreen();
 void videoClearBuffer();
 void videoDrawTextAt(const char * str, int length, uint64_t x, uint64_t y, uint32_t hexColor);
 
+int videoGetWidth();
+int videoGetHeight();
+
 // Bitmap utils
 void videoDrawBitMap(uint64_t x, uint64_t y,uint32_t *bitmap);
 void videoConfigBitmap(int size,uint32_t hexColor,int width);

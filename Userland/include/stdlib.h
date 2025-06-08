@@ -24,6 +24,8 @@ typedef enum{
     ID_CONFIG_BITMAP,
     ID_FONT_SIZE,
     ID_DRAW_TEXT,
+    ID_VIDEO_WIDTH,
+    ID_VIDEO_HEIGHT,
     ID_TIME_TICKS,
     ID_SLEEP,
     ID_TIME,
@@ -58,11 +60,15 @@ int getHours();
 // Syscalls
 uint64_t sysWrite(int fd, char * buff, int length);
 uint64_t sysRead(int fd, char * buff, int length);
+
 void sysClear();
 void sysDraw();
 void sysConfigBitmap(int bitmapSize,uint32_t hexColor,int width);
 void sysDrawBitmap(uint64_t x, uint64_t y,uint32_t *bitmap);
 void sysFontSize(int size);
+uint64_t sysGetScreenWidth();
+uint64_t sysGetScreenHeight();
+
 uint64_t sysTimeTicks();
 uint64_t sysTime(int arg);
 void sysRegisters(int fd);
