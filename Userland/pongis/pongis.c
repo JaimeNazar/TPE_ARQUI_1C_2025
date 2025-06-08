@@ -41,9 +41,9 @@ static uint32_t asteroide[][21]={
 };
 
 static char player2Exists = 0;
-static Body p1 = {50,50, 0, 0, 0,0, 0, 0, 0};
-static Body p2 = {100, 100, 0, 0, 0,0, 0, 0, 0};
-static Body ball = {200,200, 0, 0, 0,0, 0, 0, 0};
+static Body p1 = {50,50, 0, 0, 0,0, 0, 0, 0,5};
+static Body p2 = {100, 100, 0, 0, 0,0, 0, 0, 0,5};
+static Body ball = {200,200, 0, 0, 0,0, 0, 0, 0,0};
 static uint64_t hole_x = 0;
 static uint64_t hole_y = 0;
 static char end = 0;
@@ -106,7 +106,7 @@ static void drawPlayfield(){
 }
 
 static void Finish(){
-    end = 1;
+    end = WIN;
 
     // Fun tune
     sysBeep(800,2);
@@ -181,6 +181,14 @@ static void checkCollisions(){
 
 }
 
+
+static void checkGameOver(){
+    if ((p1.hits >= p1.lives || p2.hits >= p2.lives) && ball.vel_x == 0 && ball.vel_y == 0){
+        end = GAME_OVER;
+    }
+}
+
+
 // Process keyboard input
 static void keyboardInput() {
     uint8_t c;
@@ -189,7 +197,7 @@ static void keyboardInput() {
 
     switch(c) {
         case KEYPRESS_BACKSPACE:
-            end = 1;
+            end = GAME_OVER;
             break;
         case KEYPRESS_W:
             p1.foward = 1;
@@ -290,7 +298,7 @@ static void update() {
 
     // Check colisions
     checkCollisions();
-    
+    checkGameOver();
     // Dibuja la nave usando el sprite correspondiente:
     drawPlayer(1);
     drawBall();
@@ -372,7 +380,7 @@ void pongis(int playerCount) {
     int lastTime = sysTimeTicks();
 	int deltaTime = 0;
 	
-	while(!end) {
+	while(end == 0) {
 
         if (deltaTime >= 1)
             update();
@@ -383,7 +391,12 @@ void pongis(int playerCount) {
     sysClear();
     sysFontSize(21);
 
-    sysDrawTextAt("Game Over", 9,400, 200,W);
+    if (end == GAME_OVER){
+        sysDrawTextAt("Game Over", 9,400, 200,W);
+    } else if (end == WIN){
+        sysDrawTextAt("Victory!", 8,400, 200,W);
+    }
+
     drawHits(300, 300, 21);
     sysDraw();
 

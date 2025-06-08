@@ -18,6 +18,7 @@ typedef struct {
     uint8_t r_left; // For simulaneous keyboard input
     uint8_t r_right;
     uint8_t foward;
+    int lives;
 } Body;
 
 void sincosf(float angle, float *s, float *c);
