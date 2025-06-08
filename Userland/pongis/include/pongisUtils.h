@@ -26,5 +26,6 @@ float arctan(float y, float x);
 float sqrtf(float number);
 void applyForces(Body *b, float angle, float magnitud);
 float fabsf(float x);
+int iabsi(int x);
 
 #endif

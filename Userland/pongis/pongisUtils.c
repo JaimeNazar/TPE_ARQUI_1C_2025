@@ -7,6 +7,10 @@ float fabsf(float x) {
     return (x < 0.0f) ? -x : x;
 }
 
+int restaTruncada(int x) {
+    return (x < 0) ? 0 : x;
+}
+
 void sincosf(float angle, float *s, float *c) {
     // Normaliza el ángulo entre -PI y PI
     while (angle > PI) {

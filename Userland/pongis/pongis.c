@@ -55,11 +55,11 @@ static void drawHits(uint64_t x, uint64_t y,int fontsize){
     char * aux;
     if(player2Exists){
         sysDrawTextAt("Player 2: ", 10, x, y+fontsize*2, G);
-        intToStr(p2.hits, aux);
+        intToStr(restaTruncada(p2.lives - p2.hits), aux);
         sysDrawTextAt(aux, strlen(aux), x+fontsize * 10, y+fontsize*2, G);
     }
     sysDrawTextAt("Player 1:", 10, x, y, BLUE);
-    intToStr(p1.hits, aux);
+    intToStr(restaTruncada(p1.lives - p1.hits), aux);
     sysDrawTextAt(aux, strlen(aux), x+fontsize * 10, y, BLUE);
 
 }
