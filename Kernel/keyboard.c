@@ -104,15 +104,6 @@ static uint8_t dequeue() {
 }
 
 static char characterFilter(char key) {
-    // Primero, actualizamos el estado de los modificadores y descartamos el evento
-    if(key == L_SHIFT_PRESS || key == R_SHIFT_PRESS) {
-        shift = !shift; 
-        return 0;
-    }
-    if(key == L_SHIFT_RELEASE || key == R_SHIFT_RELEASE) {
-        shift = !shift;
-        return 0;
-    }
     if(key == CAPS_LOCK_PRESS) {
         capsLock = !capsLock;
         return 0;
@@ -162,8 +153,14 @@ char keyboardGetChar() {
 
 void keyboardSaveEvent() {
     uint8_t event = get_keyboard_output();
-    enqueue(event);
 
+	// Check shift state
+	if (event == L_SHIFT_PRESS || event == R_SHIFT_PRESS)
+		shift = 1;
+	else if (event == BREAK_KEY(L_SHIFT_PRESS) || event == BREAK_KEY(R_SHIFT_PRESS))
+		shift = 0;
+
+    enqueue(event);
 }
 
 uint8_t keyboardGetKeyEvent(){
