@@ -47,10 +47,10 @@ static Body ball = {200,200, 0, 0, 0,0, 0, 0, 0};
 static uint64_t hole_x = 0;
 static uint64_t hole_y = 0;
 static char end = 0;
-
+static int floatingEffect = 0;
 static uint64_t screenWidth;
 static uint64_t screenHeight;
-
+int floatingCount = 0;
 static void drawHits(uint64_t x, uint64_t y,int fontsize){
     char * aux;
     if(player2Exists){
@@ -66,33 +66,34 @@ static void drawHits(uint64_t x, uint64_t y,int fontsize){
 
 static void drawBall() {
     sysConfigBitmap(3, DG, 21);
-    sysDrawBitmap(ball.x-OFFSET,ball.y-OFFSET,asteroide[0]);
+    sysDrawBitmap(ball.x-OFFSET,ball.y-OFFSET+floatingEffect,asteroide[0]);
     sysConfigBitmap(3, LG, 21);
-    sysDrawBitmap(ball.x-OFFSET,ball.y-OFFSET,asteroide[1]);
+    sysDrawBitmap(ball.x-OFFSET,ball.y-OFFSET+floatingEffect,asteroide[1]);
 }
 
 static void drawPlayer(int players){
     if(players == 1){
         sysConfigBitmap(3, BLUE, 21);
-        sysDrawBitmap(p1.x-OFFSET, p1.y-OFFSET, nave[p1.rotation * 2]);
+        sysDrawBitmap(p1.x-OFFSET, p1.y-OFFSET+floatingEffect, nave[p1.rotation * 2]);
         sysConfigBitmap(3, R, 21);
-        sysDrawBitmap(p1.x-OFFSET, p1.y-OFFSET, nave[p1.rotation * 2 + 1]);
+        sysDrawBitmap(p1.x-OFFSET, p1.y-OFFSET+floatingEffect, nave[p1.rotation * 2 + 1]);
     }
     else{
         sysConfigBitmap(3, G, 21);
-        sysDrawBitmap(p2.x-OFFSET, p2.y-OFFSET, nave[p2.rotation * 2]);
+        sysDrawBitmap(p2.x-OFFSET, p2.y-OFFSET+floatingEffect, nave[p2.rotation * 2]);
         sysConfigBitmap(3, R, 21);
-        sysDrawBitmap(p2.x-OFFSET, p2.y-OFFSET, nave[p2.rotation * 2 + 1]);
+        sysDrawBitmap(p2.x-OFFSET, p2.y-OFFSET+floatingEffect, nave[p2.rotation * 2 + 1]);
     }
 }
 
 static void drawHole(){
     sysConfigBitmap(3,C,21);
-    sysDrawBitmap(hole_x-OFFSET, hole_y-OFFSET, blackHole[0]);
+    sysDrawBitmap(hole_x-OFFSET, hole_y-OFFSET+floatingEffect, blackHole[0]);
     sysConfigBitmap(3,P,21);
-    sysDrawBitmap(hole_x-OFFSET, hole_y-OFFSET, blackHole[1]);
+    sysDrawBitmap(hole_x-OFFSET, hole_y-OFFSET+floatingEffect, blackHole[1]);
     sysConfigBitmap(3,BLUE,21);
-    sysDrawBitmap(hole_x-OFFSET, hole_y-OFFSET, blackHole[2]);
+    sysDrawBitmap(hole_x-OFFSET, hole_y-OFFSET+floatingEffect, blackHole[2]);
+    
 }
 
 static void drawPlayfield(){
@@ -113,7 +114,13 @@ static void Finish(){
     sysBeep(800,2);
     sysBeep(700,3);
 }
-
+void floating(){
+    if(floatingCount% 15 == 0) {
+        floatingEffect = (floatingEffect==0) ? 2 : 0; // Toggle floating effect
+        floatingCount = 0;
+    }
+    floatingCount++;
+}
 static void checkCollisionsBorders(Body *player) {
 
     // Collision with borders
@@ -291,6 +298,7 @@ static void update() {
     
     sysDraw();
 
+    floating();
 }
 
 void pongis(int playerCount) {
@@ -301,7 +309,8 @@ void pongis(int playerCount) {
     // Intialize variables
     screenWidth = sysGetScreenWidth();
     screenHeight = sysGetScreenHeight();
-
+    p1.hits = 0;
+    p2.hits = 0;
     sysClear();
     sysConfigBitmap(50, DG, 21);
     sysDrawBitmap(0, 0, nave[16]);
