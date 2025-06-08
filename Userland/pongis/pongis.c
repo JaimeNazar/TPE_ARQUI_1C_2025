@@ -1,6 +1,6 @@
 #include <pongis.h>
 
-uint32_t nave[][21]={
+static uint32_t nave[][21]={
     {0x000000,0x000000,0x030000,0x03C000,0x03F000,0x03FC00,0x03C700,0x0329C0,0x0329F0,0x0286FC,0x024000,0x0286FC,0x0329F0,0x0329C0,0x03C700,0x03FC00,0x03F000,0x03C000,0x030000,0x000000,0x000000},
     {0x000000,0x000000,0x000000,0x000000,0x000000,0x000000,0x043800,0x04D600,0x04D600,0x013900,0x01FFFF,0x013900,0x04D600,0x04D600,0x043800,0x000000,0x000000,0x000000,0x000000,0x000000,0x000000},
 
@@ -27,26 +27,29 @@ uint32_t nave[][21]={
     {0xFFFFFF,0xFFFFFF,0xFFFFFF,0xFFFFFF,0xFFFFFF,0xFFFFFF,0xFFFFFF,0xFFFFFF,0xFFFFFF,0xFFFFFF,0xFFFFFF,0xFFFFFF,0xFFFFFF,0xFFFFFF,0xFFFFFF,0xFFFFFF,0xFFFFFF,0xFFFFFF,0xFFFFFF,0xFFFFFF,0xFFFFFF}
 };
 
-float angulos[8]={0,PI/4.0,PI/2.0,(3.0/4.0)*PI,PI,(5.0/4.0)*PI,(3.0/2.0)*PI,(7.0/4.0)*PI};
+static float angulos[8]={0,PI/4.0,PI/2.0,(3.0/4.0)*PI,PI,(5.0/4.0)*PI,(3.0/2.0)*PI,(7.0/4.0)*PI};
 
-uint32_t blackHole[][21]={
+static uint32_t blackHole[][21]={
     {0x000780,0x000580,0x061F06,0x0761CE,0x078334,0x030218,0x028218,0x026618,0x1FFFFF,0x140C25,0x1C06C7,0x040786,0x0405C4,0x020E7E,0x06081E,0x0D381E,0x08F026,0x0FF0C0,0x00BF00,0x00E000,0x000000},
     {0x000000,0x000000,0x000000,0x001E00,0x007CC0,0x00E0E0,0x024060,0x018020,0x000000,0x030018,0x030018,0x030018,0x030018,0x018000,0x01C060,0x00C0E0,0x000FC0,0x000F00,0x000000,0x000000,0x000000},
     {0x000000,0x000000,0x000000,0x000000,0x000000,0x001D00,0x003D80,0x0019C0,0x000000,0x00F3C0,0x03F920,0x00F860,0x00FA20,0x007180,0x003780,0x000700,0x000000,0x000000,0x000000,0x000000,0x000000}
 };
 
-uint32_t asteroide[][21]={
+static uint32_t asteroide[][21]={
     {0x003F80,0x00FFE0,0x003FC0,0x000F80,0x000FC0,0x0007E2,0x0007FE,0x1007FF,0x180FFF,0x18FFFF,0x1E3FFF,0x1FFFE3,0x1FFFC1,0x1FFF80,0x0FFF80,0x0FFF80,0x07FF80,0x03F880,0x01FDC0,0x00FFE0,0x003F80},
     {0x000000,0x00001C,0x01C03E,0x07F07F,0x07F03E,0x0FF81C,0x0FF800,0x0FF800,0x07F000,0x07F000,0x01C000,0x00001C,0x00003E,0x00007F,0x00007F,0x00007F,0x00027F,0x00077F,0x00023E,0x00001C,0x000000},
 };
 
-char player2Exists = 0;
-Body p1 = {50,50, 0, 0, 0,0, 0, 0, 0};
-Body p2 = {100, 100, 0, 0, 0,0, 0, 0, 0};
-Body ball = {200,200, 0, 0, 0,0, 0, 0, 0};
-uint64_t hole_x = 0;
-uint64_t hole_y = 0;
-char end = 0;
+static char player2Exists = 0;
+static Body p1 = {50,50, 0, 0, 0,0, 0, 0, 0};
+static Body p2 = {100, 100, 0, 0, 0,0, 0, 0, 0};
+static Body ball = {200,200, 0, 0, 0,0, 0, 0, 0};
+static uint64_t hole_x = 0;
+static uint64_t hole_y = 0;
+static char end = 0;
+
+static uint64_t screenWidth;
+static uint64_t screenHeight;
 
 static void drawHits(uint64_t x, uint64_t y,int fontsize){
     char * aux;
@@ -111,37 +114,36 @@ static void Finish(){
     sysBeep(700,3);
 }
 
-static void checkCollisions(){
-    if(p1.x-OFFSET< 10|| p1.x+OFFSET > 1000){
+static void checkCollisionsBorders(Body *player) {
+
+    // Collision with borders
+    if(player->x-OFFSET< 10|| player->x+OFFSET > screenWidth){
         sysBeep(800,2);
-        p1.vel_x = -p1.vel_x * 1.5f;
+        player->vel_x = -player->vel_x * 1.5f;
     } 
     
-    if(p1.y-OFFSET < 80|| p1.y+OFFSET > 700){
+    if(player->y-OFFSET < 80|| player->y+OFFSET > screenHeight){
         sysBeep(800,2);
-        p1.vel_y = -p1.vel_y * 1.5f; 
-    }
-    
-    if(ball.x-OFFSET < 10|| ball.x+OFFSET > 1000){
-        sysBeep(800,2);
-        ball.vel_x = -ball.vel_x * 1.5f;
-    }
-        
-    if(ball.y-OFFSET < 80|| ball.y+OFFSET > 700){
-        sysBeep(800,2);
-        ball.vel_y = -ball.vel_y * 1.5f;
+        player->vel_y = -player->vel_y * 1.5f; 
     }
 
+}
+
+static void checkCollisions(){
+
+    checkCollisionsBorders(&p1);
+    checkCollisionsBorders(&ball);
+
+    // Collision with ball
     hitball(&p1, &ball);
 
-    if(player2Exists){
-        if(p2.x-OFFSET< 10|| p2.x+OFFSET > 1000) 
-            p2.vel_x = -p2.vel_x * 1.5f; ;
-        if(p2.y-OFFSET < 80|| p2.y+OFFSET > 700)
-            p2.vel_y = -p2.vel_y * 1.5f; 
+    if(player2Exists){       
+        checkCollisionsBorders(&p2);
 
+        // Collision with ball
         hitball(&p2, &ball);
 
+        // Collisio with other player
         int dx = p2.x - p1.x;
         int dy = p2.y - p1.y;
 
@@ -159,6 +161,7 @@ static void checkCollisions(){
     }
 
 
+    // Collision with hole
     int dx = ball.x - hole_x;
     int dy = ball.y - hole_y;
 
@@ -296,6 +299,8 @@ void pongis(int playerCount) {
     sysFontSize(8);
     
     // Intialize variables
+    screenWidth = sysGetScreenWidth();
+    screenHeight = sysGetScreenHeight();
 
     sysClear();
     sysConfigBitmap(50, DG, 21);
