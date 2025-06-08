@@ -2,7 +2,26 @@
 #define PONGIS_H
 
 #include <stdint.h>
-#include "pongisUtils.h"
+#include <pongisUtils.h>
+
+#define MAXVEL 10
+
+#define B 0x000000
+#define G 0x00FF00
+#define R 0xFF0000
+#define Y 0xFFFF00
+#define C 0x00FFFF
+#define M 0xFF00FF
+#define P 0x800080
+#define GRAY 0x808080
+#define DG 0x404040
+#define LG 0xC0C0C0
+#define BLUE 0x0000FF
+#define ORANGE 0xFFA500
+#define AQUA 0x00FFFF
+#define W 0xFFFFFF
+
+#define DRAG 0.9f
 
 // Keycode + KeyRelease = scancode for that key release
 #define KEYRELEASE 0x80
@@ -22,8 +41,6 @@
 
 #define BREAK_KEY(c)  ((c) + KEYRELEASE)
 
-void drawBall();
-void play(void);
 void pongis(int playerCount);
 
 #endif // PONGIS_H

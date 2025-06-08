@@ -1,22 +1,4 @@
-#include <stdint.h>
 #include <pongis.h>
-#define MAXVEL 10
-
-#define B 0x000000
-#define G 0x00FF00
-#define R 0xFF0000
-#define Y 0xFFFF00
-#define C 0x00FFFF
-#define M 0xFF00FF
-#define P 0x800080
-#define GRAY 0x808080
-#define DG 0x404040
-#define LG 0xC0C0C0
-#define BLUE 0x0000FF
-#define ORANGE 0xFFA500
-#define AQUA 0x00FFFF
-#define W 0xFFFFFF
-
 
 uint32_t nave[][21]={
     {0x000000,0x000000,0x030000,0x03C000,0x03F000,0x03FC00,0x03C700,0x0329C0,0x0329F0,0x0286FC,0x024000,0x0286FC,0x0329F0,0x0329C0,0x03C700,0x03FC00,0x03F000,0x03C000,0x030000,0x000000,0x000000},
@@ -44,26 +26,29 @@ uint32_t nave[][21]={
     {0x000000,0x000000,0x006000,0x004000,0x000000,0x001C00,0x036B00,0x026300,0x009C80,0x00DD80,0x009C80,0x006300,0x006B00,0x001C80,0x000040,0x000020,0x000010,0x000008,0x000004,0x000002,0x000000},
     {0xFFFFFF,0xFFFFFF,0xFFFFFF,0xFFFFFF,0xFFFFFF,0xFFFFFF,0xFFFFFF,0xFFFFFF,0xFFFFFF,0xFFFFFF,0xFFFFFF,0xFFFFFF,0xFFFFFF,0xFFFFFF,0xFFFFFF,0xFFFFFF,0xFFFFFF,0xFFFFFF,0xFFFFFF,0xFFFFFF,0xFFFFFF}
 };
+
 float angulos[8]={0,PI/4.0,PI/2.0,(3.0/4.0)*PI,PI,(5.0/4.0)*PI,(3.0/2.0)*PI,(7.0/4.0)*PI};
+
 uint32_t blackHole[][21]={
     {0x000780,0x000580,0x061F06,0x0761CE,0x078334,0x030218,0x028218,0x026618,0x1FFFFF,0x140C25,0x1C06C7,0x040786,0x0405C4,0x020E7E,0x06081E,0x0D381E,0x08F026,0x0FF0C0,0x00BF00,0x00E000,0x000000},
     {0x000000,0x000000,0x000000,0x001E00,0x007CC0,0x00E0E0,0x024060,0x018020,0x000000,0x030018,0x030018,0x030018,0x030018,0x018000,0x01C060,0x00C0E0,0x000FC0,0x000F00,0x000000,0x000000,0x000000},
     {0x000000,0x000000,0x000000,0x000000,0x000000,0x001D00,0x003D80,0x0019C0,0x000000,0x00F3C0,0x03F920,0x00F860,0x00FA20,0x007180,0x003780,0x000700,0x000000,0x000000,0x000000,0x000000,0x000000}
 };
 
-
 uint32_t asteroide[][21]={
     {0x003F80,0x00FFE0,0x003FC0,0x000F80,0x000FC0,0x0007E2,0x0007FE,0x1007FF,0x180FFF,0x18FFFF,0x1E3FFF,0x1FFFE3,0x1FFFC1,0x1FFF80,0x0FFF80,0x0FFF80,0x07FF80,0x03F880,0x01FDC0,0x00FFE0,0x003F80},
     {0x000000,0x00001C,0x01C03E,0x07F07F,0x07F03E,0x0FF81C,0x0FF800,0x0FF800,0x07F000,0x07F000,0x01C000,0x00001C,0x00003E,0x00007F,0x00007F,0x00007F,0x00027F,0x00077F,0x00023E,0x00001C,0x000000},
 };
+
 char player2Exists = 0;
-body p1 = {50,50, 0, 0, 0,0, 0, 0, 0};
-body p2 = {100, 100, 0, 0, 0,0, 0, 0, 0};
-body ball = {200,200, 0, 0, 0,0, 0, 0, 0};
+Body p1 = {50,50, 0, 0, 0,0, 0, 0, 0};
+Body p2 = {100, 100, 0, 0, 0,0, 0, 0, 0};
+Body ball = {200,200, 0, 0, 0,0, 0, 0, 0};
 uint64_t hole_x = 0;
 uint64_t hole_y = 0;
 char end = 0;
-void drawHits(uint64_t x,uint64_t y,int fontsize){
+
+static void drawHits(uint64_t x, uint64_t y,int fontsize){
     char * aux;
     if(player2Exists){
         sysDrawTextAt("Player 2: ", 10, x, y+fontsize*2, G);
@@ -75,41 +60,115 @@ void drawHits(uint64_t x,uint64_t y,int fontsize){
     sysDrawTextAt(aux, strlen(aux), x+fontsize * 10, y, BLUE);
 
 }
-void drawBall() {
+
+static void drawBall() {
     sysConfigBitmap(3, DG, 21);
     sysDrawBitmap(ball.x-OFFSET,ball.y-OFFSET,asteroide[0]);
     sysConfigBitmap(3, LG, 21);
     sysDrawBitmap(ball.x-OFFSET,ball.y-OFFSET,asteroide[1]);
 }
-void drawPlayer(int player){
-    if(player == 1){
-    sysConfigBitmap(3, BLUE, 21);
-    sysDrawBitmap(p1.x-OFFSET, p1.y-OFFSET, nave[p1.rotation * 2]);
-    sysConfigBitmap(3, R, 21);
-    sysDrawBitmap(p1.x-OFFSET, p1.y-OFFSET, nave[p1.rotation * 2 + 1]);
+
+static void drawPlayer(int players){
+    if(players == 1){
+        sysConfigBitmap(3, BLUE, 21);
+        sysDrawBitmap(p1.x-OFFSET, p1.y-OFFSET, nave[p1.rotation * 2]);
+        sysConfigBitmap(3, R, 21);
+        sysDrawBitmap(p1.x-OFFSET, p1.y-OFFSET, nave[p1.rotation * 2 + 1]);
     }
     else{
-    sysConfigBitmap(3, G, 21);
-    sysDrawBitmap(p2.x-OFFSET, p2.y-OFFSET, nave[p2.rotation * 2]);
-    sysConfigBitmap(3, R, 21);
-    sysDrawBitmap(p2.x-OFFSET, p2.y-OFFSET, nave[p2.rotation * 2 + 1]);
+        sysConfigBitmap(3, G, 21);
+        sysDrawBitmap(p2.x-OFFSET, p2.y-OFFSET, nave[p2.rotation * 2]);
+        sysConfigBitmap(3, R, 21);
+        sysDrawBitmap(p2.x-OFFSET, p2.y-OFFSET, nave[p2.rotation * 2 + 1]);
     }
 }
-void drawHole(){
+
+static void drawHole(){
     sysConfigBitmap(3,C,21);
-    sysDrawBitmap(hole_x-OFFSET,hole_y-OFFSET,blackHole[0]);
+    sysDrawBitmap(hole_x-OFFSET, hole_y-OFFSET, blackHole[0]);
     sysConfigBitmap(3,P,21);
-    sysDrawBitmap(hole_x-OFFSET,hole_y-OFFSET,blackHole[1]);
+    sysDrawBitmap(hole_x-OFFSET, hole_y-OFFSET, blackHole[1]);
     sysConfigBitmap(3,BLUE,21);
-    sysDrawBitmap(hole_x-OFFSET,hole_y-OFFSET,blackHole[2]);
+    sysDrawBitmap(hole_x-OFFSET, hole_y-OFFSET, blackHole[2]);
 }
-void drawPlayfield(){
+
+static void drawPlayfield(){
     sysConfigBitmap(50, DG, 21);
     sysDrawBitmap(0, 0, nave[16]);
     sysConfigBitmap(40, B, 21);
     sysDrawBitmap(0, 60, nave[16]);
     sysConfigBitmap(40, B, 21);
     sysDrawBitmap(400, 60, nave[16]);
+}
+
+static void Finish(){
+    end = 1;
+
+    // Fun tune
+    sysBeep(800,2);
+    sysBeep(700,3);
+    sysBeep(800,2);
+    sysBeep(700,3);
+}
+
+static void checkCollisions(){
+    if(p1.x-OFFSET< 10|| p1.x+OFFSET > 1000){
+        sysBeep(800,2);
+        p1.vel_x = -p1.vel_x * 1.5f;
+    } 
+    
+    if(p1.y-OFFSET < 80|| p1.y+OFFSET > 700){
+        sysBeep(800,2);
+        p1.vel_y = -p1.vel_y * 1.5f; 
+    }
+    
+    if(ball.x-OFFSET < 10|| ball.x+OFFSET > 1000){
+        sysBeep(800,2);
+        ball.vel_x = -ball.vel_x * 1.5f;
+    }
+        
+    if(ball.y-OFFSET < 80|| ball.y+OFFSET > 700){
+        sysBeep(800,2);
+        ball.vel_y = -ball.vel_y * 1.5f;
+    }
+
+    hitball(&p1, &ball);
+
+    if(player2Exists){
+        if(p2.x-OFFSET< 10|| p2.x+OFFSET > 1000) 
+            p2.vel_x = -p2.vel_x * 1.5f; ;
+        if(p2.y-OFFSET < 80|| p2.y+OFFSET > 700)
+            p2.vel_y = -p2.vel_y * 1.5f; 
+
+        hitball(&p2, &ball);
+
+        int dx = p2.x - p1.x;
+        int dy = p2.y - p1.y;
+
+        float distancia = sqrtf((float)(dx*dx + dy*dy));
+        float suma_radios = OFFSET* 2.0 * FEELGOODCONSTANT;
+
+        if (distancia <= suma_radios) {
+            float aux = p2.vel_x;
+            p2.vel_x = p1.vel_x;
+            p1.vel_x = aux;
+            aux = p2.vel_y;
+            p2.vel_y = p1.vel_y;
+            p1.vel_y = aux;
+        }
+    }
+
+
+    int dx = ball.x - hole_x;
+    int dy = ball.y - hole_y;
+
+    float distancia = sqrtf(dx * dx + dy * dy);
+    float suma_radios = OFFSET* 2.0 * FEELGOODCONSTANT;
+
+    if(distancia <= suma_radios){
+        Finish();
+    }
+
 }
 
 // Process keyboard input
@@ -163,7 +222,7 @@ static void keyboardInput() {
     }
 }
 
-static void updateMovements(body *b) {
+static void updateMovements(Body *b) {
     float s, cs; 
     if (b->r_left) {
         // Incrementa el índice de rotación cíclicamente (0 a 7)
@@ -181,9 +240,17 @@ static void updateMovements(body *b) {
         b->vel_x += (int)(5 * cs);
         b->vel_y += (int)(5 * (-s));
     }
+
+    b->vel_x *= DRAG;
+    b->vel_y *= DRAG;
+
+    // Si es suficientemente bajo, ponelo en 0
+    if (fabsf(b->vel_x) < 0.5f) b->vel_x = 0;
+    if (fabsf(b->vel_y) < 0.5f) b->vel_y = 0;
+
 }
 
-void play(void) {
+static void update() {
 
     clearGame();
     drawPlayfield();
@@ -192,43 +259,28 @@ void play(void) {
     // Process keyboard input
     keyboardInput();
 
-    // Check for actions based on key events
-
-    // Player 1
+    // Check for actions based on key events and apply physics
     updateMovements(&p1);
-    updateMovements(&p2);
-
-    // Check colisions
-    checkColissions();
-    
-    float drag = 0.9f; 
-    p1.vel_x *= drag;
-    p1.vel_y *= drag;
-    if(player2Exists){
-        p2.vel_x *= drag;
-        p2.vel_y *= drag;
-    }
-    
-    ball.vel_x *= drag;
-    ball.vel_y *= drag;
-
-
-// Si es suficientemente bajo, ponelo en 0
-    if (fabsf(p1.vel_x) < 0.5f) p1.vel_x = 0;
-    if (fabsf(p1.vel_y) < 0.5f) p1.vel_y = 0;
-    if (fabsf(ball.vel_x) < 0.5f) ball.vel_x = 0;
-    if (fabsf(ball.vel_y) < 0.5f) ball.vel_y = 0;
     p1.x += p1.vel_x;
     p1.y += p1.vel_y;
+
+    if(player2Exists){
+        updateMovements(&p2);
+        
+        p2.x += p2.vel_x;
+        p2.y += p2.vel_y;
+        drawPlayer(2);
+    }
+
+    updateMovements(&ball);
+    
+    // Update position
     ball.x += ball.vel_x;
     ball.y += ball.vel_y*-1;
-    if(player2Exists){
-    if (fabsf(p2.vel_x) < 0.5f) p2.vel_x = 0;
-    if (fabsf(p2.vel_y) < 0.5f) p2.vel_y = 0;
-    p2.x += p2.vel_x;
-    p2.y += p2.vel_y;
-    drawPlayer(2);
-    }
+
+    // Check colisions
+    checkCollisions();
+    
     // Dibuja la nave usando el sprite correspondiente:
     drawPlayer(1);
     drawBall();
@@ -239,15 +291,25 @@ void play(void) {
 }
 
 void pongis(int playerCount) {
+
+    // Set game font size
+   // sysFontSize(21);
+    
+    // Intialize variables
+
     sysClear();
     sysConfigBitmap(50, DG, 21);
     sysDrawBitmap(0, 0, nave[16]);
-    if(playerCount==2){
+
+    if(playerCount == 2){
         player2Exists = 1;
     }
+
     sysClear();
     drawPlayfield();
     int randTick = sysTimeTicks();
+
+    // Randomize the positions
     switch(randTick%4) {
         case 0:
             hole_x = 100;
@@ -290,40 +352,45 @@ void pongis(int playerCount) {
             ball.y = 200;
             break;
     }
-    while(!end){
-        play();
-    }
+
+    // --- MAIN LOOP ---
+
+    int lastTime = sysTimeTicks();
+	int deltaTime = 0;
+	
+	while(!end) {
+
+        if (deltaTime >= 1)
+            update();
+
+		deltaTime = sysTimeTicks() - lastTime;
+	}
+
     sysClear();
     sysFontSize(21);
+
     sysDrawTextAt("Game Over", 9,400, 200,W);
     drawHits(300, 300, 21);
     sysFontSize(8);
     sysDraw();
+
     sysSleep(50);
+
     sysClear();
     sysDraw();
     end = 0;
     player2Exists = 0;
     
+    // Return
 }
+
 clearGame(){
     sysConfigBitmap(3, B, 21);
     sysDrawBitmap(p1.x-OFFSET,p1.y-OFFSET,nave[16]);
+
     if(player2Exists){
         sysDrawBitmap(p2.x-OFFSET,p2.y-OFFSET,nave[16]);
     }
+
     sysDrawBitmap(ball.x-OFFSET,ball.y-OFFSET,nave[16]);
 }
-//typedef struct {
-   // uint64_t x;
-    //uint64_t y;
-    //uint64_t acceleration_x;
-    //uint64_t acceleration_y;
-    //uint64_t vel_x;
-    //uint64_t vel_y;
-    //float angle;
-    //uint64_t max_speed;
-    //uint64_t max_acceleration;
-    //int x_offset;
-    //int y_offset;
-//} body;

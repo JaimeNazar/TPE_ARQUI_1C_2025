@@ -6,6 +6,7 @@ static lastHit = 0;
 float fabsf(float x) {
     return (x < 0.0f) ? -x : x;
 }
+
 void sincosf(float angle, float *s, float *c) {
     // Normaliza el ángulo entre -PI y PI
     while (angle > PI) {
@@ -23,6 +24,7 @@ void sincosf(float angle, float *s, float *c) {
     *c = 1 - angle2 / 2.0f + (angle2 * angle2) / 24.0f - (angle2 * angle2 * angle2) / 720.0f;
     
 }
+
 float sqrtf(float number) {
     if (number <= 0.0f) return 0.0f;
 
@@ -66,89 +68,33 @@ float arctan(float y, float x) {
     }
     return atan;
 }
-void Finish(){
-    end = 1;
-    sysBeep(800,2);
-    sysBeep(700,3);
-    sysBeep(800,2);
-    sysBeep(700,3);
-}
-void hitball(body *b,body *ball){
+
+void hitball(Body *b, Body *ball){
     int dx =  b->x - ball->x;
-int dy = b->y - ball->y;
-float distancia = sqrtf((float)(dx*dx + dy*dy));
-
-
-
-float suma_radios = OFFSET* 2.0 * FEELGOODCONSTANT;
-
-if (distancia <= suma_radios) {
-    // Colisión detectada
-    float angle;
-    angle = arctan(dy,dx);
-    
-    float velocity = sqrtf(b->vel_x * b->vel_x + b->vel_y * b->vel_y);
-    applyForces(ball, angle,  velocity * 1.4f);
-    
-    int timeElapsed = sysTimeTicks();
-    if(timeElapsed - lastHit > 25){
-        lastHit = timeElapsed;
-        b->hits++;}
-    
-    
-
-}
-}
-void checkColissions(){
-    if(p1.x-OFFSET< 10|| p1.x+OFFSET > 1000){
-        sysBeep(800,2);
-        p1.vel_x = -p1.vel_x * 1.5f;
-    } 
-    if(p1.y-OFFSET < 80|| p1.y+OFFSET > 700){
-        sysBeep(800,2);
-        p1.vel_y = -p1.vel_y * 1.5f; 
-    }
-    if(ball.x-OFFSET < 10|| ball.x+OFFSET > 1000){
-        sysBeep(800,2);
-        ball.vel_x = -ball.vel_x * 1.5f;
-    }
-        
-    if(ball.y-OFFSET < 80|| ball.y+OFFSET > 700){
-        sysBeep(800,2);
-        ball.vel_y = -ball.vel_y * 1.5f;
-    }
-hitball(&p1, &ball);
-if(player2Exists){
-    if(p2.x-OFFSET< 10|| p2.x+OFFSET > 1000) 
-        p2.vel_x = -p2.vel_x * 1.5f; ;
-    if(p2.y-OFFSET < 80|| p2.y+OFFSET > 700)
-        p2.vel_y = -p2.vel_y * 1.5f; 
-    hitball(&p2, &ball);
-    int dx = p2.x - p1.x;
-    int dy = p2.y - p1.y;
+    int dy = b->y - ball->y;
     float distancia = sqrtf((float)(dx*dx + dy*dy));
+
     float suma_radios = OFFSET* 2.0 * FEELGOODCONSTANT;
+
     if (distancia <= suma_radios) {
-        float aux = p2.vel_x;
-        p2.vel_x = p1.vel_x;
-        p1.vel_x = aux;
-        aux = p2.vel_y;
-        p2.vel_y = p1.vel_y;
-        p1.vel_y = aux;
+        // Colisión detectada
+        float angle;
+        angle = arctan(dy,dx);
+        
+        float velocity = sqrtf(b->vel_x * b->vel_x + b->vel_y * b->vel_y);
+        applyForces(ball, angle,  velocity * 1.4f);
+        
+        int timeElapsed = sysTimeTicks();
+        
+        if(timeElapsed - lastHit > 25){
+            lastHit = timeElapsed;
+            b->hits++;
+        }
+
     }
 }
 
-
-int dx = ball.x - hole_x;
-int dy = ball.y - hole_y;
-float distancia = sqrtf(dx * dx + dy * dy);
-float suma_radios = OFFSET* 2.0 * FEELGOODCONSTANT;
-    if(distancia <= suma_radios){
-        Finish();
-    }
-
-}
-void applyForces(body *b,float angle,float magnitud){
+void applyForces(Body *b,float angle,float magnitud){
     float s, c;
     sincosf(angle, &s, &c);
     b->vel_x += magnitud * c * (-1.0f);
