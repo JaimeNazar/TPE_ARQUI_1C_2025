@@ -121,7 +121,8 @@ uint64_t syscallDispatcher(uint64_t rax, ...) {
             break;
 
         case ID_PUT_CHAR:
-            videoDrawChar(va_arg(args, char), COLOR_WHITE);
+            char c = va_arg(args, int);
+            videoDrawChar((char)c, COLOR_WHITE);
             break;
 
         case ID_DRAW_BITMAP: 

@@ -5,7 +5,7 @@
 int strlen(char* str) {
 	int count = 0;
 	while (str[count++] != 0);
-	return count;
+	return count - 1;
 }
 
 int strcmp(char* str1, char* str2, int length1, int lenght2) {
@@ -111,6 +111,8 @@ void floatToStr(float value, char *str, int decimals) {
         decPart *= BASE_TEN;
 
         str[i++] = (int)decPart + '0'; 
+
+        decPart -= (int)decPart;
     }
 
     // Null terminated
@@ -213,26 +215,9 @@ void scanf(char* ftm, ...) {
                     toRead[toReadIdx] = '\0';
 
                     break;
-                case 'f':
-                    parseIndex = 0;
-                    int dot = 0;    // Keeps track of the dot
-
-                    // Only read numbers or a minus symbol at the start and one dot
-                    while((parseIndex == 0 && buffer[index] == '-') || (!dot && buffer[index] == '.')
-                        || (buffer[index] >= '0' && buffer[index] <= '9' && index < MAX_CMD_LEN)) {
-
-                        if (buffer[index] == '.')
-                            dot = 1;
-
-                        parseBuffer[parseIndex++] = buffer[index++];
-                    }
-
-                    // Null terminated
-                    parseBuffer[parseIndex] = '\0';
-
-                    float *toReadFloat = va_arg(args, float*);
-
-                    *toReadFloat = strToFloat(parseBuffer); // Parse to int
+                case 'c':
+                    char* c = (char*)va_arg(args, char*);
+                    *c = buffer[index++];
 
                     break;
 
@@ -289,12 +274,7 @@ void printf(char* ftm, ...) {
                     sysWrite(STDOUT, toAppend, strlen(toAppend));
                     break;
                 case 'c':
-                    sysPutChar(va_arg(args, char));
-                    break;
-                case 'f':   // TODO: Allow user to selec amonut of decimals
-                    double fvalue = va_arg(args, double);
-                    floatToStr(fvalue, buffer, 4); // Parse to float
-                    toAppend = buffer;
+                    sysPutChar((char)va_arg(args, int));    // Chars are promoted to int in va_arg
                     break;
                 case 'd':
                     intToStr(va_arg(args, int), buffer); // Parse to string
