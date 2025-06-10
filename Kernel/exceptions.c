@@ -17,7 +17,7 @@ static void exceptionMsg(const char* msg) {
 	printError(msg);
 	syscallWrite(STDERR, "\n", 1);
 
-	interruptsDumpRegisters(STDERR);
+	registersDump(STDERR);
 
 	printError("\n\n Press enter to resume normal execution \n");
 }

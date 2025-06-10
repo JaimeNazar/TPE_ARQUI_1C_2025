@@ -1,16 +1,12 @@
-//******************************************************************************
-// Archivo: idtLoader.h
-//******************************************************************************
 
 #ifndef _IDTLOADER_H_
 #define _IDTLOADER_H_
 
-//******************************************************************************
-// DECLARACIÓN DE PROTOTIPOS
-//******************************************************************************
+#include <stdint.h>
 
-static void setup_IDT_entry(int index, uint64_t offset);
+#include <defs.h>
+#include <interrupts.h>
+
 void load_idt();
-
 
 #endif // _IDTLOADER_H_

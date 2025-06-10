@@ -174,14 +174,14 @@ unsigned char font_bitmap[][16] = {
     { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,  },       //0x7F, delete
 };
 
-
 static uint32_t buffer[MAX_HEIGHT][MAX_WIDTH];
 
 // --- Text variables ---
 static int font_size = DEFAULT_FONT_SIZE;
 static int charsPerWidth;
 static int charsPerHeight;
-// Represents the char grid positions when working with printing strings
+
+// Represents the char grid positions when working with strings
 static int currentCharX = 0;    // Top-left corner
 static int currentCharY = 0;
 
@@ -196,6 +196,7 @@ void videoInitialize() {
     charsPerHeight = VBE_mode_info->height / (font_size * 2);  // Characters are double the width in height
 }
 
+/* Places pixel in the frame buffer */
 void videoPutPixel(uint32_t hexColor, uint64_t x, uint64_t y) {
 
     if (x >= VBE_mode_info->width || y >= VBE_mode_info->height)
@@ -204,9 +205,17 @@ void videoPutPixel(uint32_t hexColor, uint64_t x, uint64_t y) {
     uint8_t * framebuffer = (uint8_t *) VBE_mode_info->framebuffer;
     uint64_t offset = (x * ((VBE_mode_info->bpp)/8)) + (y * VBE_mode_info->pitch);
     
-    framebuffer[offset]     =  (hexColor) & 0xFF;
-    framebuffer[offset+1]   =  (hexColor >> 8) & 0xFF; 
-    framebuffer[offset+2]   =  (hexColor >> 16) & 0xFF;
+    // Check current video mode
+    if (VBE_mode_info->bpp == 32) {
+        framebuffer[offset]     =  (hexColor) & 0xFF;
+        framebuffer[offset + 1] =  (hexColor >> 8) & 0xFF;
+        framebuffer[offset + 2] =  (hexColor >> 16) & 0xFF;
+        framebuffer[offset + 3] =  (hexColor >> 24) & 0xFF;
+    } else if (VBE_mode_info->bpp == 24) {
+        framebuffer[offset]     =  (hexColor) & 0xFF;
+        framebuffer[offset + 1] =  (hexColor >> 8) & 0xFF;
+        framebuffer[offset + 2] =  (hexColor >> 16) & 0xFF;
+    }
 }
 
 /* Draws a square, the top-left corner has the position specified */
@@ -217,16 +226,16 @@ void videoDrawSquare(uint64_t x, uint64_t y, uint64_t size, uint32_t hexColor) {
         return;
     }
 
+    // Place it on buffer
 	for (int i = 0; i < size; i++) {
 		for (int j = 0; j < size; j++) {
-			//putPixel(hexColor, x+i, y+j);
-            buffer[y+i][x+j] = hexColor;
+            buffer[y+i][x+j] = hexColor; 
 		}
 	}
 }
 
 /* Draws char at provided coordinates(top-left corner of char) */
-void videoDrawCharAt(char c, uint64_t x, uint64_t y, uint32_t hexColor) {
+static void videoDrawCharAt(char c, uint64_t x, uint64_t y, uint32_t hexColor) {
 
 	unsigned char* index = font_bitmap[c];    // get letter bitmap starting index
 	char pixel = 0; // Current pixel
@@ -252,17 +261,19 @@ void videoDrawTextAt(const char * str, int length, uint64_t x, uint64_t y, uint3
 	}
 }
 
+/* Clear the buffer, set all its bytes to 0 */
 void videoClearBuffer() {
     for (int i = 0; i < VBE_mode_info->height; i++) {
 		for (int j = 0; j < VBE_mode_info->width; j++) {
-            //putPixel(0, j, i);
 			buffer[i][j] = 0;
 		}
 	}
 
+    // Reset text grid
     currentCharX = currentCharY = 0;
 }
 
+/* Copy the buffer to the actual frame buffer */
 void videoDrawScreen() {
     for (int i = 0; i < VBE_mode_info->height; i++) {
 		for (int j = 0; j < VBE_mode_info->width; j++) {
@@ -283,17 +294,20 @@ int videoGetHeight() {
 
 // ------ BITMAP UTILS ------
 
+/* Set bitmap config, allows to draw multiple bitmaps with the same config */
 void videoConfigBitmap(int bps,uint32_t hexColor,int width){
     bitmapPixelSize = bps;   
     hc = hexColor; // Hex color to draw the bitmap
     w = (width <= 0) ? 1 : width;
 }
+
 void videoDrawBitMap( uint64_t x, uint64_t y,uint32_t *bitmap) {
 
     for (int i = 0; i < w; i++) {
-        uint32_t row = bitmap[i];  // Cada fila de bits
+        uint32_t row = bitmap[i];  // Each bits row
         for (int j = 0; j < w; j++) {
-            // Verificamos si el bit en la posición j está encendido
+
+            // Check if a pixel should be drawn
             if ((row >> (w - 1 - j)) & 1) {
                 videoDrawSquare(x + j * bitmapPixelSize, y + i * bitmapPixelSize, bitmapPixelSize, hc);
             }
@@ -303,21 +317,25 @@ void videoDrawBitMap( uint64_t x, uint64_t y,uint32_t *bitmap) {
 
 // ------ TEXT UTILS ------
 
+/* Scrolls screen contents one text line up */
 static void scroll() {
 
+    // Move one line up
     for (int i = 0; i < VBE_mode_info->height-font_size*2; i++) {
         for (int j = 0; j < VBE_mode_info->width; j++) {
             buffer[i][j] = buffer[i+font_size*2][j];
         }
     }
 
+    // Clear last line
     for (int i = VBE_mode_info->height - font_size*2; i < VBE_mode_info->height; i++) {
         for (int j = 0; j < VBE_mode_info->width; j++) {
             buffer[i][j] = 0;
         }
     }
     
-    currentCharY = charsPerHeight-2;  // Its unknown how much we overshoot the limit
+    // Update text position
+    currentCharY = charsPerHeight-2;  // Its unknown how much we overshoot the limit, so point to the last line
     currentCharX = 0;
 }
 
@@ -333,6 +351,7 @@ void videoSetFontsize(uint8_t size) {
     charsPerHeight = VBE_mode_info->height / (font_size * 2);
 }
 
+/* Draw char using text grid */
 void videoDrawChar(char c, uint32_t hexColor) {    
 
     // Check if bottom of screen was reached

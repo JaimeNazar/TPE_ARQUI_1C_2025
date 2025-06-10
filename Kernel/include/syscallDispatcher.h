@@ -2,10 +2,13 @@
 #define SYSCALLDISPATCHER_H
 
 #include <stdint.h>
+
 #include <keyboard.h>
 #include <videoDriver.h>
 #include <soundDriver.h>
 #include <stdarg.h>
+#include <time.h>
+#include <registers.h>
 
 // Syscalls IDs
 typedef enum{

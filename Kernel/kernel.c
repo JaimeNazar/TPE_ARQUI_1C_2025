@@ -3,9 +3,8 @@
 #include <lib.h>
 #include <moduleLoader.h>
 #include <naiveConsole.h>
-#include <styledConsole.h>
 #include <idtLoader.h>
-#include <soundDriver.h>
+
 extern uint8_t text;
 extern uint8_t rodata;
 extern uint8_t data;
@@ -85,36 +84,15 @@ void * initializeKernelBinary()
 	return getStackBase();
 }
 
-uint8_t getHours() {
-	return rtc(4);
-}
-
-uint8_t getMinutes() {
-	return rtc(2);
-}
-
-uint8_t getSeconds() {
-	return rtc(0);
-}
-
-void printTime(){
-	scPrint("Current time: ", 0x0F);
-	scPrintHex(getHours(), 0x0F);	// In Universal Standard Time
-	scPrint(":", 0x0F);
-	scPrintHex(getMinutes(), 0x0F);
-	scPrint(":", 0x0F);
-	scPrintHex(getSeconds(), 0x0F);
-
-	scNewline();
-}
-
-
-
 int main()
 {	
+	// Load interrupt table
 	load_idt();
+
+	// Initialize video variables now that the video structure is loaded
 	videoInitialize();
 	
+	// Go to user space
 	((EntryPoint)userCodeModuleAddress)();
 	
 	return 0;

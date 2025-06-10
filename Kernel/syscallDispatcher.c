@@ -1,11 +1,8 @@
 #include <syscallDispatcher.h>
-#include <time.h>
-#include <stdint.h>
-#include <interrupts.h>
-#include <keyboard.h>
 
-// Output style depends on file descriptor
 int syscallWrite(int fd, const char * buff, int length) {
+
+    // Output style depends on file descriptor
     switch (fd) {
         case 1:
             videoPrintText(buff, length, COLOR_WHITE);
@@ -19,7 +16,6 @@ int syscallWrite(int fd, const char * buff, int length) {
     return length;
 }
 
-// Polls the keyboard until enter is pressed or reached length specified
 int syscallRead(int fd, char * buff, int length) {
     
     int count = 0;
@@ -68,7 +64,6 @@ static uint64_t time(uint8_t code) {
     return upperBits * 10 + lowerBits;
 }
 
-// FIX: Org id numbers
 uint64_t syscallDispatcher(uint64_t rax, ...) {
     va_list args;
     va_start(args, rax);  
@@ -143,7 +138,7 @@ uint64_t syscallDispatcher(uint64_t rax, ...) {
 
         case ID_DUMP_REGS:
             int fdDump = va_arg(args, int);
-            interruptsDumpRegisters(fdDump);
+            registersDump(fdDump);
 
             break;
 

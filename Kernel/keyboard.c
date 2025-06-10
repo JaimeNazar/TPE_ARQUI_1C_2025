@@ -1,7 +1,6 @@
 
 #include <keyboard.h>
 
-
 static unsigned char keyValues[KEYS_END][2] = {
 	{0, 0},
 	{27, 27},
@@ -66,17 +65,18 @@ static unsigned char keyValues[KEYS_END][2] = {
 typedef struct{
     int elemCount;
     uint8_t buffer[BUFFER_SIZE];
-    uint8_t nextToWrite; // Siguiente posicion a escribir
-    uint8_t nextToRead; // Siguiente posicion a leer
+    uint8_t nextToWrite; // Next slot to write into
+    uint8_t nextToRead; // Next slot to be read
 
 } CycleBuffer;
 
 static CycleBuffer keyboardEvents;
 
-static int nextToWrite = 0; //Siguiente posicion a escribir
-static int nextToRead = 0; //Siguiente posicion a leer
-static int countToRead = 0; //Cantidad de caracteres a leer
-static int altKey = 0; // determina cuando se utiliza shift y capslock
+static int nextToWrite = 0;
+static int nextToRead = 0;
+static int countToRead = 0;
+
+// Keep track of these for upper and lower case 
 static int shift = 0;
 static int capsLock = 0;
 
@@ -103,62 +103,52 @@ static uint8_t dequeue() {
     return 0;
 }
 
-static char characterFilter(char key) {
-    if(key == CAPS_LOCK_PRESS) {
-        capsLock = !capsLock;
-        return 0;
-    }
-    
-    // Evitamos índices fuera de rango
-    if(key >= KEYS_END||key<KEYS_START)
-        return 0;
-    
-    // Para las letras se hace XOR entre shift y capsLock; para otros, se utiliza shift
-    if((key >= 16 && key <= 25) || (key >= 30 && key <= 38) || (key >= 44 && key <= 50))
-        altKey = (shift ^ capsLock) ? 1 : 0;
-    else
-        altKey = shift ? 1 : 0;
+/* Checks if char should be in uppercase or not */
+static char getChar(uint8_t event) {
+
+	uint8_t uppercase = 0;
+    // Check special keys
+    if(capsLock || shift)
+        uppercase = 1;
         
-    return keyValues[key][altKey];
+    return keyValues[event][uppercase];
 }
 
 static uint8_t isKeyPress(uint8_t event) {
     return event < KEYS_END && event > KEYS_START;
 }
 
-char keyboardHasEvent() {
-  return keyboardEvents.elemCount > 0;
+static uint8_t isChar(uint8_t event) {
+    return isKeyPress(event) && event != L_SHIFT_PRESS && event != R_SHIFT_PRESS && event != CAPS_LOCK_PRESS;
 }
 
-uint8_t keyboardPoll() {
-    while(!(get_keyboard_status() & 0x01));
-
-    uint8_t scancode = get_keyboard_output();
-    scancode = characterFilter(scancode);
-	return scancode;
-
+char keyboardHasEvent() {
+  return keyboardEvents.elemCount > 0;
 }
 
 char keyboardGetChar() {
     uint8_t event = keyboardGetKeyEvent();
 
     // While no char is pressed, keep asking for the next event on the queue
-    while (!isKeyPress(event)) {
+    while (!isChar(event)) {
         event = keyboardGetKeyEvent();
     }
 
     // Parse event into a char
-    return characterFilter(event);
+    return getChar(event);
 }
 
 void keyboardSaveEvent() {
     uint8_t event = get_keyboard_output();
 
-	// Check shift state
-	if (event == L_SHIFT_PRESS || event == R_SHIFT_PRESS)
+	// Keep track of special keys
+	if (event == L_SHIFT_PRESS || event == R_SHIFT_PRESS) // Check shift state
 		shift = 1;
 	else if (event == BREAK_KEY(L_SHIFT_PRESS) || event == BREAK_KEY(R_SHIFT_PRESS))
 		shift = 0;
+	else if (event == CAPS_LOCK_PRESS) // Check caps lock
+		capsLock = capsLock ? 0 : 1;	// Toggle it
+		
 
     enqueue(event);
 }

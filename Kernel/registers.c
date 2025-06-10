@@ -1,4 +1,4 @@
-#include<interrupts.h>
+#include<registers.h>
 
 const char * generalRegisterString[] = {                               //todos con len = 8
 	"RAX:    ", "RBX:    ", "RCX:    ", "RDX:    ",
@@ -18,7 +18,7 @@ static int strlen(char* str) {
 
 /*
  * Prints hex representaiton of 64 bit value
- * NOTE: The for doesnt stop if the raminder is 0 because it need to rewrite 
+ * NOTE: The for doesnt stop if the raminder is 0 because it needs to rewrite 
  * any previoud character left on the template in an earlier call
 */
 static void printHex(uint64_t value, int fd) {
@@ -34,9 +34,7 @@ static void printHex(uint64_t value, int fd) {
 	syscallWrite(fd, template, HEX_64_TEMPLATE_LENGHT);
 }
 
-/* Prints a map, in this case, used the registers mapped to their values 
- * TODO: It prints them in columns of 3
- */
+/* Prints a map, in this case, used the registers mapped to their values */
 static void printMap(const char** keys, uint64_t* values, int lenght, int fd)  {
 	for (int i = 0 ; i < lenght; i++) {
 		syscallWrite(fd, keys[i], MSG_LENGTH);
@@ -45,7 +43,7 @@ static void printMap(const char** keys, uint64_t* values, int lenght, int fd)  {
 	}
 }
 
-void interruptsDumpRegisters(int fd){
+void registersDump(int fd){
     char *general = "General Registers: \n";
 	syscallWrite(fd, general, strlen(general));
 
