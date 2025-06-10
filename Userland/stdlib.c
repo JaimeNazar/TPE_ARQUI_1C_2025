@@ -327,12 +327,12 @@ int getHours() {
 
 // ------ SYSCALLS ------
 
-uint64_t sysWrite(int fd, char * buff, int length) {
-    return syscall_wizard(0, fd, buff, length, NO_ARG, NO_ARG);
+uint64_t sysWrite(int fd, const char * buff, int length) {
+    return syscall_wizard(0, fd, (uint64_t)buff, length, NO_ARG, NO_ARG);
 }
 
 uint64_t sysRead(int fd, char * buff, int length) {
-    return syscall_wizard(ID_READ, fd, buff, length, NO_ARG, NO_ARG);
+    return syscall_wizard(ID_READ, fd, (uint64_t)buff, length, NO_ARG, NO_ARG);
 }
 
 uint64_t sysTimeTicks(){
@@ -364,7 +364,7 @@ void sysBeep(int freq, int duration) {
 }
 
 void sysDrawBitmap(uint64_t x, uint64_t y,uint32_t *bitmap) {
-    syscall_wizard(ID_DRAW_BITMAP, x, y, bitmap, NO_ARG, NO_ARG);
+    syscall_wizard(ID_DRAW_BITMAP, x, y, (uint64_t)bitmap, NO_ARG, NO_ARG);
 }
 
 void sysConfigBitmap(int bitmapSize,uint32_t hexColor,int width){
@@ -388,7 +388,7 @@ void sysFontSize(int size) {
 }
 
 void sysDrawTextAt(const char * str, int length, uint64_t x, uint64_t y, uint32_t hexColor) {
-    syscall_wizard(ID_DRAW_TEXT, str, length, x, y, hexColor);
+    syscall_wizard(ID_DRAW_TEXT, (uint64_t)str, length, x, y, hexColor);
 }
 uint8_t sysGetKeyEvent() {
     return syscall_wizard(ID_GET_KEY_EVENT, NO_ARG, NO_ARG, NO_ARG, NO_ARG, NO_ARG);

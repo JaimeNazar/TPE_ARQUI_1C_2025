@@ -15,7 +15,7 @@
 #define MAX_ARGS 16
 
 // Syscalls IDs
-typedef enum{
+enum{
     ID_WRITE=0,
     ID_READ,
     ID_CLEAR_BUFFER,
@@ -58,7 +58,7 @@ int getMinutes();
 int getHours();
 
 // Syscalls
-uint64_t sysWrite(int fd, char * buff, int length);
+uint64_t sysWrite(int fd, const char * buff, int length);
 uint64_t sysRead(int fd, char * buff, int length);
 
 void sysClear();
