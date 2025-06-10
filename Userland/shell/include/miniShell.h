@@ -5,7 +5,6 @@
 #include <stdlib.h>
 #include "../pongis/include/pongis.h"
 
-#define SHELL_PROMPT "miniShell > "
 #define MAX_ARGS 16
 
 #define MIN_FONT_SIZE 8
@@ -24,6 +23,8 @@ void beepCommand(int frequency, int duration);
 void ticksCommand();
 void echoCommand(char* arguments[MAX_ARGS], int cant);
 void fontCommand(int size);
+void testZeroCommand();
+void invalidopcodeCommand();
 void error();
 void errorByArguments(char* command, int cant);
 void errorInvalidArgument(char* argument);
