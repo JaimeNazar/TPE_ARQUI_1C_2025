@@ -4,7 +4,7 @@ void soundPlay(uint32_t freq) {
     uint16_t divisor = (uint16_t)(PIT_FREQ / freq);
 
     // Setup PIT channel 2
-    outb(0x43, 0xB6);                   //https://wiki.osdev.org/Programmable_Interval_Timer razonamiento de 0xB6
+    outb(0x43, 0xB6);                   //https://wiki.osdev.org/Programmable_Interval_Timer reasoning for 0xB6
     outb(0x42, divisor & 0xFF);         
     outb(0x42, (divisor >> 8) & 0xFF);
 

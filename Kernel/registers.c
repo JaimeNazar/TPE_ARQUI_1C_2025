@@ -1,6 +1,6 @@
 #include<registers.h>
 
-const char * generalRegisterString[] = {                               //todos con len = 8
+const char * generalRegisterString[] = {                               //every entry with a lenght of 8
 	"RAX:    ", "RBX:    ", "RCX:    ", "RDX:    ",
 	"RBP:    ", "RDI:    ", "RSI:    ",
 	"R8:     ", "R9:     ", "R10:     ", "R11:    ", "R12:    ", "R13:    ", "R14:    ", "R15:    "

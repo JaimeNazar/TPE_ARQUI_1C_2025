@@ -174,7 +174,6 @@ uint64_t syscallDispatcher(uint64_t rax, ...) {
             break;
 
         default:
-            // Manejar  
             break;
     };
 
