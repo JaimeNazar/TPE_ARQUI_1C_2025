@@ -31,6 +31,7 @@ enum{
     ID_TIME,
     ID_BEEP,
     ID_GET_CHAR,
+    ID_PUT_CHAR,
     ID_GET_KEY_EVENT,
     ID_DUMP_REGS,
 };
@@ -73,7 +74,9 @@ uint64_t sysTimeTicks();
 uint64_t sysTime(int arg);
 void sysRegisters(int fd);
 char sysGetChar();
+void sysPutChar(const char c);
 
 void sysDrawTextAt(const char * str, int length, uint64_t x, uint64_t y, uint32_t hexColor);
 uint8_t sysGetKeyEvent();
+
 #endif

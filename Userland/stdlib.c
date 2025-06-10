@@ -286,9 +286,14 @@ void printf(char* ftm, ...) {
             switch(next){
                 case 's':
                     toAppend = va_arg(args, char*);
+                    sysWrite(STDOUT, toAppend, strlen(toAppend));
+                    break;
+                case 'c':
+                    sysPutChar(va_arg(args, char));
                     break;
                 case 'f':   // TODO: Allow user to selec amonut of decimals
-                    floatToStr(va_arg(args, int), buffer, 4); // Parse to float
+                    double fvalue = va_arg(args, double);
+                    floatToStr(fvalue, buffer, 4); // Parse to float
                     toAppend = buffer;
                     break;
                 case 'd':
@@ -300,7 +305,6 @@ void printf(char* ftm, ...) {
                     break;
             }
 
-            sysWrite(STDOUT, toAppend, strlen(toAppend));
             i++;
         } else {
             sysWrite(STDOUT, ftm + i, 1);
@@ -390,6 +394,11 @@ void sysFontSize(int size) {
 void sysDrawTextAt(const char * str, int length, uint64_t x, uint64_t y, uint32_t hexColor) {
     syscall_wizard(ID_DRAW_TEXT, (uint64_t)str, length, x, y, hexColor);
 }
+
+void sysPutChar(const char c) {
+    syscall_wizard(ID_PUT_CHAR, c, NO_ARG, NO_ARG, NO_ARG, NO_ARG);
+}
+
 uint8_t sysGetKeyEvent() {
     return syscall_wizard(ID_GET_KEY_EVENT, NO_ARG, NO_ARG, NO_ARG, NO_ARG, NO_ARG);
 }

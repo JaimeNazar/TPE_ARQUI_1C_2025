@@ -226,7 +226,7 @@ haltcpu:
 
 section .rodata
 	userland equ 0a00000h
-	id_reg_dump equ 16
+	id_reg_dump equ 17
 
 SECTION .bss
 	aux resq 1

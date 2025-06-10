@@ -42,4 +42,4 @@ test_Invalid_OpCode:
     ret
 
 section .rodata
-    id_reg_dump equ 16
+    id_reg_dump equ 17

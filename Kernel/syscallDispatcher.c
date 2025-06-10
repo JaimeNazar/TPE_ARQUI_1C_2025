@@ -120,6 +120,10 @@ uint64_t syscallDispatcher(uint64_t rax, ...) {
             ret_val = keyboardGetChar();
             break;
 
+        case ID_PUT_CHAR:
+            videoDrawChar(va_arg(args, char), COLOR_WHITE);
+            break;
+
         case ID_DRAW_BITMAP: 
             uint64_t x = va_arg(args, uint64_t);
             uint64_t y = va_arg(args, uint64_t);

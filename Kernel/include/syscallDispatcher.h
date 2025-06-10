@@ -28,6 +28,7 @@ enum{
     ID_TIME,
     ID_BEEP,
     ID_GET_CHAR,
+    ID_PUT_CHAR,
     ID_GET_KEY_EVENT,
     ID_DUMP_REGS,
 };
