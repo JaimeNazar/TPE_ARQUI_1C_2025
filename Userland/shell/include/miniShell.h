@@ -3,12 +3,14 @@
 
 #include <shellUtils.h>
 #include <stdlib.h>
-#include "../pongis/include/pongis.h"
+#include <pongis.h>
 
 #define MAX_ARGS 16
 
 #define MIN_FONT_SIZE 8
 #define UTC_OFFSET -3
+
+extern void test_Invalid_OpCode();
 
 void setFontSize(int size);
 

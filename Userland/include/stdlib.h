@@ -70,6 +70,7 @@ void sysFontSize(int size);
 uint64_t sysGetScreenWidth();
 uint64_t sysGetScreenHeight();
 
+void sysSleep(int duration);
 uint64_t sysTimeTicks();
 uint64_t sysTime(int arg);
 void sysRegisters(int fd);
