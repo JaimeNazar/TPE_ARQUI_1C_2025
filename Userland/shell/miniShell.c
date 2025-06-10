@@ -10,11 +10,6 @@ void shellInit() {
 
     sysWrite(1, "miniShell > ", strlen("miniShell > "));
     
-	char test[55];
-	floatToStr(33.159f, test, 2);
-
-	printf("sss: %s\n", test);
-
     sysDraw();
 
 	int lastTime = sysTimeTicks();
