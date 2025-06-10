@@ -51,6 +51,11 @@ static int floatingEffect = 0;
 static uint64_t screenWidth;
 static uint64_t screenHeight;
 int floatingCount = 0;
+
+// For main cycle
+static int lastUpdate = 0;
+static int deltaTime = 0;
+
 static void drawHits(uint64_t x, uint64_t y,int fontsize){
     char * aux;
     if(player2Exists){
@@ -268,7 +273,10 @@ static void updateMovements(Body *b) {
 
 }
 
-static void update(int deltaTime) {
+static void update() {
+
+    // Update delta time
+    deltaTime = sysTimeTicks() - lastUpdate;
 
     clearGame();
     drawPlayfield();
@@ -296,9 +304,9 @@ static void update(int deltaTime) {
         // Update position
         ball.x += ball.vel_x;
         ball.y += ball.vel_y*-1;
+
+        lastUpdate = sysTimeTicks();
     }
-
-
 
     // Check colisions
     checkCollisions();
@@ -384,16 +392,8 @@ void pongis(int playerCount) {
     }
 
     // --- MAIN LOOP ---
-
-    int lastTime = sysTimeTicks();
-	int deltaTime = 0;
-	
 	while(!end) {
-		deltaTime = sysTimeTicks() - lastTime;
-
-        update(deltaTime);
-
-        lastTime = sysTimeTicks();
+        update();
 	}
 
     sysClear();
