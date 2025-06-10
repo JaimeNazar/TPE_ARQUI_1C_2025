@@ -380,12 +380,13 @@ void pongis(int playerCount) {
     int lastTime = sysTimeTicks();
 	int deltaTime = 0;
 	
-	while(end == 0) {
+	while(!end) {
+		deltaTime = sysTimeTicks() - lastTime;
 
         if (deltaTime >= 1)
             update();
 
-		deltaTime = sysTimeTicks() - lastTime;
+        lastTime = sysTimeTicks();
 	}
 
     sysClear();
