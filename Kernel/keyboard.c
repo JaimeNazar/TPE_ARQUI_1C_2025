@@ -83,7 +83,7 @@ static void enqueue(uint8_t event) {
         keyboardEvents.nextToWrite = (keyboardEvents.nextToWrite + 1) % BUFFER_SIZE;
         keyboardEvents.elemCount++;
     } else {
-        // Buffer lleno: sobrescribimos el más viejo (nextToRead)
+        // Buffer full: overwrite the oldest one (nextToRead)
         keyboardEvents.buffer[keyboardEvents.nextToWrite] = event;
         keyboardEvents.nextToWrite = (keyboardEvents.nextToWrite + 1) % BUFFER_SIZE;
         keyboardEvents.nextToRead = (keyboardEvents.nextToRead + 1) % BUFFER_SIZE; 

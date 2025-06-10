@@ -13,7 +13,7 @@ typedef struct {
 
 #pragma pack(pop)		/* Restore the current alignment */
 
-DESCR_INT * idt = (DESCR_INT *) 0;	IDT with 255 entries
+DESCR_INT * idt = (DESCR_INT *) 0;	//IDT with 255 entries
 
 static void setup_IDT_entry (int index, uint64_t offset) {
   idt[index].selector = 0x08;
