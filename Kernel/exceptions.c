@@ -1,13 +1,13 @@
 #include<exceptions.h>
 
-static int strlen(char* str) {
+static int strlen(const char* str) {
 	int count = 0;
 	while (str[count++] != 0);
 	return count;
 }
 
 // Outputs text into the STDERR file descriptor
-static void printError(char * str) {
+static void printError(const char * str) {
 	syscallWrite(STDERR, str, strlen(str));
 }
 

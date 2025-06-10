@@ -32,7 +32,7 @@ struct vbe_mode_info_structure {
 	uint8_t reserved_position;
 	uint8_t direct_color_attributes;
  
-	uint32_t framebuffer;		// physical address of the linear frame buffer; write here to draw to the screen
+	uint8_t * framebuffer;		// physical address of the linear frame buffer; write here to draw to the screen
 	uint32_t off_screen_mem_off;
 	uint16_t off_screen_mem_size;	// size of memory in the framebuffer but not being displayed on the screen
 	uint8_t reserved1[206];
@@ -174,6 +174,7 @@ unsigned char font_bitmap[][16] = {
     { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,  },       //0x7F, delete
 };
 
+// Buffer with max possible size, pure64 was configures so it wont go higher than 1920x1080x32
 static uint32_t buffer[MAX_HEIGHT][MAX_WIDTH];
 
 // --- Text variables ---
@@ -237,7 +238,7 @@ void videoDrawSquare(uint64_t x, uint64_t y, uint64_t size, uint32_t hexColor) {
 /* Draws char at provided coordinates(top-left corner of char) */
 static void videoDrawCharAt(char c, uint64_t x, uint64_t y, uint32_t hexColor) {
 
-	unsigned char* index = font_bitmap[c];    // get letter bitmap starting index
+	unsigned char* index = font_bitmap[(uint8_t)c];    // get letter bitmap starting index
 	char pixel = 0; // Current pixel
 
     int bitmapPixelSize = font_size / CHAR_BITMAP_WIDTH;    // This allows the font size to be the pixel width of a char

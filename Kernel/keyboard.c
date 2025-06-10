@@ -70,11 +70,8 @@ typedef struct{
 
 } CycleBuffer;
 
+// Main buffer for keyboard events
 static CycleBuffer keyboardEvents;
-
-static int nextToWrite = 0;
-static int nextToRead = 0;
-static int countToRead = 0;
 
 // Keep track of these for upper and lower case 
 static int shift = 0;
