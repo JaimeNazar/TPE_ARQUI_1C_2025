@@ -88,6 +88,7 @@ void hitball(Body *b, Body *ball){
         float velocity = sqrtf(b->vel_x * b->vel_x + b->vel_y * b->vel_y);
         applyForces(ball, angle,  velocity * 1.4f+(ball->vel_x+ball->vel_y) * -0.4f);
         
+        //No se cuenta como hit si golpeo la pelota hace poco
         int timeElapsed = sysTimeTicks();
         
         if(timeElapsed - lastHit > 25){
