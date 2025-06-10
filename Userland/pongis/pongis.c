@@ -268,7 +268,7 @@ static void updateMovements(Body *b) {
 
 }
 
-static void update() {
+static void update(int deltaTime) {
 
     clearGame();
     drawPlayfield();
@@ -277,30 +277,38 @@ static void update() {
     // Process keyboard input
     keyboardInput();
 
-    // Check for actions based on key events and apply physics
-    updateMovements(&p1);
-    p1.x += p1.vel_x;
-    p1.y += p1.vel_y;
+    // Only update the physics every tick
+    if (deltaTime >= 1) {
+        // Check for actions based on key events and apply physics
+        updateMovements(&p1);
+        p1.x += p1.vel_x;
+        p1.y += p1.vel_y;
 
-    if(player2Exists){
-        updateMovements(&p2);
+        if(player2Exists){
+            updateMovements(&p2);
+            
+            p2.x += p2.vel_x;
+            p2.y += p2.vel_y;
+        }
+
+        updateMovements(&ball);
         
-        p2.x += p2.vel_x;
-        p2.y += p2.vel_y;
-        drawPlayer(2);
+        // Update position
+        ball.x += ball.vel_x;
+        ball.y += ball.vel_y*-1;
     }
 
-    updateMovements(&ball);
-    
-    // Update position
-    ball.x += ball.vel_x;
-    ball.y += ball.vel_y*-1;
+
 
     // Check colisions
     checkCollisions();
     checkGameOver();
+
     // Dibuja la nave usando el sprite correspondiente:
     drawPlayer(1);
+    if(player2Exists)
+        drawPlayer(2);
+
     drawBall();
     drawHole();
     
@@ -383,8 +391,7 @@ void pongis(int playerCount) {
 	while(!end) {
 		deltaTime = sysTimeTicks() - lastTime;
 
-        if (deltaTime >= 1)
-            update();
+        update(deltaTime);
 
         lastTime = sysTimeTicks();
 	}
