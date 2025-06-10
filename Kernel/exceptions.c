@@ -29,7 +29,7 @@ static void zeroDivision() {
 
 
 static void undefinedOpCode() {
-	char *msg = "Division by zero";
+	char *msg = "Undefined Operation Code";
 	exceptionMsg(msg);
 }
 

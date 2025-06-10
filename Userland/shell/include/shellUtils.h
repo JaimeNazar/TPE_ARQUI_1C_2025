@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <miniShell.h>
 
-#define COMMANDS 10
+#define COMMANDS 12
 #define MAX_ARGS 16
 
 char **getCommandList();

@@ -119,6 +119,15 @@ void fontCommand(int size) {
 
 }
 
+
+void testZeroCommand() {
+	float a = 10 / 0;
+}
+
+void invalidopcodeCommand() {
+	//
+}
+
 void error() {
 	sysWrite(1, "\nCommand not found \n", 22);
 	sysWrite(1, " \ntype 'help' for a list of commands\n", 37);
