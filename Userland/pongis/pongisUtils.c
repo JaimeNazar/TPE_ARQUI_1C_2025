@@ -86,7 +86,7 @@ void hitball(Body *b, Body *ball){
         angle = arctan(dy,dx);
         
         float velocity = sqrtf(b->vel_x * b->vel_x + b->vel_y * b->vel_y);
-        applyForces(ball, angle,  velocity * 1.4f+(ball->vel_x+ball->vel_y) * 0.2f);
+        applyForces(ball, angle,  velocity * 1.4f+(ball->vel_x+ball->vel_y) * -0.4f);
         
         int timeElapsed = sysTimeTicks();
         

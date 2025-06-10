@@ -194,7 +194,6 @@ static void checkGameOver() {
 }
 
 static void showRegisters() {
-    sysClear();
     sysRegisters(1);
 
     printf("Press enter to continue\n");
@@ -342,6 +341,19 @@ static void update() {
     floating();
 }
 
+static void init(Body *b) {
+    b->hits = 0;
+    b->lives = INITIAL_LIVES;
+
+    b->vel_x = 0;
+    b->vel_y = 0;
+
+    b->r_left = 0;
+    b->r_right = 0;
+
+    b->foward = 0;
+}
+
 void pongis(int playerCount) {
 
     // Set game font size
@@ -350,8 +362,11 @@ void pongis(int playerCount) {
     // Intialize variables
     screenWidth = sysGetScreenWidth();
     screenHeight = sysGetScreenHeight();
-    p1.hits = 0;
-    p2.hits = 0;
+
+    init(&p1);
+    init(&p2);
+    init(&ball);
+
     sysClear();
     sysConfigBitmap(50, DG, 21);
     sysDrawBitmap(0, 0, nave[16]);

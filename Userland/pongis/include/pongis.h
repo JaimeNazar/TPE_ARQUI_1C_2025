@@ -45,6 +45,9 @@
 
 #define BREAK_KEY(c)  ((c) + KEYRELEASE)
 
+// Constant
+#define INITIAL_LIVES 5
+
 void pongis(int playerCount);
 
 #endif // PONGIS_H
