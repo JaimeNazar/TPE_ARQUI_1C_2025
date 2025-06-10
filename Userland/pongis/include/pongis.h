@@ -39,6 +39,8 @@
 #define KEYPRESS_J 0x24
 #define KEYPRESS_L 0x26
 
+#define KEYPRESS_R 0x13
+
 #define KEYPRESS_BACKSPACE 0x0E
 
 #define BREAK_KEY(c)  ((c) + KEYRELEASE)

@@ -33,7 +33,7 @@ static unsigned char keyValues[KEYS_END][2] = {
 	{']', '}'},
 	{'\n', '\n'},
 	{0, 0},
-	{'a', 'A'},//30
+	{'a', 'A'}, //30
 	{'s', 'S'},
 	{'d', 'D'},
 	{'f', 'F'},
@@ -41,7 +41,7 @@ static unsigned char keyValues[KEYS_END][2] = {
 	{'h', 'H'},
 	{'j', 'J'},
 	{'k', 'K'},
-	{'l', 'L'},//38
+	{'l', 'L'}, //38
 	{';', ':'},
 	{39, 34}, 
 	{'`', '~'},
@@ -53,7 +53,7 @@ static unsigned char keyValues[KEYS_END][2] = {
 	{'v', 'V'},
 	{'b', 'B'},
 	{'n', 'N'},
-	{'m', 'M'},//50
+	{'m', 'M'}, //50
 	{',', '<'},
 	{'.', '>'},
 	{'/', '?'},

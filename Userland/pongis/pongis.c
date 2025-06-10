@@ -101,7 +101,7 @@ static void drawHole(){
     
 }
 
-static void drawPlayfield(){
+static void drawPlayfield() {
     sysConfigBitmap(50, DG, 21);
     sysDrawBitmap(0, 0, nave[16]);
     sysConfigBitmap(40, B, 21);
@@ -110,7 +110,7 @@ static void drawPlayfield(){
     sysDrawBitmap(400, 60, nave[16]);
 }
 
-static void Finish(){
+static void Finish() {
     end = WIN;
 
     // Fun tune
@@ -119,7 +119,8 @@ static void Finish(){
     sysBeep(800,2);
     sysBeep(700,3);
 }
-void floating(){
+
+void floating() {
     if(floatingCount% 15 == 0) {
         floatingEffect = (floatingEffect==0) ? 2 : 0; // Toggle floating effect
         floatingCount = 0;
@@ -141,7 +142,7 @@ static void checkCollisionsBorders(Body *player) {
 
 }
 
-static void checkCollisions(){
+static void checkCollisions() {
 
     checkCollisionsBorders(&p1);
     checkCollisionsBorders(&ball);
@@ -186,13 +187,26 @@ static void checkCollisions(){
 
 }
 
-
-static void checkGameOver(){
+static void checkGameOver() {
     if ((p1.hits >= p1.lives || p2.hits >= p2.lives) && ball.vel_x == 0 && ball.vel_y == 0){
         end = GAME_OVER;
     }
 }
 
+static void showRegisters() {
+    sysClear();
+    sysRegisters(1);
+
+    printf("Press enter to continue\n");
+
+    sysDraw();
+
+    // Wait for user input
+    char c = sysGetChar();
+
+    while (c != '\n')
+        c = sysGetChar();
+}
 
 // Process keyboard input
 static void keyboardInput() {
@@ -221,6 +235,9 @@ static void keyboardInput() {
             break;
         case KEYPRESS_I:
             p2.foward = 1;
+            break;
+        case KEYPRESS_R:
+            showRegisters();
             break;
         case BREAK_KEY(KEYPRESS_W):
             p1.foward = 0;
@@ -307,7 +324,7 @@ static void update() {
 
         lastUpdate = sysTimeTicks();
     }
-
+    
     // Check colisions
     checkCollisions();
     checkGameOver();
