@@ -1,5 +1,5 @@
 #include <miniShell.h>
-
+extern test_Invalid_OpCode();
 
 static int fontSize = MIN_FONT_SIZE;
 static char buffer[128];
@@ -125,7 +125,7 @@ void testZeroCommand() {
 }
 
 void invalidopcodeCommand() {
-	//
+	test_Invalid_OpCode();
 }
 
 void error() {

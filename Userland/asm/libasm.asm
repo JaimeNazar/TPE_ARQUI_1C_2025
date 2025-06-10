@@ -1,5 +1,6 @@
 GLOBAL syscall_wizard
 GLOBAL syscall_register_dump
+GLOBAL test_Invalid_OpCode
 section .text
 
 ; uint64_t syscall_wizard(uint64_t rax, uint64_t rdi, uint64_t rsi, uint64_t rdx)
@@ -34,6 +35,10 @@ syscall_register_dump:
 
 	mov rsp, rbp
 	pop rbp
+    ret
+
+test_Invalid_OpCode:
+    ud2
     ret
 
 section .rodata
