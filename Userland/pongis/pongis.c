@@ -264,18 +264,18 @@ static void keyboardInput() {
 static void updateMovements(Body *b) {
     float s, cs; 
     if (b->r_left) {
-        // Incrementa el índice de rotación cíclicamente (0 a 7)
+         // Increment the rotation index cyclically (0 to 7)
         b->rotation = (b->rotation + 1) % 8;
     } 
 
     if (b->r_right) {
-        // Decrementa el índice de rotación cíclicamente (usando módulo 8)
+        // Decrement the rotation index cyclically (using % 8)
         b->rotation = (b->rotation + 7) % 8;
     }
 
     if (b->foward) {
         sincosf(angulos[b->rotation], &s, &cs);
-        // Calcula la aceleración en función del ángulo seleccionado en el ciclo
+        // Calculate acceleration based on the selected angle in the cycle
         b->vel_x += (int)(5 * cs);
         b->vel_y += (int)(5 * (-s));
     }
@@ -283,7 +283,7 @@ static void updateMovements(Body *b) {
     b->vel_x *= DRAG;
     b->vel_y *= DRAG;
 
-    // Si es suficientemente bajo, ponelo en 0
+    // If it is low enough, set it to 0
     if (fabsf(b->vel_x) < 0.5f) b->vel_x = 0;
     if (fabsf(b->vel_y) < 0.5f) b->vel_y = 0;
 

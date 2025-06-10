@@ -12,7 +12,7 @@ int restaTruncada(int x) {
 }
 
 void sincosf(float angle, float *s, float *c) {
-    // Normaliza el ángulo entre -PI y PI
+    // Normalize the angle between -PI and PI
     while (angle > PI) {
         angle -= 2.0f * PI;
     }
@@ -21,10 +21,10 @@ void sincosf(float angle, float *s, float *c) {
     }
     
     float angle2 = angle * angle;
-    // Aproximación del seno (serie de Taylor hasta el término de x^7)
+    // Sine approximation (Taylor series up to x^7)
     *s = angle - (angle * angle2) / 6.0f + (angle * angle2 * angle2) / 120.0f - (angle * angle2 * angle2 * angle2) / 5040.0f;
     
-    // Aproximación del coseno (serie de Taylor hasta el término de x^6)
+    // Cosine approximation (Taylor series up to x^6)
     *c = 1 - angle2 / 2.0f + (angle2 * angle2) / 24.0f - (angle2 * angle2 * angle2) / 720.0f;
     
 }
@@ -46,9 +46,9 @@ float arctan(float y, float x) {
     if (x == 0.0f) {
         if (y > 0.0f)  return PI / 2;    //  +90°
         if (y < 0.0f)  return -PI / 2;   //  -90°
-        return 0.0f;                    //  x=0, y=0 → arbitrario igual a 0
+        return 0.0f;                    //  x=0, y=0 → arbitrarily equals 0
     }
-    // Constante de ajuste; 0.28 es un valor común para buena aproximación en [−π/2, +π/2]
+    // Adjustment constant; 0.28 is a common value for good approximation in [−π/2, +π/2]
     const float A = 0.28f;
 
     float abs_y = fabsf(y);
@@ -56,16 +56,16 @@ float arctan(float y, float x) {
     float z = y / x;
     float atan;
 
-    // Caso |z| < 1  → usamos aproximación directa
+    // Case |z| < 1 → use direct approximation
     if (fabsf(z) < 1.0f) {
         atan = z / (1.0f + A * z * z);
         if (x < 0.0f) {
-            // x < 0, hay que desplazar π según signo de y
+            // x < 0, must shift π based on the sign of y
             if (y < 0.0f)      atan -= PI;
             else               atan += PI;
         }
     }
-    // Caso |z| ≥ 1  → hacemos reflect en π/2
+    // Case |z| ≥ 1 → reflect at π/2
     else {
         atan = (PI / 2) - (x / y) / (1.0f + A * (x / y) * (x / y));
         if (y < 0.0f)     atan -= PI;
@@ -81,14 +81,14 @@ void hitball(Body *b, Body *ball){
     float suma_radios = OFFSET* 2.0 * FEELGOODCONSTANT;
 
     if (distancia <= suma_radios) {
-        // Colisión detectada
+        // Collision detected
         float angle;
         angle = arctan(dy,dx);
         
         float velocity = sqrtf(b->vel_x * b->vel_x + b->vel_y * b->vel_y);
         applyForces(ball, angle,  velocity * 1.4f+(ball->vel_x+ball->vel_y) * -0.4f);
         
-        //No se cuenta como hit si golpeo la pelota hace poco
+        // Not counted as a hit if the ball was hit recently
         int timeElapsed = sysTimeTicks();
         
         if(timeElapsed - lastHit > 25){
