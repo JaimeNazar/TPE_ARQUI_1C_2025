@@ -10,7 +10,9 @@ static char *commandList[] = {
     "ticks",
     "echo",
     "registers",
-    "font-size"
+    "font-size",
+    "zero-division",
+    "undefined-op-code"
 };
 
 char *commandListDescription[] = {
@@ -23,7 +25,9 @@ char *commandListDescription[] = {
     " - Displays the number of ticks elapsed since system start",
     " - Echoes the input back to the user",
     " - Shows the current values of each register",
-    " - Changes system font size, size must be greater than or equal 8"
+    " - Changes system font size, size must be greater than or equal 8",
+    " - Tests the division by zero exception",
+    " - Tests the invalid operation code Exception"
 };
 
 
@@ -37,7 +41,9 @@ static const int argumentsPerCommand[] = {
     0, // ticks
     0, // echo, special case
     0, // registers
-    1  // font size
+    1,  // font size
+    0,  // test zero
+    0  // test operation code
 };
 
 
@@ -51,7 +57,9 @@ typedef enum{
     TICKS,
     ECHO,
     REGISTERS,
-    FONT_SIZE
+    FONT_SIZE,
+    ZERO_DIVISION,
+    INVALID_OPCODE
 };
 
 int idHandler(char* command, int length) {
@@ -130,6 +138,12 @@ void commandHandler(char* command, int length) {
                 setFontSize(size); // Update font size 
                 fontCommand(size);
             }
+            break;
+        case ZERO_DIVISION: 
+            testZeroCommand();
+            break;
+        case INVALID_OPCODE: 
+            invalidopcodeCommand();
             break;
         default:
             error();
