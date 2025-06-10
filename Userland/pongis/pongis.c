@@ -355,7 +355,7 @@ static void init(Body *b) {
 }
 
 void pongis(int playerCount) {
-
+    startAnimation();
     // Set game font size
     sysFontSize(8);
     
@@ -459,4 +459,35 @@ clearGame(){
     }
 
     sysDrawBitmap(ball.x-OFFSET,ball.y-OFFSET,nave[16]);
+}
+void startAnimation(){
+    sysClear();
+    for(int i = 0; i < 10; i++) {
+        sysConfigBitmap(6, BLUE, 21);
+        sysDrawBitmap(i*100, 50,nave[0]);
+        sysConfigBitmap(6, R, 21);
+        sysDrawBitmap(i*100, 50,nave[1]);
+        sysConfigBitmap(6, G, 21);
+        sysDrawBitmap(900-i*100, 600,nave[8]);
+        sysConfigBitmap(6, R, 21);
+        sysDrawBitmap(900-i*100, 600,nave[9]);
+        sysDraw();
+        sysSleep(8);
+    }
+    sysConfigBitmap(6,C,21);
+    sysDrawBitmap(80, 300, blackHole[0]);
+    sysConfigBitmap(6,P,21);
+    sysDrawBitmap(80, 300, blackHole[1]);
+    sysConfigBitmap(6,BLUE,21);
+    sysDrawBitmap(80, 300, blackHole[2]);
+    sysConfigBitmap(6,C,21);
+    sysDrawBitmap(800, 300, blackHole[0]);
+    sysConfigBitmap(6,P,21);
+    sysDrawBitmap(800, 300, blackHole[1]);
+    sysConfigBitmap(6,BLUE,21);
+    sysDrawBitmap(800, 300, blackHole[2]);
+    sysFontSize(27);
+    sysDrawTextAt("PONGIS IN SPACE", 15,300, 350,R);
+    sysDraw();
+    sysSleep(30);
 }
