@@ -13,7 +13,7 @@ static void printError(const char * str) {
 
 static void exceptionMsg(const char* msg) {
 	
-	printError("Excepcion: ");
+	printError("Exception: ");
 	printError(msg);
 	syscallWrite(STDERR, "\n", 1);
 
