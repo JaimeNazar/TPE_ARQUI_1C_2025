@@ -163,7 +163,7 @@ void commandHandler(char* command, int length) {
             break;
         case FONT_SIZE:
             int size = strToInt(arguments[1]);
-            if (size <= MIN_FONT_SIZE){
+            if (size < MIN_FONT_SIZE || size >= MAX_FONT_SIZE){
                 errorInvalidArgument(arguments[1]);
             } else {
                 setFontSize(size); // Update font size 
