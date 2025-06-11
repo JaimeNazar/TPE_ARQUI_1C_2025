@@ -353,9 +353,10 @@ static void update() {
     // Update delta time
     deltaTime = sysTimeTicks() - lastUpdate;
 
+    sysClear();
+
     clearGame();
 
-    drawPlayfield();
     drawHits(10, 10, 8);
 
     // Process keyboard input
@@ -432,8 +433,6 @@ void pongis(int playerCount) {
     if(playerCount == 2){
         player2Exists = 1;
     }
-
-    drawPlayfield();
     
     int randTick = sysTimeTicks();
     int quarterScreen = screenWidth / 4;
