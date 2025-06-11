@@ -143,41 +143,6 @@ float strToFloat(const char *str) {
     return result;
 }
 
-
-int commandToArguments(char *command, int length, char *arguments[MAX_ARGS]) {
-    static char buffer[MAX_CMD_LEN];
-    int argCount = 0;
-    int i = 0, j = 0;
-
-    //Eliminate '\n' if needed
-    if (length > 0 && (command[length - 1] == '\n')) {
-        command[--length] = '\0';
-    }
-
-    while (i < length && argCount < MAX_ARGS - 1) {
-        // Saves the pointer of the current argument
-        arguments[argCount] = &buffer[j];
-
-        // Copy characters until the next space
-        while (i < length && command[i] != ' ') {
-            buffer[j++] = command[i++];
-        }
-
-        buffer[j++] = '\0'; // End of argument
-        argCount++;
-
-        // Skips all the spaces until the next argument
-        while (i < length && command[i] == ' '){
-            i++;
-        }
-            
-        }
-
-        return argCount;    //Returns argument quantity
-}
-
-
-
 /* Recieves null terminated string, parse it and read specified args */
 void scanf(char* ftm, ...) {
 

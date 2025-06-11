@@ -25,6 +25,7 @@ void beepCommand(int frequency, int duration);
 void ticksCommand();
 void echoCommand(char* arguments[MAX_ARGS], int cant);
 void fontCommand(int size);
+void registersCommand();
 void testZeroCommand();
 void invalidopcodeCommand();
 void error();
