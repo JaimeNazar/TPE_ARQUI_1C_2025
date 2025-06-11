@@ -157,18 +157,6 @@ static void drawHole(){
     
 }
 
-static void drawPlayfield() {
-    // One gray square
-    sysConfigBitmap(100, DG, 21);
-    sysDrawBitmap(0, 0, nave[16]);
-
-    // Three black squares
-    sysConfigBitmap(100, B, 21);
-    sysDrawBitmap(0, 60, nave[16]);
-    sysDrawBitmap(screenWidth / 3, 60, nave[16]);
-    sysDrawBitmap((screenWidth / 3)*2, 60, nave[16]);
-}
-
 static void Finish() {
     end = WIN;
 
@@ -408,6 +396,8 @@ static void init(Body *b) {
 
     b->vel_x = 0;
     b->vel_y = 0;
+
+    b->rotation = 0;
 
     b->r_left = 0;
     b->r_right = 0;
