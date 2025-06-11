@@ -56,18 +56,6 @@ int floatingCount = 0;
 static int lastUpdate = 0;
 static int deltaTime = 0;
 
-static void clearGame(){
-    sysConfigBitmap(3, B, 21);
-    sysDrawBitmap(p1.x-OFFSET,p1.y-OFFSET,nave[16]);
-
-    if(player2Exists){
-        sysDrawBitmap(p2.x-OFFSET,p2.y-OFFSET,nave[16]);
-    }
-
-    sysDrawBitmap(ball.x-OFFSET,ball.y-OFFSET,nave[16]);
-}
-
-
 static void drawCenteredText(char * text, int fontsize) {
     sysDrawTextAt(text, strlen(text), (screenWidth / 2) - (strlen(text) / 2 )* fontsize, screenHeight / 2 - fontsize * 2,W);
 }
@@ -342,8 +330,6 @@ static void update() {
     deltaTime = sysTimeTicks() - lastUpdate;
 
     sysClear();
-
-    clearGame();
 
     drawHits(10, 10, 8);
 
