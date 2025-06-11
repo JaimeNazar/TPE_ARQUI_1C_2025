@@ -158,12 +158,15 @@ static void drawHole(){
 }
 
 static void drawPlayfield() {
-    sysConfigBitmap(50, DG, 21);
+    // One gray square
+    sysConfigBitmap(100, DG, 21);
     sysDrawBitmap(0, 0, nave[16]);
-    sysConfigBitmap(40, B, 21);
+
+    // Three black squares
+    sysConfigBitmap(100, B, 21);
     sysDrawBitmap(0, 60, nave[16]);
-    sysConfigBitmap(40, B, 21);
-    sysDrawBitmap(400, 60, nave[16]);
+    sysDrawBitmap(screenWidth / 3, 60, nave[16]);
+    sysDrawBitmap((screenWidth / 3)*2, 60, nave[16]);
 }
 
 static void Finish() {
