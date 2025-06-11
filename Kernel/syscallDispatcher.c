@@ -26,31 +26,26 @@ int syscallRead(int fd, char * buff, int length) {
             while (count<length) {
 
                 current = keyboardGetChar();   // Get char from keyboard buffer
-
+                
                 if (current == '\n') { // Enter
                     buff[count++] = '\n';
                     videoNextLine();
                     break; // Stop reading on Enter
-                } else if(current == '\b' && videoCanErase()) { // Backspace
-                    if (count > 0) {
-                        count--;
-                        
-                        videoDrawChar('\b', COLOR_WHITE); 
-                        videoDrawScreen();
-                        continue;
-                    }
-                    
-                }else if(current!= 0){
+
+                } else if(current == '\b' && count > 0) { // Backspace
+                    count--;
+                } else {
                     buff[count++] = current;
-                    videoDrawChar(current, COLOR_WHITE);
-                    videoDrawScreen();
                 }
+
+                videoDrawChar(current, COLOR_WHITE);
+                    videoDrawScreen();
 
             }
         break;
     }
 
-    return count;
+    return count - 1;
 
 }
 
