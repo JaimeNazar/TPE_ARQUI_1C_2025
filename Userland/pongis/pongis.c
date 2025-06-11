@@ -66,34 +66,48 @@ static void clearGame(){
 
     sysDrawBitmap(ball.x-OFFSET,ball.y-OFFSET,nave[16]);
 }
+
+
+static void drawCenteredText(char * text, int fontsize) {
+    sysDrawTextAt(text, 9, (screenWidth / 2) - strlen(text) * fontsize, screenHeight / 2,W);
+}
+
+
 static void startAnimation(){
     sysClear();
+
+    int padding = screenWidth / 10;
+
     for(int i = 0; i < 10; i++) {
         sysConfigBitmap(6, BLUE, 21);
-        sysDrawBitmap(i*100, 50,nave[0]);
+        sysDrawBitmap(i*padding , 50,nave[0]);
         sysConfigBitmap(6, R, 21);
-        sysDrawBitmap(i*100, 50,nave[1]);
+        sysDrawBitmap(i*padding , 50,nave[1]);
         sysConfigBitmap(6, G, 21);
-        sysDrawBitmap(900-i*100, 600,nave[8]);
+        sysDrawBitmap(screenWidth-i*padding, screenHeight - 200,nave[8]);
         sysConfigBitmap(6, R, 21);
-        sysDrawBitmap(900-i*100, 600,nave[9]);
+        sysDrawBitmap(screenWidth-i*padding, screenHeight - 200,nave[9]);
         sysDraw();
         sysSleep(8);
     }
+
+    // Get the width of one quarter of the screen
+    int quarterScreen = screenWidth / 4;
+
     sysConfigBitmap(6,C,21);
-    sysDrawBitmap(80, 300, blackHole[0]);
+    sysDrawBitmap(quarterScreen-100, 300, blackHole[0]);
     sysConfigBitmap(6,P,21);
-    sysDrawBitmap(80, 300, blackHole[1]);
+    sysDrawBitmap(quarterScreen-100, 300, blackHole[1]);
     sysConfigBitmap(6,BLUE,21);
-    sysDrawBitmap(80, 300, blackHole[2]);
+    sysDrawBitmap(quarterScreen-100, 300, blackHole[2]);
     sysConfigBitmap(6,C,21);
-    sysDrawBitmap(800, 300, blackHole[0]);
+    sysDrawBitmap(quarterScreen*3, 300, blackHole[0]);
     sysConfigBitmap(6,P,21);
-    sysDrawBitmap(800, 300, blackHole[1]);
+    sysDrawBitmap(quarterScreen*3, 300, blackHole[1]);
     sysConfigBitmap(6,BLUE,21);
-    sysDrawBitmap(800, 300, blackHole[2]);
+    sysDrawBitmap(quarterScreen*3, 300, blackHole[2]);
     sysFontSize(27);
-    sysDrawTextAt("PONGIS IN SPACE", 15,300, 350,R);
+    drawCenteredText("PONGIS IN SPACE", 27);
     sysDraw();
     sysSleep(30);
 }
@@ -397,14 +411,16 @@ static void init(Body *b) {
 }
 
 void pongis(int playerCount) {
-    startAnimation();
-    // Set game font size
-    sysFontSize(8);
-    
     // Intialize variables
     screenWidth = sysGetScreenWidth();
     screenHeight = sysGetScreenHeight();
 
+    // Render start animation
+    startAnimation();
+
+    // Set game font size
+    sysFontSize(8);
+    
     init(&p1);
     init(&p2);
     init(&ball);
@@ -474,9 +490,9 @@ void pongis(int playerCount) {
     sysFontSize(21);
 
     if (end == GAME_OVER){
-        sysDrawTextAt("Game Over", 9,400, 200,W);
+        drawCenteredText("Game Over", 21);
     } else if (end == WIN){
-        sysDrawTextAt("Victory!", 8,400, 200,W);
+        drawCenteredText("Victory!", 21);
     }
 
     drawHits(300, 300, 21);
