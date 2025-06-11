@@ -69,7 +69,7 @@ static void clearGame(){
 
 
 static void drawCenteredText(char * text, int fontsize) {
-    sysDrawTextAt(text, 9, (screenWidth / 2) - strlen(text) * fontsize, screenHeight / 2,W);
+    sysDrawTextAt(text, strlen(text), (screenWidth / 2) - (strlen(text) / 2 )* fontsize, screenHeight / 2 - fontsize * 2,W);
 }
 
 
@@ -84,9 +84,9 @@ static void startAnimation(){
         sysConfigBitmap(6, R, 21);
         sysDrawBitmap(i*padding , 50,nave[1]);
         sysConfigBitmap(6, G, 21);
-        sysDrawBitmap(screenWidth-i*padding, screenHeight - 200,nave[8]);
+        sysDrawBitmap((screenWidth-100)-i*padding, screenHeight - 200,nave[8]);
         sysConfigBitmap(6, R, 21);
-        sysDrawBitmap(screenWidth-i*padding, screenHeight - 200,nave[9]);
+        sysDrawBitmap((screenWidth-100)-i*padding, screenHeight - 200,nave[9]);
         sysDraw();
         sysSleep(8);
     }
@@ -95,19 +95,19 @@ static void startAnimation(){
     int quarterScreen = screenWidth / 4;
 
     sysConfigBitmap(6,C,21);
-    sysDrawBitmap(quarterScreen-100, 300, blackHole[0]);
+    sysDrawBitmap(quarterScreen-100, screenHeight/2-100, blackHole[0]);
     sysConfigBitmap(6,P,21);
-    sysDrawBitmap(quarterScreen-100, 300, blackHole[1]);
+    sysDrawBitmap(quarterScreen-100, screenHeight/2-100, blackHole[1]);
     sysConfigBitmap(6,BLUE,21);
-    sysDrawBitmap(quarterScreen-100, 300, blackHole[2]);
+    sysDrawBitmap(quarterScreen-100, screenHeight/2-100, blackHole[2]);
     sysConfigBitmap(6,C,21);
-    sysDrawBitmap(quarterScreen*3, 300, blackHole[0]);
+    sysDrawBitmap(quarterScreen*3, screenHeight/2-100, blackHole[0]);
     sysConfigBitmap(6,P,21);
-    sysDrawBitmap(quarterScreen*3, 300, blackHole[1]);
+    sysDrawBitmap(quarterScreen*3, screenHeight/2-100, blackHole[1]);
     sysConfigBitmap(6,BLUE,21);
-    sysDrawBitmap(quarterScreen*3, 300, blackHole[2]);
-    sysFontSize(27);
-    drawCenteredText("PONGIS IN SPACE", 27);
+    sysDrawBitmap(quarterScreen*3, screenHeight/2-100, blackHole[2]);
+    sysFontSize(26);
+    drawCenteredText("PONGIS IN SPACE", 26);
     sysDraw();
     sysSleep(30);
 }
@@ -351,6 +351,7 @@ static void update() {
     deltaTime = sysTimeTicks() - lastUpdate;
 
     clearGame();
+
     drawPlayfield();
     drawHits(10, 10, 8);
 
@@ -416,7 +417,7 @@ void pongis(int playerCount) {
     screenHeight = sysGetScreenHeight();
 
     // Render start animation
-    startAnimation();
+    //startAnimation();
 
     // Set game font size
     sysFontSize(8);
@@ -433,7 +434,6 @@ void pongis(int playerCount) {
         player2Exists = 1;
     }
 
-    sysClear();
     drawPlayfield();
     int randTick = sysTimeTicks();
 
@@ -495,7 +495,7 @@ void pongis(int playerCount) {
         drawCenteredText("Victory!", 21);
     }
 
-    drawHits(300, 300, 21);
+    drawHits(screenWidth / 2 - 100, screenHeight / 2 - 200, 21);
     sysDraw();
 
     sysSleep(50);
