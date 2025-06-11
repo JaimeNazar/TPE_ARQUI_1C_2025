@@ -7,6 +7,7 @@
 #define MAXVEL 10
 #define GAME_OVER 1
 #define WIN 2
+#define MAX_STR_LENGTH 32
 
 #define B 0x000000
 #define G 0x00FF00

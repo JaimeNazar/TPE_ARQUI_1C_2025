@@ -21,11 +21,14 @@ typedef struct {
     int lives;
 } Body;
 
+int subtractTruncated(int x);
 void sincosf(float angle, float *s, float *c);
 float arctan(float y, float x);
 float sqrtf(float number);
-void applyForces(Body *b, float angle, float magnitud);
 float fabsf(float x);
 int iabsi(int x);
+
+void applyForces(Body *b, float angle, float magnitud);
+void hitball(Body *b, Body *ball);
 
 #endif
