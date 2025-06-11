@@ -52,12 +52,13 @@ void setFontSize(int size) {
 void helpCommand() {
 	char **commandList = getCommandList();
 	char **commandListDescription = getCommandListDescription();
-	sysWrite(1, "\nAvailable commands:\n", 21);
+	sysWrite(1, "Available commands:\n", 20);
 	for (int i = 0; i < COMMANDS; i++) {
 		sysWrite(1, commandList[i], strlen(commandList[i]));
 		sysWrite(1, commandListDescription[i], strlen(commandListDescription[i]));
 		sysWrite(1, "\n", 1);
 	}
+	sysWrite(1, "\n", 1);
 }
 
 void clearCommand() {
@@ -102,6 +103,7 @@ void echoCommand(char* arguments[MAX_ARGS], int cant) {
 		sysWrite(1, arguments[i], strlen(arguments[i]));
 		sysWrite(1, " ", 1); 
 	}
+	sysWrite(1, "\n", 1);
 	sysWrite(1, "\n", 1);
 }
 
