@@ -1,13 +1,13 @@
 
 #include <pongisUtils.h>
 
-static lastHit = 0;
+static int lastHit = 0;
 
 float fabsf(float x) {
     return (x < 0.0f) ? -x : x;
 }
 
-int restaTruncada(int x) {
+int subtractTruncated(int x) {
     return (x < 0) ? 0 : x;
 }
 
@@ -51,8 +51,6 @@ float arctan(float y, float x) {
     // Adjustment constant; 0.28 is a common value for good approximation in [−π/2, +π/2]
     const float A = 0.28f;
 
-    float abs_y = fabsf(y);
-    float abs_x = fabsf(x);
     float z = y / x;
     float atan;
 

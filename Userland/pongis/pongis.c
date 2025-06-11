@@ -56,15 +56,57 @@ int floatingCount = 0;
 static int lastUpdate = 0;
 static int deltaTime = 0;
 
+static void clearGame(){
+    sysConfigBitmap(3, B, 21);
+    sysDrawBitmap(p1.x-OFFSET,p1.y-OFFSET,nave[16]);
+
+    if(player2Exists){
+        sysDrawBitmap(p2.x-OFFSET,p2.y-OFFSET,nave[16]);
+    }
+
+    sysDrawBitmap(ball.x-OFFSET,ball.y-OFFSET,nave[16]);
+}
+static void startAnimation(){
+    sysClear();
+    for(int i = 0; i < 10; i++) {
+        sysConfigBitmap(6, BLUE, 21);
+        sysDrawBitmap(i*100, 50,nave[0]);
+        sysConfigBitmap(6, R, 21);
+        sysDrawBitmap(i*100, 50,nave[1]);
+        sysConfigBitmap(6, G, 21);
+        sysDrawBitmap(900-i*100, 600,nave[8]);
+        sysConfigBitmap(6, R, 21);
+        sysDrawBitmap(900-i*100, 600,nave[9]);
+        sysDraw();
+        sysSleep(8);
+    }
+    sysConfigBitmap(6,C,21);
+    sysDrawBitmap(80, 300, blackHole[0]);
+    sysConfigBitmap(6,P,21);
+    sysDrawBitmap(80, 300, blackHole[1]);
+    sysConfigBitmap(6,BLUE,21);
+    sysDrawBitmap(80, 300, blackHole[2]);
+    sysConfigBitmap(6,C,21);
+    sysDrawBitmap(800, 300, blackHole[0]);
+    sysConfigBitmap(6,P,21);
+    sysDrawBitmap(800, 300, blackHole[1]);
+    sysConfigBitmap(6,BLUE,21);
+    sysDrawBitmap(800, 300, blackHole[2]);
+    sysFontSize(27);
+    sysDrawTextAt("PONGIS IN SPACE", 15,300, 350,R);
+    sysDraw();
+    sysSleep(30);
+}
+
 static void drawHits(uint64_t x, uint64_t y,int fontsize){
-    char * aux;
+    char aux[MAX_STR_LENGTH];
     if(player2Exists){
         sysDrawTextAt("Player 2: ", 10, x, y+fontsize*2, G);
-        intToStr(restaTruncada(p2.lives - p2.hits), aux);
+        intToStr(subtractTruncated(p2.lives - p2.hits), aux);
         sysDrawTextAt(aux, strlen(aux), x+fontsize * 10, y+fontsize*2, G);
     }
     sysDrawTextAt("Player 1:", 10, x, y, BLUE);
-    intToStr(restaTruncada(p1.lives - p1.hits), aux);
+    intToStr(subtractTruncated(p1.lives - p1.hits), aux);
     sysDrawTextAt(aux, strlen(aux), x+fontsize * 10, y, BLUE);
 
 }
@@ -448,46 +490,4 @@ void pongis(int playerCount) {
     player2Exists = 0;
     
     // Return
-}
-
-clearGame(){
-    sysConfigBitmap(3, B, 21);
-    sysDrawBitmap(p1.x-OFFSET,p1.y-OFFSET,nave[16]);
-
-    if(player2Exists){
-        sysDrawBitmap(p2.x-OFFSET,p2.y-OFFSET,nave[16]);
-    }
-
-    sysDrawBitmap(ball.x-OFFSET,ball.y-OFFSET,nave[16]);
-}
-void startAnimation(){
-    sysClear();
-    for(int i = 0; i < 10; i++) {
-        sysConfigBitmap(6, BLUE, 21);
-        sysDrawBitmap(i*100, 50,nave[0]);
-        sysConfigBitmap(6, R, 21);
-        sysDrawBitmap(i*100, 50,nave[1]);
-        sysConfigBitmap(6, G, 21);
-        sysDrawBitmap(900-i*100, 600,nave[8]);
-        sysConfigBitmap(6, R, 21);
-        sysDrawBitmap(900-i*100, 600,nave[9]);
-        sysDraw();
-        sysSleep(8);
-    }
-    sysConfigBitmap(6,C,21);
-    sysDrawBitmap(80, 300, blackHole[0]);
-    sysConfigBitmap(6,P,21);
-    sysDrawBitmap(80, 300, blackHole[1]);
-    sysConfigBitmap(6,BLUE,21);
-    sysDrawBitmap(80, 300, blackHole[2]);
-    sysConfigBitmap(6,C,21);
-    sysDrawBitmap(800, 300, blackHole[0]);
-    sysConfigBitmap(6,P,21);
-    sysDrawBitmap(800, 300, blackHole[1]);
-    sysConfigBitmap(6,BLUE,21);
-    sysDrawBitmap(800, 300, blackHole[2]);
-    sysFontSize(27);
-    sysDrawTextAt("PONGIS IN SPACE", 15,300, 350,R);
-    sysDraw();
-    sysSleep(30);
 }
