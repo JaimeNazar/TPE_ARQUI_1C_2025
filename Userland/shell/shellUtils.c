@@ -138,8 +138,7 @@ void commandHandler(char* command, int length) {
             int players = strToInt(arguments[1]);
             if (players != 1 && players != 2){
                 errorInvalidArgument(arguments[1]);
-            }
-            gameCommand(players);
+            } else {gameCommand(players);}
             break;
         case TIME: 
             timeCommand();
