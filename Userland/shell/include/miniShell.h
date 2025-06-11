@@ -8,6 +8,7 @@
 #define MAX_ARGS 16
 
 #define MIN_FONT_SIZE 8
+#define MAX_FONT_SIZE 25
 #define UTC_OFFSET -3
 
 extern void test_Invalid_OpCode();
