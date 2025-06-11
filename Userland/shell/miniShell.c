@@ -32,8 +32,6 @@ void shellUpdate() {
     
     int realLen = sysRead(1, buffer, 128);	//Reads 128 caracter
 
-	printf("\n texto: %s con length: %d\n", buffer, realLen);
-
 	sysWrite(1, "\n", 1);	// Move one line down
 	sysDraw();
 
