@@ -237,7 +237,6 @@ void printf(char* ftm, ...) {
             switch(next){
                 case 's':
                     toAppend = va_arg(args, char*);
-                    sysWrite(STDOUT, toAppend, strlen(toAppend));
                     break;
                 case 'c':
                     sysPutChar((char)va_arg(args, int));    // Chars are promoted to int in va_arg
