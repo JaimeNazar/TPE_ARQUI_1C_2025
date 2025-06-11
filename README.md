@@ -34,7 +34,7 @@ El proyecto puede ser probado tanto en un emulador(qemu, virtualBox) o en hardwa
 qemu-system-x86\_64 \-hda Image/x64BareBonesImage.qcow2 \-m 512
 ```
 
-Puede ocurrir que el sonido no funcione, en ese caso agregar los argumentos: **\-audiodev sdl,id=audio0 \-machine pcspk-audiodev=audio0,** el comando quedaría de la siguiente manera: 
+Puede ocurrir que el sonido no funcione, en ese caso agregar los argumentos: `\-audiodev sdl,id=audio0 \-machine pcspk-audiodev=audio0`, el comando quedaría de la siguiente manera: 
 
 ```
 qemu-system-x86\_64 \-hda Image/x64BareBonesImage.qcow2 \-m 512 \-audiodev sdl,id=audio0 \-machine pcspk-audiodev=audio0
