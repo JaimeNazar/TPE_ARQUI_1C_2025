@@ -417,7 +417,7 @@ void pongis(int playerCount) {
     screenHeight = sysGetScreenHeight();
 
     // Render start animation
-    //startAnimation();
+    startAnimation();
 
     // Set game font size
     sysFontSize(8);
@@ -426,16 +426,14 @@ void pongis(int playerCount) {
     init(&p2);
     init(&ball);
 
-    sysClear();
-    sysConfigBitmap(50, DG, 21);
-    sysDrawBitmap(0, 0, nave[16]);
-
     if(playerCount == 2){
         player2Exists = 1;
     }
 
     drawPlayfield();
+    
     int randTick = sysTimeTicks();
+    int quarterScreen = screenWidth / 4;
 
     // Randomize the positions
     switch(randTick%4) {
@@ -450,28 +448,28 @@ void pongis(int playerCount) {
             ball.y = 600;
             break;
         case 1:
-            hole_x = 800;
+            hole_x = screenWidth - 200;
             hole_y = 100;
             p1.x = 100;
             p1.y = 500;
             p2.x = 400;
             p2.y = 500;
             ball.x = 200;
-            ball.y = 600;
+            ball.y = screenHeight - 400;
             break;
         case 2:
             hole_x = 200;
-            hole_y = 700;
+            hole_y = screenHeight - 400;
             p1.x = 100;
             p1.y = 500;
             p2.x = 400;
             p2.y = 500;
-            ball.x = 600;
+            ball.x = screenWidth - 200;
             ball.y = 200;
             break;
         case 3:
-            hole_x = 800;
-            hole_y = 700;
+            hole_x = screenWidth - 200;
+            hole_y = screenHeight - 400;
             p1.x = 100;
             p1.y = 500;
             p2.x = 400;
