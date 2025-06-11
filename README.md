@@ -8,7 +8,7 @@ Para poder compilar el kernel basado en **x64BareBones** es necesario tener inst
 
 Primero, clonar el repositorio de github con el siguiente comando:
 ```
-git clone** **https://github.com/JaimeNazar/TPE\_ARQUI\_1C\_2025
+git clone https://github.com/JaimeNazar/TPE\_ARQUI\_1C\_2025
 ```
 o simplemente usando la aplicación de escritorio de git o alguna de sus variantes. Debe estar en un directorio visible para el contenedor de docker en caso de que se haya elegido esa opción.
 
