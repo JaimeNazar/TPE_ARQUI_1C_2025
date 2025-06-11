@@ -32,14 +32,15 @@ int syscallRead(int fd, char * buff, int length) {
                     videoNextLine();
                     break; // Stop reading on Enter
 
-                } else if(current == '\b' && count > 0) { // Backspace
-                    count--;
+                } else if(current == '\b' && count >= 0) { // Backspace
+                    if (count != 0)
+                        count--;
                 } else {
                     buff[count++] = current;
                 }
 
                 videoDrawChar(current, COLOR_WHITE);
-                    videoDrawScreen();
+                videoDrawScreen();
 
             }
         break;
