@@ -8,7 +8,7 @@ void shellInit() {
 	sysFontSize(fontSize);
 
     sysWrite(1, "miniShell > ", strlen("miniShell > "));
-    
+
     sysDraw();
 
 	int lastTime = sysTimeTicks();

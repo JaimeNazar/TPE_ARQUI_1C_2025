@@ -61,6 +61,7 @@ void intToStr(int value, char *str) {
         str[j] = str[k];
         str[k] = tmp;
     }
+    
 }
 
 int strToInt(const char *str) {
@@ -250,6 +251,7 @@ void printf(char* ftm, ...) {
                     break;
             }
 
+            sysWrite(STDOUT, toAppend, strlen(toAppend));
             i++;
         } else {
             sysWrite(STDOUT, ftm + i, 1);
