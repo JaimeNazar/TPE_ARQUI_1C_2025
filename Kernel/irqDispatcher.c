@@ -1,12 +1,14 @@
 #include <time.h>
 #include <stdint.h>
 #include <keyboard.h>
+#include <interrupts.h>
 
 static void int_20() {
 	timer_handler();
 }
 
 static void int_21() { 
+	_registers_backup();
 	keyboardSaveEvent();
 }
 

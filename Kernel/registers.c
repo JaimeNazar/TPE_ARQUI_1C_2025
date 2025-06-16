@@ -9,7 +9,10 @@ const char * generalRegisterString[] = {                               //every e
 const char * specialRegisterString[] = {
 	"RIP:    ", "CS:     ", "RFLAGS: ", "RSP:    ", "SS:     "
 };
-
+uint64_t regsInit[15] = {0}; // General purpose registers
+uint64_t *regs = regsInit; // Pointer to the general purpose registers
+uint64_t specialRegsInit[5] = {0}; // Special purpose registers
+uint64_t *specialRegs = specialRegsInit; // Pointer to the special purpose registers
 static int strlen(char* str) {
 	int count = 0;
 	while (str[count++] != 0);
@@ -42,18 +45,22 @@ static void printMap(const char** keys, uint64_t* values, int lenght, int fd)  {
 		syscallWrite(fd, "\n", 1);
 	}
 }
+void saveRegs(){
+	regs = get_registers();
+	specialRegs = get_special_registers();
+}
 
 void registersDump(int fd){
     char *general = "General Registers: \n";
 	syscallWrite(fd, general, strlen(general));
 
 	// Print general purpose registers
-	printMap(generalRegisterString, get_registers(), GENERAL_REGISTERS_COUNT, fd);
+	printMap(generalRegisterString, regs, GENERAL_REGISTERS_COUNT, fd);
 
 	char *special = "Special Registers: \n";
 	syscallWrite(fd, special, strlen(special));
 
 	// Print special registers
-	printMap(specialRegisterString, get_special_registers(), SPECIAL_REGISTERS_COUNT, fd);
+	printMap(specialRegisterString, specialRegs, SPECIAL_REGISTERS_COUNT, fd);
 
 }

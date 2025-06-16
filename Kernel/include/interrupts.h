@@ -12,6 +12,7 @@ extern void _irq03Handler(void);
 extern void _irq04Handler(void);
 extern void _irq05Handler(void);
 extern void _syscallHandler(void);
+extern void _registers_backup(void);
 
 extern void _exception0Handler(void);
 extern void _exception06Handler(void);

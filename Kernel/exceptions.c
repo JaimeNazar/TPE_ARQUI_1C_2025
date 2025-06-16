@@ -34,7 +34,7 @@ static void undefinedOpCode() {
 }
 
 void exceptionDispatcher(int exception) {
-	
+	saveRegs();
 	if (exception == ZERO_EXCEPTION_ID)
 		zeroDivision();
 	else if (exception == UNDEF_OP_CODE_EXCEPTION_ID)
