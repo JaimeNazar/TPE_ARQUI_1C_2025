@@ -2,9 +2,10 @@
 #define KEYBOARD_H
 
 #include <stdint.h>
-#include <styledConsole.h>
+#include <registers.h>
 #include <videoDriver.h>
 #include <interrupts.h>
+
 #define BUFFER_SIZE 5
 
 #define L_SHIFT_PRESS 0x2A

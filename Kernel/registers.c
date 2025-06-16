@@ -1,5 +1,8 @@
 #include<registers.h>
 
+static uint64_t generalRegs[GENERAL_REGISTERS_COUNT];
+static uint64_t specialRegs[SPECIAL_REGISTERS_COUNT];
+
 const char * generalRegisterString[] = {                               //every entry with a lenght of 8
 	"RAX:    ", "RBX:    ", "RCX:    ", "RDX:    ",
 	"RBP:    ", "RDI:    ", "RSI:    ",
@@ -9,10 +12,7 @@ const char * generalRegisterString[] = {                               //every e
 const char * specialRegisterString[] = {
 	"RIP:    ", "CS:     ", "RFLAGS: ", "RSP:    ", "SS:     "
 };
-uint64_t regsInit[15] = {0}; // General purpose registers
-uint64_t *regs = regsInit; // Pointer to the general purpose registers
-uint64_t specialRegsInit[5] = {0}; // Special purpose registers
-uint64_t *specialRegs = specialRegsInit; // Pointer to the special purpose registers
+
 static int strlen(char* str) {
 	int count = 0;
 	while (str[count++] != 0);
@@ -45,9 +45,17 @@ static void printMap(const char** keys, uint64_t* values, int lenght, int fd)  {
 		syscallWrite(fd, "\n", 1);
 	}
 }
+
+/* Copies content from array 2 to array 1 */
+static copyArray(uint64_t* array1, uint64_t* array2, int size) {
+	for (int i = 0; i < size; i++) {
+		array1[i] = array2[i];
+	}
+}
+
 void saveRegs(){
-	regs = get_registers();
-	specialRegs = get_special_registers();
+	copyArray(generalRegs, get_registers(), GENERAL_REGISTERS_COUNT);
+	copyArray(specialRegs, get_special_registers(), SPECIAL_REGISTERS_COUNT);
 }
 
 void registersDump(int fd){
@@ -55,7 +63,7 @@ void registersDump(int fd){
 	syscallWrite(fd, general, strlen(general));
 
 	// Print general purpose registers
-	printMap(generalRegisterString, regs, GENERAL_REGISTERS_COUNT, fd);
+	printMap(generalRegisterString, generalRegs, GENERAL_REGISTERS_COUNT, fd);
 
 	char *special = "Special Registers: \n";
 	syscallWrite(fd, special, strlen(special));

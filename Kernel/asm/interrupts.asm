@@ -86,14 +86,9 @@ SECTION .text
 	iretq
 %endmacro
 
- _registers_backup:
+%macro exceptionHandler 1
     call save_special_registers
     call save_registers
-    ret
-
-%macro exceptionHandler 1
-	
-	call _registers_backup
 
 	pushState
 
@@ -146,6 +141,8 @@ _irq00Handler:
 
 ;Keyboard
 _irq01Handler:
+    call save_special_registers
+    call save_registers
 	irqHandlerMaster 1
 
 ;Cascade pic never called
@@ -165,33 +162,6 @@ _irq05Handler:
 	irqHandlerMaster 5
 
 _syscallHandler:
-
-	cmp rax, id_reg_dump	; Check if the syscall needs the registers saved
-	jne .continue
-
-	; --- RECOVER RAX ---
-	call _registers_backup
-	
-	; Get RAX original value
-	push rax	; Save sycall id
-	push rbx	; Save aux registers
-	push rcx
-	call get_special_registers	; Get special registers array address
-	
-	mov rbx, [rax+8*3]	; Get user RSP address, where RAX was passed
-	mov rcx, [rbx]	; Read RAX value
-
-	; Now put it on the array containing the registers values
-	call get_registers	; Get registers array address
-
-	mov [rax], rcx ; RAX is the first element
-
-	pop rcx	; Restore registers 
-	pop rbx	; Restore registers
-	pop rax
-
-.continue:
-
 	push rbx
 	push rcx
 	push rdx

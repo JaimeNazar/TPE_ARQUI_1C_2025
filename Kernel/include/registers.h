@@ -31,7 +31,6 @@ extern uint64_t get_r13();
 extern uint64_t get_r14();
 extern uint64_t get_r15();
 
-
 extern void save_registers();
 extern uint64_t* get_registers();
 
