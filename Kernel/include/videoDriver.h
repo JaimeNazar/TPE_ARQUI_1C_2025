@@ -20,7 +20,7 @@ void videoPutPixel(uint32_t hexColor, uint64_t x, uint64_t y);
 /* Draws a square, the top-left corner has the position specified */
 void videoDrawSquare(uint64_t x, uint64_t y, uint64_t size, uint32_t hexColor);
 
-/* Copy the buffer to the actual frame buffer */
+/* Draw buffer, use dirty rectangles when possible */
 void videoDrawScreen();
 
 /* Clear the buffer, set all its bytes to 0 */

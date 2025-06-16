@@ -193,51 +193,42 @@ static int w = 0;
 
 // Refresh stuff
 #define DIRTY_RECTANGLE_SIZE 50
+#define DIRTY_HEIGHT (MAX_HEIGHT/DIRTY_RECTANGLE_SIZE)
+#define DIRTY_WIDTH (MAX_WIDTH/DIRTY_RECTANGLE_SIZE)
 
-typedef struct {
-    uint32_t x;
-    uint32_t y;
-    uint8_t dirty;
-} DirtyRectangle;
-
-#define DIRTY_SIZE (MAX_HEIGHT / DIRTY_RECTANGLE_SIZE) * (MAX_WIDTH / DIRTY_RECTANGLE_SIZE)
-// TODO: If more than x Rectangles are used, just clear the whole buffer
-DirtyRectangle dirtyRectangles[DIRTY_SIZE];
+static uint8_t dirtyRectangles[DIRTY_HEIGHT][DIRTY_WIDTH];
 
 static void setDirty(int x, int y) {
-    int i = 0;
 
-    int xGrid = (x / DIRTY_RECTANGLE_SIZE) * DIRTY_RECTANGLE_SIZE;
-    int yGrid = (y / DIRTY_RECTANGLE_SIZE) * DIRTY_RECTANGLE_SIZE;
+    int xGrid = x / DIRTY_RECTANGLE_SIZE;
+    int yGrid = y / DIRTY_RECTANGLE_SIZE;
 
-    // Go get the first non dirty one
-    while (i < DIRTY_SIZE && dirtyRectangles[i].dirty) {
-        // if its already marked, ignore ir
-        if (dirtyRectangles[i].x == xGrid && dirtyRectangles[i].y == yGrid)
-            return;
+    if (!dirtyRectangles[yGrid][xGrid])
+        dirtyRectangles[yGrid][xGrid] = 1;
+}
 
-        i++;
+static void drawDirtyRectangle(int xGrid, int yGrid) {
+
+    for (int i = 0; i < DIRTY_RECTANGLE_SIZE; i++) {
+        for (int j = 0; j < DIRTY_RECTANGLE_SIZE; j++) {
+            uint32_t color = buffer[yGrid*DIRTY_RECTANGLE_SIZE+i][xGrid*DIRTY_RECTANGLE_SIZE+j];
+            videoPutPixel(color, xGrid*DIRTY_RECTANGLE_SIZE+j, yGrid*DIRTY_RECTANGLE_SIZE+i);
+        }
     }
 
-    dirtyRectangles[i].x = xGrid;
-    dirtyRectangles[i].y = yGrid;
-    dirtyRectangles[i].dirty = 1;
+    // Not dirty anymore
+    dirtyRectangles[yGrid][xGrid] = 0;
 }
 
 static void drawDirtyRectangles() {
     
-    for (int i = 0; i < DIRTY_SIZE && dirtyRectangles[i].dirty; i++) {
-
-        int x = dirtyRectangles[i].x;
-        int y = dirtyRectangles[i].y;
-
-        for (int j = 0; j < DIRTY_RECTANGLE_SIZE; j++) {
-            for (int k = 0; k < DIRTY_RECTANGLE_SIZE; k++) {
-                videoPutPixel(buffer[y+j][x+k], x+k, y+j);
+    for (int i = 0; i < DIRTY_HEIGHT; i++) {
+        for (int j = 0; j < DIRTY_WIDTH; j++) {
+            if (dirtyRectangles[i][j]) {
+                drawDirtyRectangle(j, i);
             }
+
         }
-        
-        dirtyRectangles[i].dirty = 0;
     }
 }
 
@@ -280,8 +271,10 @@ void videoDrawSquare(uint64_t x, uint64_t y, uint64_t size, uint32_t hexColor) {
     // Place it on buffer
 	for (int i = 0; i < size; i++) {
 		for (int j = 0; j < size; j++) {
-            buffer[y+i][x+j] = hexColor;
-            setDirty(x+j, y+i);
+            if (buffer[y+i][x+j] != hexColor) {
+                buffer[y+i][x+j] = hexColor;
+                setDirty(x+j, y+i);
+            }
 		}
 	}
 }
@@ -317,7 +310,6 @@ void videoDrawTextAt(const char * str, int length, uint64_t x, uint64_t y, uint3
 void videoClearBuffer() {
     for (int i = 0; i < VBE_mode_info->height; i++) {
 		for (int j = 0; j < VBE_mode_info->width; j++) {
-
             if (buffer[i][j] != 0) {
                 setDirty(j, i);
 			    buffer[i][j] = 0;
@@ -329,15 +321,18 @@ void videoClearBuffer() {
     currentCharX = currentCharY = 0;
 }
 
-/* Copy the buffer to the actual frame buffer */
-void videoDrawScreen() {
-    //     for (int i = 0; i < VBE_mode_info->height; i++) {
-	// 	for (int j = 0; j < VBE_mode_info->width; j++) {
-    //         videoPutPixel(buffer[i][j], j, i);
-	// 	}
-	// }
+static void copyBuffer() {
+    for (int i = 0; i < VBE_mode_info->height; i++) {
+		for (int j = 0; j < VBE_mode_info->width; j++) {
+            videoPutPixel(buffer[i][j], j, i);
+		}
+	}
+}
 
+/* Draw buffer, use dirty rectangles when possible */
+void videoDrawScreen() {
     drawDirtyRectangles();
+
 }
 
 int videoGetWidth() {
@@ -409,7 +404,7 @@ void videoSetFontsize(uint8_t size) {
 }
 
 /* Draw char using text grid */
-void videoDrawChar(char c, uint32_t hexColor) {    
+void videoDrawChar(char c, uint32_t hexColor) {
 
     // Check if bottom of screen was reached
     if (currentCharY >= charsPerHeight-1)
