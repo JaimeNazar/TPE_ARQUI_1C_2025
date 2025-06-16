@@ -230,7 +230,13 @@ void videoDrawSquare(uint64_t x, uint64_t y, uint64_t size, uint32_t hexColor) {
     // Place it on buffer
 	for (int i = 0; i < size; i++) {
 		for (int j = 0; j < size; j++) {
-            buffer[y+i][x+j] = hexColor; 
+
+            // If its not already there, change it
+            if(buffer[y+i][x+j] != hexColor) {
+                buffer[y+i][x+j] = hexColor;
+                videoPutPixel(buffer[y+i][x+j], x+j, y+i);
+            }
+
 		}
 	}
 }
@@ -264,9 +270,16 @@ void videoDrawTextAt(const char * str, int length, uint64_t x, uint64_t y, uint3
 
 /* Clear the buffer, set all its bytes to 0 */
 void videoClearBuffer() {
+    
     for (int i = 0; i < VBE_mode_info->height; i++) {
 		for (int j = 0; j < VBE_mode_info->width; j++) {
-			buffer[i][j] = 0;
+
+            // If its not already there, change it
+            if(buffer[i][j] != 0x0) {
+                buffer[i][j] = 0x0;
+                videoPutPixel(buffer[i][j], j, i);
+            }
+
 		}
 	}
 
@@ -276,11 +289,6 @@ void videoClearBuffer() {
 
 /* Copy the buffer to the actual frame buffer */
 void videoDrawScreen() {
-    for (int i = 0; i < VBE_mode_info->height; i++) {
-		for (int j = 0; j < VBE_mode_info->width; j++) {
-            videoPutPixel(buffer[i][j], j, i);
-		}
-	}
 
 }
 
