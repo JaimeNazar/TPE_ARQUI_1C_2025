@@ -30,6 +30,8 @@ EXTERN save_special_registers
 EXTERN get_registers
 EXTERN get_special_registers
 
+EXTERN getStackBase
+
 SECTION .text
 
 %macro pushState 0
@@ -97,10 +99,13 @@ SECTION .text
 
 	popState
 
+	call getStackBase
+	mov [rsp+8*3], rax ; Reset RSP after exception
+
 	mov rax, userland
 	mov [rsp], rax	; Set return address to userland
 
-	iretq	
+	iretq
 
 %endmacro
 
