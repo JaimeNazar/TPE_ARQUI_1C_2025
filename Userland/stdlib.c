@@ -330,7 +330,7 @@ uint64_t sysGetScreenHeight() {
 }
 
 void sysRegisters(int fd) {
-    syscall_wizard(ID_DUMP_REGS, NO_ARG, NO_ARG, NO_ARG, NO_ARG, NO_ARG);
+    syscall_wizard(ID_DUMP_REGS, fd, NO_ARG, NO_ARG, NO_ARG, NO_ARG);
 }
 
 void sysFontSize(int size) {

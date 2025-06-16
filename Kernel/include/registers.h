@@ -40,6 +40,8 @@ extern uint64_t* get_registers();
 extern uint64_t* get_special_registers();
 extern void save_special_registers();
 
+void saveRegs();
+
 /* Outputs a dump of the registers via the specified file descriptor */
 void registersDump();
 

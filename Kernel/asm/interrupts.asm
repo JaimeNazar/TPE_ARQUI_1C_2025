@@ -69,6 +69,9 @@ SECTION .text
 %endmacro
 
 %macro irqHandlerMaster 1
+    call save_special_registers
+    call save_registers
+
 	pushState
 
 	mov rdi, [rsp + 8]       ;guardo el rip para luego mostrarlo
@@ -141,8 +144,6 @@ _irq00Handler:
 
 ;Keyboard
 _irq01Handler:
-    call save_special_registers
-    call save_registers
 	irqHandlerMaster 1
 
 ;Cascade pic never called
