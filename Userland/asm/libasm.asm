@@ -21,25 +21,6 @@ syscall_wizard:
 	pop rbp
 	ret
 
-; Special function to avoid modifying registers
-syscall_register_dump:
-	push rbp
-	mov rbp, rsp
-
-    push rax    ; Save rax
-
-    mov rax, id_reg_dump
-    int 80h;
-
-    pop rax
-
-	mov rsp, rbp
-	pop rbp
-    ret
-
 test_Invalid_OpCode:
     ud2
     ret
-
-section .rodata
-    id_reg_dump equ 17
