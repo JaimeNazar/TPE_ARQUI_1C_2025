@@ -192,7 +192,7 @@ static uint32_t hc = 0xFFFFFF;
 static int w = 0;
 
 // Refresh stuff
-#define DIRTY_RECTANGLE_SIZE 50
+#define DIRTY_RECTANGLE_SIZE 100
 #define DIRTY_HEIGHT (MAX_HEIGHT/DIRTY_RECTANGLE_SIZE)
 #define DIRTY_WIDTH (MAX_WIDTH/DIRTY_RECTANGLE_SIZE)
 
