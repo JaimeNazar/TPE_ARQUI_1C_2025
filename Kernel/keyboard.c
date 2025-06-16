@@ -120,7 +120,7 @@ static uint8_t isChar(uint8_t event) {
 }
 
 char keyboardHasEvent() {
-  return keyboardEvents.elemCount > 0;
+	return keyboardEvents.elemCount > 0;
 }
 
 char keyboardGetChar() {
@@ -136,6 +136,7 @@ char keyboardGetChar() {
 }
 
 void keyboardSaveEvent() {
+	
     uint8_t event = get_keyboard_output();
 
 	// Keep track of special keys
@@ -145,7 +146,8 @@ void keyboardSaveEvent() {
 		shift = 0;
 	else if (event == CAPS_LOCK_PRESS) // Check caps lock
 		capsLock = capsLock ? 0 : 1;	// Toggle it
-		
+	else if(event == ESC)
+		saveRegs();
 
     enqueue(event);
 }

@@ -14,7 +14,7 @@ GLOBAL _irq04Handler
 GLOBAL _irq05Handler
 
 GLOBAL _syscallHandler
-
+GLOBAL  _registers_backup
 
 ;exceptions.c
 GLOBAL _exception0Handler
@@ -86,10 +86,14 @@ SECTION .text
 	iretq
 %endmacro
 
+ _registers_backup:
+    call save_special_registers
+    call save_registers
+    ret
 
 %macro exceptionHandler 1
-	call save_special_registers	; Save current state of registers memory, which reside in stack base
-	call save_registers	; Exception handler will use it later
+	
+	call _registers_backup
 
 	pushState
 
@@ -166,8 +170,7 @@ _syscallHandler:
 	jne .continue
 
 	; --- RECOVER RAX ---
-	call save_registers	; Exception handler will use it later
-	call save_special_registers	; Save current state of registers memory, which reside in stack base
+	call _registers_backup
 	
 	; Get RAX original value
 	push rax	; Save sycall id
