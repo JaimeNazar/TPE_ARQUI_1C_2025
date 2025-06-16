@@ -191,6 +191,56 @@ static int bitmapPixelSize;
 static uint32_t hc = 0xFFFFFF; 
 static int w = 0;
 
+// Refresh stuff
+#define DIRTY_RECTANGLE_SIZE 50
+
+typedef struct {
+    uint32_t x;
+    uint32_t y;
+    uint8_t dirty;
+} DirtyRectangle;
+
+#define DIRTY_SIZE (MAX_HEIGHT / DIRTY_RECTANGLE_SIZE) * (MAX_WIDTH / DIRTY_RECTANGLE_SIZE)
+// TODO: If more than x Rectangles are used, just clear the whole buffer
+DirtyRectangle dirtyRectangles[DIRTY_SIZE];
+
+static void setDirty(int x, int y) {
+    int i = 0;
+
+    int xGrid = (x / DIRTY_RECTANGLE_SIZE) * DIRTY_RECTANGLE_SIZE;
+    int yGrid = (y / DIRTY_RECTANGLE_SIZE) * DIRTY_RECTANGLE_SIZE;
+
+    // Go get the first non dirty one
+    while (i < DIRTY_SIZE && dirtyRectangles[i].dirty) {
+        // if its already marked, ignore ir
+        if (dirtyRectangles[i].x == xGrid && dirtyRectangles[i].y == yGrid)
+            return;
+
+        i++;
+    }
+
+    dirtyRectangles[i].x = xGrid;
+    dirtyRectangles[i].y = yGrid;
+    dirtyRectangles[i].dirty = 1;
+}
+
+static void drawDirtyRectangles() {
+    
+    for (int i = 0; i < DIRTY_SIZE && dirtyRectangles[i].dirty; i++) {
+
+        int x = dirtyRectangles[i].x;
+        int y = dirtyRectangles[i].y;
+
+        for (int j = 0; j < DIRTY_RECTANGLE_SIZE; j++) {
+            for (int k = 0; k < DIRTY_RECTANGLE_SIZE; k++) {
+                videoPutPixel(buffer[y+j][x+k], x+k, y+j);
+            }
+        }
+        
+        dirtyRectangles[i].dirty = 0;
+    }
+}
+
 /* Gets basic screen information */
 void videoInitialize() {
     charsPerWidth = VBE_mode_info->width / font_size;
@@ -230,13 +280,8 @@ void videoDrawSquare(uint64_t x, uint64_t y, uint64_t size, uint32_t hexColor) {
     // Place it on buffer
 	for (int i = 0; i < size; i++) {
 		for (int j = 0; j < size; j++) {
-
-            // If its not already there, change it
-            if(buffer[y+i][x+j] != hexColor) {
-                buffer[y+i][x+j] = hexColor;
-                videoPutPixel(buffer[y+i][x+j], x+j, y+i);
-            }
-
+            buffer[y+i][x+j] = hexColor;
+            setDirty(x+j, y+i);
 		}
 	}
 }
@@ -270,16 +315,13 @@ void videoDrawTextAt(const char * str, int length, uint64_t x, uint64_t y, uint3
 
 /* Clear the buffer, set all its bytes to 0 */
 void videoClearBuffer() {
-    
     for (int i = 0; i < VBE_mode_info->height; i++) {
 		for (int j = 0; j < VBE_mode_info->width; j++) {
 
-            // If its not already there, change it
-            if(buffer[i][j] != 0x0) {
-                buffer[i][j] = 0x0;
-                videoPutPixel(buffer[i][j], j, i);
+            if (buffer[i][j] != 0) {
+                setDirty(j, i);
+			    buffer[i][j] = 0;
             }
-
 		}
 	}
 
@@ -289,7 +331,13 @@ void videoClearBuffer() {
 
 /* Copy the buffer to the actual frame buffer */
 void videoDrawScreen() {
+    //     for (int i = 0; i < VBE_mode_info->height; i++) {
+	// 	for (int j = 0; j < VBE_mode_info->width; j++) {
+    //         videoPutPixel(buffer[i][j], j, i);
+	// 	}
+	// }
 
+    drawDirtyRectangles();
 }
 
 int videoGetWidth() {
