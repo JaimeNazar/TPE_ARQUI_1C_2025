@@ -232,6 +232,14 @@ static void drawDirtyRectangles() {
     }
 }
 
+/* Writes into buffer and check if pixel should be flagged as dirty */
+static void setBuffer(int x, int y, uint32_t hexColor) {
+    if (buffer[y][x] != hexColor) {
+        setDirty(x, y);
+	    buffer[y][x] = hexColor;
+    }
+}
+
 /* Gets basic screen information */
 void videoInitialize() {
     charsPerWidth = VBE_mode_info->width / font_size;
@@ -271,10 +279,7 @@ void videoDrawSquare(uint64_t x, uint64_t y, uint64_t size, uint32_t hexColor) {
     // Place it on buffer
 	for (int i = 0; i < size; i++) {
 		for (int j = 0; j < size; j++) {
-            if (buffer[y+i][x+j] != hexColor) {
-                buffer[y+i][x+j] = hexColor;
-                setDirty(x+j, y+i);
-            }
+            setBuffer(x+j, y+i, hexColor);
 		}
 	}
 }
@@ -310,10 +315,7 @@ void videoDrawTextAt(const char * str, int length, uint64_t x, uint64_t y, uint3
 void videoClearBuffer() {
     for (int i = 0; i < VBE_mode_info->height; i++) {
 		for (int j = 0; j < VBE_mode_info->width; j++) {
-            if (buffer[i][j] != 0) {
-                setDirty(j, i);
-			    buffer[i][j] = 0;
-            }
+            setBuffer(j, i, 0);
 		}
 	}
 
@@ -375,14 +377,14 @@ static void scroll() {
     // Move one line up
     for (int i = 0; i < VBE_mode_info->height-font_size*2; i++) {
         for (int j = 0; j < VBE_mode_info->width; j++) {
-            buffer[i][j] = buffer[i+font_size*2][j];
+            setBuffer(j, i, buffer[i+font_size*2][j]);
         }
     }
 
     // Clear last line
     for (int i = VBE_mode_info->height - font_size*2; i < VBE_mode_info->height; i++) {
         for (int j = 0; j < VBE_mode_info->width; j++) {
-            buffer[i][j] = 0;
+            setBuffer(j, i, 0);
         }
     }
     
