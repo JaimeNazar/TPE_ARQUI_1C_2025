@@ -118,7 +118,7 @@ void commandHandler(char* command, int length) {
     if ( commandID != -1 && commandID != ECHO && argumentsPerCommand[commandID] != cant - 1 ) {      
         errorByArguments(arguments[0], argumentsPerCommand[commandID]);
     }
-    else {                          
+    else {
         //Given the commandID, executes the correct command/error
         switch (commandID) {
         case HELP: 

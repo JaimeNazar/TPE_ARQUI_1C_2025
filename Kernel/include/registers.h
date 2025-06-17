@@ -5,8 +5,8 @@
 
 #include <syscallDispatcher.h>
 
-#define GENERAL_REGISTERS_COUNT 15 
-#define SPECIAL_REGISTERS_COUNT 5 
+#define GENERAL_REGISTERS_COUNT 14
+#define SPECIAL_REGISTERS_COUNT 5
 #define MSG_LENGTH 8
 
 #define HEX_BASE 16

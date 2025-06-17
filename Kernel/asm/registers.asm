@@ -214,15 +214,14 @@ save_registers:
 	mov [regs+8*3], rdx
 	mov [regs+8*4], rsi
 	mov [regs+8*5], rdi
-	mov [regs+8*6], rsp
-	mov [regs+8*7], rbp
-	mov [regs+8*8], r8
-	mov [regs+8*9], r9
-	mov [regs+8*10], r10
-	mov [regs+8*11], r12
-	mov [regs+8*12], r13
-	mov [regs+8*13], r14
-	mov [regs+8*14], r15
+	mov [regs+8*6], rbp
+	mov [regs+8*7], r8
+	mov [regs+8*8], r9
+	mov [regs+8*9], r10
+	mov [regs+8*10], r12
+	mov [regs+8*11], r13
+	mov [regs+8*12], r14
+	mov [regs+8*13], r15
 
 	ret
 
@@ -270,5 +269,5 @@ save_special_registers:
 
 
 section .bss
-	regs resq 15
+	regs resq 14
 	spec_regs resq 5
