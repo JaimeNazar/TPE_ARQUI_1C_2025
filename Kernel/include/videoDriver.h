@@ -11,6 +11,10 @@
 #define CHAR_BITMAP_WIDTH 8
 #define CHAR_BITMAP_HEIGHT 16
 
+#define DIRTY_RECTANGLE_SIZE 100
+#define DIRTY_HEIGHT (MAX_HEIGHT/DIRTY_RECTANGLE_SIZE)
+#define DIRTY_WIDTH (MAX_WIDTH/DIRTY_RECTANGLE_SIZE)
+
 /* Gets basic screen information */
 void videoInitialize();
 

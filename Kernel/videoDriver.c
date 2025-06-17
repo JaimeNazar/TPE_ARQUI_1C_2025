@@ -191,13 +191,12 @@ static int bitmapPixelSize;
 static uint32_t hc = 0xFFFFFF; 
 static int w = 0;
 
-// Refresh stuff
-#define DIRTY_RECTANGLE_SIZE 100
-#define DIRTY_HEIGHT (MAX_HEIGHT/DIRTY_RECTANGLE_SIZE)
-#define DIRTY_WIDTH (MAX_WIDTH/DIRTY_RECTANGLE_SIZE)
-
+// --- Dirty rectangles ----
 static uint8_t dirtyRectangles[DIRTY_HEIGHT][DIRTY_WIDTH];
 
+// ------ DIRTY RECTANGLES UTILS ------
+
+/* Sets coordinates rectangle as dirty */
 static void setDirty(int x, int y) {
 
     int xGrid = x / DIRTY_RECTANGLE_SIZE;
@@ -207,6 +206,7 @@ static void setDirty(int x, int y) {
         dirtyRectangles[yGrid][xGrid] = 1;
 }
 
+/* Draw the specified dirty rectangle */
 static void drawDirtyRectangle(int xGrid, int yGrid) {
 
     for (int i = 0; i < DIRTY_RECTANGLE_SIZE; i++) {
@@ -220,6 +220,7 @@ static void drawDirtyRectangle(int xGrid, int yGrid) {
     dirtyRectangles[yGrid][xGrid] = 0;
 }
 
+/* Check which rectangles are dirty and draw them */
 static void drawDirtyRectangles() {
     
     for (int i = 0; i < DIRTY_HEIGHT; i++) {
@@ -323,15 +324,7 @@ void videoClearBuffer() {
     currentCharX = currentCharY = 0;
 }
 
-static void copyBuffer() {
-    for (int i = 0; i < VBE_mode_info->height; i++) {
-		for (int j = 0; j < VBE_mode_info->width; j++) {
-            videoPutPixel(buffer[i][j], j, i);
-		}
-	}
-}
-
-/* Draw buffer, use dirty rectangles when possible */
+/* Draw buffer, but only the rectangles flagged as dirty */
 void videoDrawScreen() {
     drawDirtyRectangles();
 
