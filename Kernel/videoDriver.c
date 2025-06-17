@@ -199,20 +199,21 @@ static uint8_t dirtyRectangles[DIRTY_HEIGHT][DIRTY_WIDTH];
 /* Sets coordinates rectangle as dirty */
 static void setDirty(int x, int y) {
 
-    int xGrid = x / DIRTY_RECTANGLE_SIZE;
-    int yGrid = y / DIRTY_RECTANGLE_SIZE;
-
-    if (!dirtyRectangles[yGrid][xGrid])
-        dirtyRectangles[yGrid][xGrid] = 1;
+    // Shift to avoid division, since rectangle size is a power of two
+    int xGrid = x >> DIRTY_RECTANGLE_SIZE_SHIFT;
+    int yGrid = y >> DIRTY_RECTANGLE_SIZE_SHIFT;
+    dirtyRectangles[yGrid][xGrid] = 1;
 }
 
 /* Draw the specified dirty rectangle */
 static void drawDirtyRectangle(int xGrid, int yGrid) {
 
+    int xStart = xGrid*DIRTY_RECTANGLE_SIZE;
+    int yStart = yGrid*DIRTY_RECTANGLE_SIZE;
+
     for (int i = 0; i < DIRTY_RECTANGLE_SIZE; i++) {
         for (int j = 0; j < DIRTY_RECTANGLE_SIZE; j++) {
-            uint32_t color = buffer[yGrid*DIRTY_RECTANGLE_SIZE+i][xGrid*DIRTY_RECTANGLE_SIZE+j];
-            videoPutPixel(color, xGrid*DIRTY_RECTANGLE_SIZE+j, yGrid*DIRTY_RECTANGLE_SIZE+i);
+            videoPutPixel(buffer[yStart+i][xStart+j], xStart+j, yStart+i);
         }
     }
 
@@ -223,8 +224,8 @@ static void drawDirtyRectangle(int xGrid, int yGrid) {
 /* Check which rectangles are dirty and draw them */
 static void drawDirtyRectangles() {
     
-    for (int i = 0; i < DIRTY_HEIGHT; i++) {
-        for (int j = 0; j < DIRTY_WIDTH; j++) {
+    for (int i = 0; i < VBE_mode_info->height >> DIRTY_RECTANGLE_SIZE_SHIFT; i++) {
+        for (int j = 0; j < VBE_mode_info->width >> DIRTY_RECTANGLE_SIZE_SHIFT; j++) {
             if (dirtyRectangles[i][j]) {
                 drawDirtyRectangle(j, i);
             }
