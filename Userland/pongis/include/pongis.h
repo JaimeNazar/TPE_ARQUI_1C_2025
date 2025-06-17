@@ -4,7 +4,7 @@
 #include <stdint.h>
 #include <pongisUtils.h>
 
-#define MAXVEL 10
+#define MAXVEL 50
 #define GAME_OVER 1
 #define WIN 2
 #define MAX_STR_LENGTH 32

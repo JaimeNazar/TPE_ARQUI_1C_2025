@@ -76,7 +76,7 @@ static void startAnimation(){
         sysConfigBitmap(6, R, 21);
         sysDrawBitmap((screenWidth-100)-i*padding, screenHeight - 200,nave[9]);
         sysDraw();
-        sysSleep(8);
+        sysSleep(40);
     }
 
     // Get the width of one quarter of the screen
@@ -97,7 +97,7 @@ static void startAnimation(){
     sysFontSize(26);
     drawCenteredText("PONGIS IN SPACE", 26);
     sysDraw();
-    sysSleep(30);
+    sysSleep(150);
 }
 
 static void drawHits(uint64_t x, uint64_t y,int fontsize){
@@ -149,10 +149,10 @@ static void Finish() {
     end = WIN;
 
     // Fun tune
-    sysBeep(800,2);
-    sysBeep(700,3);
-    sysBeep(800,2);
-    sysBeep(700,3);
+    sysBeep(800,10);
+    sysBeep(700,15);
+    sysBeep(800,10);
+    sysBeep(700,15);
 }
 
 void floating() {
@@ -166,12 +166,12 @@ static void checkCollisionsBorders(Body *player) {
 
     // Collision with borders
     if(player->x-OFFSET< 10|| player->x+OFFSET > screenWidth){
-        sysBeep(800,2);
+        sysBeep(800,10);
         player->vel_x = -player->vel_x * 1.5f;
     } 
     
     if(player->y-OFFSET < 80|| player->y+OFFSET > screenHeight){
-        sysBeep(800,2);
+        sysBeep(800,10);
         player->vel_y = -player->vel_y * 1.5f; 
     }
 
@@ -474,7 +474,7 @@ void pongis(int playerCount) {
     drawHits(screenWidth / 2 - 100, screenHeight / 2 - 200, 21);
     sysDraw();
 
-    sysSleep(50);
+    sysSleep(250);
 
     sysClear();
     sysDraw();

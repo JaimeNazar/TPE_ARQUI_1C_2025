@@ -1,6 +1,9 @@
 #ifndef _TIME_H_
 #define _TIME_H_
+
 #include <stdint.h>
+
+#define PIT_FREQ 1193180
 
 typedef struct
 {
@@ -14,6 +17,7 @@ typedef struct
 
 extern uint8_t rtc(uint8_t selection);
 
+void timer_set(int ms);
 void timer_handler();
 int ticks_elapsed();
 int seconds_elapsed();

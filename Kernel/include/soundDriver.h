@@ -4,8 +4,6 @@
 #include <stdint.h>
 #include <time.h>
 
-#define PIT_FREQ 1193180
-
 extern void outb(uint16_t port, uint8_t value);
 extern uint8_t inb(uint16_t port);
 

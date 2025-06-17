@@ -91,6 +91,9 @@ int main()
 	// Load interrupt table
 	load_idt();
 
+	// Change timer tick to 10ms
+	timer_set(10);
+
 	// Initialize video variables now that the video structure is loaded
 	videoInitialize();
 	

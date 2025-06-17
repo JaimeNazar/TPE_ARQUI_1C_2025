@@ -1,4 +1,5 @@
 #include <time.h>
+
 #define RTC_ADDRESS 0x70
 #define RTC_DATA 0x71
 #define RTC_SECONDS 0x00
@@ -10,6 +11,22 @@
 
 
 static unsigned long ticks = 0;
+
+/* Changes the ticks value to the passed value */
+void timer_set(int ms) {
+
+	// Based on https://wiki.osdev.org/Programmable_Interval_Timer#The_Oscillator
+	int count = (PIT_FREQ * ms) / 1000;
+
+	// Pass value 0x36 to channel 0(0x43), the control word
+	outb(0x43, 0x36);
+	
+	// Lower byte
+	outb(0x40, count & 0xff);
+
+	// Upper byte
+	outb(0x40, count >> 8);
+}
 
 void timer_handler() {
 	ticks++;
