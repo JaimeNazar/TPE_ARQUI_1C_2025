@@ -299,7 +299,7 @@ static void videoDrawCharAt(char c, uint64_t x, uint64_t y, uint32_t hexColor) {
 		for (int j = 0; j < CHAR_BITMAP_WIDTH; j++) {
 			pixel = index[i];
 
-			if (pixel >> (CHAR_BITMAP_WIDTH-j) & 0x01)  // If there should be a "pixel" from bitmap drawn
+			if (pixel >> (CHAR_BITMAP_WIDTH-j-1) & 0x01)  // If there should be a "pixel" from bitmap drawn
 				videoDrawSquare(x + j*bitmapPixelSize, y + i*bitmapPixelSize, bitmapPixelSize, hexColor);
 		}
 	}
