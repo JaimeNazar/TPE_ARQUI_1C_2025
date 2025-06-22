@@ -256,6 +256,14 @@ static void keyboardInput() {
             break;
         case KEYPRESS_R:
             showRegisters();
+
+            // Stop registering movement
+            p1.foward = 0;
+            p1.r_left = 0;
+            p1.r_right = 0;
+            p2.foward = 0;
+            p2.r_left = 0;
+            p2.r_right = 0;
         break;
         case KEYPRESS_W:
             p1.foward = 1;
