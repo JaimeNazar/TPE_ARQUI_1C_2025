@@ -236,6 +236,11 @@ static void drawDirtyRectangles() {
 
 /* Writes into buffer and check if pixel should be flagged as dirty */
 static void setBuffer(int x, int y, uint32_t hexColor) {
+    
+    // If its outside the screen, ignore request
+    if (x >= VBE_mode_info->width || y >= VBE_mode_info->height)
+        return;
+
     if (buffer[y][x] != hexColor) {
         setDirty(x, y);
 	    buffer[y][x] = hexColor;
