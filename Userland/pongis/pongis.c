@@ -228,20 +228,6 @@ static void checkGameOver() {
     }
 }
 
-static void showRegisters() {
-    sysRegisters(1);
-
-    printf("Press enter to continue\n");
-
-    sysDraw();
-
-    // Wait for user input
-    char c = sysGetChar();
-
-    while (c != '\n')
-        c = sysGetChar();
-}
-
 // Process keyboard input
 static void keyboardInput() {
     uint8_t c;
@@ -269,9 +255,6 @@ static void keyboardInput() {
             break;
         case KEYPRESS_I:
             p2.foward = 1;
-            break;
-        case KEYPRESS_R:
-            showRegisters();
             break;
         case BREAK_KEY(KEYPRESS_W):
             p1.foward = 0;
