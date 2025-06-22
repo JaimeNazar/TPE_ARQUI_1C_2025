@@ -46,7 +46,7 @@ static void printMap(const char** keys, uint64_t* values, int lenght, int fd)  {
 }
 
 /* Copies content from array 2 to array 1 */
-static copyArray(uint64_t* array1, uint64_t* array2, int size) {
+static void copyArray(uint64_t* array1, uint64_t* array2, int size) {
 	for (int i = 0; i < size; i++) {
 		array1[i] = array2[i];
 	}

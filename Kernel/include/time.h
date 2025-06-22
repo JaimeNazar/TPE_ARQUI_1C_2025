@@ -15,6 +15,9 @@ typedef struct
     uint8_t day;
 } timeData;
 
+extern void outb(uint16_t port, uint8_t value);
+extern uint8_t inb(uint16_t port);
+
 extern uint8_t rtc(uint8_t selection);
 
 void timer_set(int ms);

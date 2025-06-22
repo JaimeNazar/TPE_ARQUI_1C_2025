@@ -9,7 +9,7 @@ $(BMFS_MBR):
 $(PXESTART):
 	$(ASM) src/bootsectors/pxestart.asm -o $(PXESTART)
 $(PURE64):
-	cd src; $(ASM) pure64.asm -o ../$(PURE64)
+	cd src; $(ASM) pure64.asm -D RES="'$(RES)'" -o ../$(PURE64)
 clean:
 	rm -rf *.sys
 .PHONY: all clean
