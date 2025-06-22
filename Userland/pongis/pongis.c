@@ -238,6 +238,11 @@ static void keyboardInput() {
         case KEYPRESS_BACKSPACE:
             end = GAME_OVER;
             break;
+        case KEYPRESS_R:
+            sysRegisters(1);
+            sysDraw();
+            sysSleep(1000);
+        break;
         case KEYPRESS_W:
             p1.foward = 1;
             break;
@@ -294,8 +299,8 @@ static void updateMovements(Body *b) {
     if (b->foward) {
         sincosf(angulos[b->rotation], &s, &cs);
         // Calculate acceleration based on the selected angle in the cycle
-        b->vel_x += (int)(5 * cs);
-        b->vel_y += (int)(5 * (-s));
+        b->vel_x += (int)(VELOCITY_INCREASE * cs);
+        b->vel_y += (int)(VELOCITY_INCREASE * (-s));
     }
 
     b->vel_x *= DRAG;
@@ -320,7 +325,7 @@ static void update() {
     keyboardInput();
 
     // Only update the physics every tick
-    if (deltaTime >= 1) {
+    if (deltaTime >= 2) {
         // Check for actions based on key events and apply physics
         updateMovements(&p1);
         p1.x += p1.vel_x;
