@@ -24,7 +24,17 @@ docker exec \-it $NAME make \-C /root/Toolchain/
 docker exec \-it $NAME make \-C /root/
 ```
 
-Donde **$NAME** es el nombre del contenedor, notar que en este ejemplo se requieren de permisos root, pero es posible configurar un usuario dentro del contenedor para poder ejecutar como usuario normal.
+Donde **$NAME** es el nombre del contenedor, notar que en este ejemplo se requieren de permisos root, pero es posible configurar un usuario dentro del contenedor para poder ejecutar como usuario normal. Tambien, en caso de necesitar especificar la resolución del hardware/emulador en el que se está probando el kernel, se puede especificar de la siguiente manera:
+
+```
+docker exec -it $NAME make RES=”1024,768,24,0x0000” -C /root/
+```
+
+Entonces, el kernel probará la resolución especificada primero y las resoluciones de respaldo en caso de que falle. La resolución debe tener el siguiente formato:
+
+```
+RES=”[width],[height],[bits per pixel],0x0000”
+```
 
 ### Modo de uso  
 
@@ -83,7 +93,7 @@ Como se muestra en la tabla, cada comando implementado tiene una cantidad de arg
 
 **sleep**: Pone al sistema a dormir por una cantidad de ticks marcada por el usuario.
 
-**game**: Comienza el juego, escribir como argumento 1 o 2 dependiendo de la cantidad de jugadores con los que se quiera jugar.
+**game**: Comienza el juego, escribir como argumento 1 o 2 dependiendo de la cantidad de jugadores con los que se quiera jugar. Presionar la tecla R mostrara los registros guardados en la ultima snapshot(tecla ESC).
 
 **time**: Muestra en pantalla el horario actual de la zona horaria de Argentina con el formato “Current time: HORAS : MINUTOS : SEGUNDOS”
 
@@ -93,7 +103,7 @@ Como se muestra en la tabla, cada comando implementado tiene una cantidad de arg
 
 **echo:** Muestra en pantalla los argumentos que escribió el usuario, hasta un máximo de 15 argumentos.
 
-**registers:** Muestra en pantalla los valores de los registros del procesador a la hora de escribir el comando.
+**registers:** Muestra en pantalla los valores de los registros del procesador guardados en la ultima snapshot, para tomar una snapshot presionar tecla ESC.
 
 **font-size:** Cambia el tamaño de letra de la terminal, el tamaño pasado como argumento tendrá que ser un número mayor o igual 8 y menor que 25\.
 
