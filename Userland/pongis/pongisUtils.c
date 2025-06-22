@@ -89,7 +89,7 @@ void hitball(Body *b, Body *ball){
         // Not counted as a hit if the ball was hit recently
         int timeElapsed = sysTimeTicks();
         
-        if(timeElapsed - lastHit > 25){
+        if(timeElapsed - lastHit > 125){
             lastHit = timeElapsed;
             b->hits++;
         }
