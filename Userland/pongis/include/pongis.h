@@ -20,12 +20,11 @@
 #define DG 0x404040
 #define LG 0xC0C0C0
 #define BLUE 0x0000FF
-#define ORANGE 0xFFA500
 #define AQUA 0x00FFFF
 #define W 0xFFFFFF
 
 #define DRAG 0.9f
-
+#define VELOCITY_INCREASE 3
 // Keycode + KeyRelease = scancode for that key release
 #define KEYRELEASE 0x80
 
